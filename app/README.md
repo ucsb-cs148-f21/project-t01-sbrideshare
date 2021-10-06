@@ -1,3 +1,6 @@
+## Deployment URL
+* https://t01-sbrideshare-lucien.herokuapp.com
+
 ## Rquired software
 * Node.js
 * Node Package Manager (npm)
