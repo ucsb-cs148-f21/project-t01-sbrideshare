@@ -8,8 +8,3 @@ SBRideShare is a web application that allows UCSB students to register as driver
 - Chris Stasiowski @chrisstasiowski01
 - Robert Gee @robertgee17
 - Louie Aldana @LouieAldana
-
-## Heroku Deployment - Heather
-https://t01-sbrideshare-heather.herokuapp.com/
-
-Hello World built using React and NodeJS.
