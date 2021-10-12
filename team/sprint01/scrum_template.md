@@ -1,7 +1,7 @@
 # Project: SBRideShare
-Mentor: Vincent/Alan
-Meeting Time: 
-Meeting Type:
+* Mentor: Vincent/Alan
+* Meeting Time: 
+* Meeting Type:
 
 ## Team
 [] Chris Stasiowski
