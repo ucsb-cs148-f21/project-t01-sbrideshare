@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # SBRideShare
 
 SBRideShare is a web application that allows UCSB students to register as drivers or riders and view a list of students traveling to similar destinations.
@@ -9,7 +8,7 @@ SBRideShare is a web application that allows UCSB students to register as driver
 - Chris Stasiowski @chrisstasiowski01
 - Robert Gee @robertgee17
 - Louie Aldana @LouieAldana
-=======
+
 # This is some starter code in React with Google Auth
 
 # Adding code to Github
