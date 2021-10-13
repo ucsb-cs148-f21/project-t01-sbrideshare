@@ -11,7 +11,7 @@
 * a measurement: a way to measure that our Slack communication has sped up the process to push changes to master is to check up during SCRUM meetings to make sure there aren't any pending PRs; in this case, there should be less pending PRs since they would be taken care of outside of class
 
 ## Start/Stop/Continue Artifact
-![alt text](https://github.com/ucsb-cs148-f21/project-t01-sbrideshare/images/RETRO_01.JPG)
+![Alt text](/images/RETRO_01.JPG?raw=true)
 
 
 ## Retro Assessment
