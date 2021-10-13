@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Private from "./pages/Private";
 import PageNotFound from "./pages/PageNotFound";
 
+
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(null);
   const script = document.createElement("script");
@@ -42,7 +43,7 @@ export default function App() {
     return <Route {...rest} component={isSignedIn ? component : Private} />;
   }
 
-  if (isSignedIn !== null) {
+  if (isSignedIn !== null){
     return (
       <BrowserRouter>
         <Switch>

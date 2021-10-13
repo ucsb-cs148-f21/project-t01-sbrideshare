@@ -6,7 +6,12 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 
 export default function NavBar(props) {
   const user = props.user;
-
+  var nonUCSB = true;
+  if(user){
+    if(user.email.substr(-8) == "ucsb.edu"){
+      var nonUCSB = false;
+    }
+  }
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -15,7 +20,7 @@ export default function NavBar(props) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            {user && <Nav.Link href="/profile">Profile</Nav.Link>}
+            {!nonUCSB && <Nav.Link href="/profile">Profile</Nav.Link>}
           </Nav>
           <Nav>
             {!user ? (
