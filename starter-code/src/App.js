@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import CheckingSignedIn from "./pages/CheckingSignedIn";
 import Home from "./pages/Home";
+import Rides from "./pages/Rides";
 import Profile from "./pages/Profile";
 import Private from "./pages/Private";
 import PageNotFound from "./pages/PageNotFound";
@@ -47,6 +48,7 @@ export default function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/rides" component={Rides} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <Route path="/" component={PageNotFound} />
         </Switch>

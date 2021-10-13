@@ -15,6 +15,7 @@ export default function NavBar(props) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/rides">Rides</Nav.Link>
             {user && <Nav.Link href="/profile">Profile</Nav.Link>}
           </Nav>
           <Nav>
