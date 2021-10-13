@@ -16,11 +16,11 @@ export default function Login() {
     return (
 
     <Container id="login-container">
-        <br />
         <h1>SBRideShare Login Page!</h1>
+        <p>This splashpage is for the MVP</p>
         <TextWrapper>
-        It will look a lot better once I style it
         </TextWrapper>
+        <br />
         <div id="login-button" />
     </Container>
 );
