@@ -1,0 +1,10 @@
+POST http://localhost:9000/testAPI/testCreateRide 
+content-type: application/json
+
+{
+    "location": "Santa Barbara",
+    "name": "John",
+    "price": 1000,
+    "phone": 123456789,
+    "seats_available": 4
+}
