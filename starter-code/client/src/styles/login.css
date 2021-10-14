@@ -1,0 +1,14 @@
+#login-container {
+    background-color: lightblue;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100%;
+    margin-left: 0;
+    text-align: center;
+}
+
+#login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

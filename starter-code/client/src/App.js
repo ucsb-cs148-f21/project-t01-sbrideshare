@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import CheckingSignedIn from "./pages/CheckingSignedIn";
+import Login from "./pages/Login"
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Private from "./pages/Private";
@@ -46,6 +47,7 @@ export default function App() {
     return (
       <BrowserRouter>
         <Switch>
+          {!isSignedIn && (<Route exact path="/" component={Login} />)}
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <Route path="/" component={PageNotFound} />
