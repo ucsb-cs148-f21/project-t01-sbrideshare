@@ -12,7 +12,7 @@ const TextWrapper = styled.div`
 
 export default function Home() {
   const user = getUser();
-  
+
   return (
     <Layout user={user}>
       <Container>
