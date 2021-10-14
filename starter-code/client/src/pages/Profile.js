@@ -15,6 +15,17 @@ const Doggo = styled.img`
 export default function Profile() {
   const user = getUser();
 
+  if(user){
+    if(user.email.substr(-8) !== "ucsb.edu"){
+      return (
+        <Layout user={user}>
+          <Container>
+            <h1>Account Error: please login with your UCSB email!</h1>
+          </Container>
+        </Layout>
+      );
+    }
+  }
   return (
     <Layout user={user}>
       <Container>
