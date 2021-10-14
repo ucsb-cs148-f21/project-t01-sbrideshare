@@ -20,7 +20,7 @@ export default function NavBar(props) {
           </Nav>
           <Nav>
             {!user ? (
-              <div id="login-button" />
+              <div />
             ) : (
               <NavDropdown
                 title={
