@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import ucsbAccount from "../utils/ucsb-account";
 
 export default function NavBar(props) {
   const user = props.user;
@@ -15,8 +16,8 @@ export default function NavBar(props) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            {user && <Nav.Link href="/profile">Profile</Nav.Link>}
-            {user && <Nav.Link href="/ride">Ride</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link href="/profile">Profile</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link href="/ride">Ride</Nav.Link>}
           </Nav>
           <Nav>
             {!user ? (
