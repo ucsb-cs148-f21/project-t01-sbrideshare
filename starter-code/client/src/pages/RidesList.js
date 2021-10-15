@@ -42,7 +42,7 @@ function printList(index){
   return obj;
   
 }
-export default function RideList() {
+export default function RidesList() {
   const user = getUser();
   var list = [];
   for(var i=0;i<10;i++){
