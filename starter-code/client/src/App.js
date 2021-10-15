@@ -40,7 +40,7 @@ export default function App() {
 
   function PrivateRoute(props) {
     const { component, ...rest } = props;
-    return <Route {...rest} component={isSignedIn ? component : Private} />;
+    return <Route {...rest} component={isSignedIn ? component : Login} />;
   }
 
   if (isSignedIn !== null) {
