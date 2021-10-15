@@ -6,6 +6,13 @@ const Rides = require('../models/rides')
 router.get("/", function(req, res, next) {
     res.send("API is working properly");
 });
+/*/attempted backend request
+router.get("/testRides", function(req, res, next){
+    var name = ["Speed Demon", "Turtle", "Grandma", "Joe", "The Fast",
+    "Ben Quadinaros", "A Ghost", "Someone", "Not You", "Google"];
+    res.send(name);
+});
+*/
 
 router.post("/testCreateRide", function(req, res, next) {
     const body = req.body;

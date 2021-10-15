@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import "./square.css"
 
 class ListObject extends Component {
 

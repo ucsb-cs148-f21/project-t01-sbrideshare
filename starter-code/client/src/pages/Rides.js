@@ -1,10 +1,11 @@
 import React from "react";
+import axios from 'axios';
 import styled from "styled-components";
 
 import getUser from "../utils/get-user";
 import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
-import ListObject from "./ListObject";
+import ListObject from "./ride-files/ListObject";
 
 
 const TextWrapper = styled.div`
@@ -14,6 +15,16 @@ const TextWrapper = styled.div`
 
 function printList(index){
   var id = [0,1,2,3,4,5,6,7,8,9];
+  var name;
+  //attempted backend request
+  /*
+  console.log("Hello!");
+  axios.get("http://localhost:9000/testAPI/testRides")
+  .then(function (response) {
+    console.log(response.data);
+    name = response.data;
+  })
+  .catch(function(error) {console.log(error)})*/
   var name = ["Speed Demon", "Turtle", "Grandma", "Joe", "The Fast",
     "Ben Quadinaros", "A Ghost", "Someone", "Not You", "Google"];
   var startLocation = ["Here","UCSB","IV","Santa Barbara","Goleta",
@@ -23,17 +34,12 @@ function printList(index){
   var dayLeave = ["Today","Never","Tomorrow","Sometime","Monday",
     "Yesterday","Future","Now","Soon","idk"];
   var timeLeave = ["14:00","12:00","13:00","5:00","4:00",
-    "3:00","25:00","o'Clock","TM","in a bit"];
+    "3:00","25:00","o'Clock","TM","in a bits"];
   
   var obj = <ListObject 
   id={id[index]} name={name[index]} startLocation={startLocation[index]} 
   endLocation={endLocation[index]} dayLeave={dayLeave[index]} timeLeave={timeLeave[index]}/>
   return obj;
-  /*
-  axios.get(/url)
-  .then(function (response) {
-    //do something with response.data
-  })*/
   
 }
 export default function RideList() {
