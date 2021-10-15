@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-
-import getUser from "../utils/get-user";
-import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
+
+import Layout from "../components/Layout";
+import getUser from "../utils/get-user";
+
+
 
 const TextWrapper = styled.div`
   width: 700px;

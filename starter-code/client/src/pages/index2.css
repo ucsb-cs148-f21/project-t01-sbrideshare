@@ -1,19 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
-body {
-  background: white;
-  display: flex;
-  min-height: 100vh;
-  justify-content: center;
-  align-items: center;
-}
-
-.form-container {
+.form-box {
   width: 360px;
   background-color: white;
   margin: auto;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   padding: 10px;
+  position:relative;
 }
 
 .register-form {
@@ -40,8 +33,6 @@ body {
 
 span {
   font-family: "Roboto", sans-serif;
-  font-size: 14px;
-  color: red;
   margin-bottom: 15px;
 }
 

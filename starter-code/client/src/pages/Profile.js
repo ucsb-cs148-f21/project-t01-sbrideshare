@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
 import DoggoImg from "../images/doggo.jpg";
+import ucsbAccount from "../utils/ucsb-account";
 
 const Doggo = styled.img`
   width: 500px;
@@ -14,6 +15,15 @@ const Doggo = styled.img`
 
 export default function Profile() {
   const user = getUser();
+  if(!ucsbAccount(user)){
+    return (
+      <Layout user={user}>
+        <Container>
+          <h1>Account Error: please login with your UCSB email!</h1>
+        </Container>
+      </Layout>
+    );
+  }
 
   return (
     <Layout user={user}>
