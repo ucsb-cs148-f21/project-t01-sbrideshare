@@ -17,6 +17,7 @@ export default function NavBar(props) {
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/rides">Rides</Nav.Link>
             {user && <Nav.Link href="/profile">Profile</Nav.Link>}
+            {user && <Nav.Link href="/ride">Ride</Nav.Link>}
           </Nav>
           <Nav>
             {!user ? (
