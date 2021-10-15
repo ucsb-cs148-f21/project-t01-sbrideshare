@@ -16,7 +16,10 @@ export default function NavBar(props) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
+
             {ucsbAccount(user) && <Nav.Link href="/profile">Profile</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link href="/ride">Ride</Nav.Link>}
+
           </Nav>
           <Nav>
             {!user ? (

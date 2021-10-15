@@ -5,6 +5,7 @@ import CheckingSignedIn from "./pages/CheckingSignedIn";
 import Login from "./pages/Login"
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import Ride from "./pages/Ride";
 import Private from "./pages/Private";
 import PageNotFound from "./pages/PageNotFound";
 
@@ -41,7 +42,7 @@ export default function App() {
 
   function PrivateRoute(props) {
     const { component, ...rest } = props;
-    return <Route {...rest} component={isSignedIn ? component : Private} />;
+    return <Route {...rest} component={isSignedIn ? component : Login} />;
   }
 
   if (isSignedIn !== null){
@@ -51,6 +52,7 @@ export default function App() {
           {!isSignedIn && (<Route exact path="/" component={Login} />)}
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/ride" component={Ride} />
           <Route path="/" component={PageNotFound} />
         </Switch>
       </BrowserRouter>
