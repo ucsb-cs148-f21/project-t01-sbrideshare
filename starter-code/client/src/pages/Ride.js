@@ -46,7 +46,8 @@ export default function Ride() {
 
   return (
     <Layout user={user}>
-       <div class="form-container">
+      <br />
+       <div class="form-box">
       <form className="register-form" onSubmit={handleSubmit}>
         {submitted && valid? <div className="success-message">Success! Thank you for registering </div> :null}
         <input
@@ -90,7 +91,7 @@ export default function Ride() {
         </button>
       </form>
     </div>
-    
+    <br />
     </Layout>
   );
 }
