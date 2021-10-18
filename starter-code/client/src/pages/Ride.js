@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import './index2.css';
-
+import Container from "react-bootstrap/Container";
 
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
-
+import ucsbAccount from "../utils/ucsb-account"
 
 export default function Ride() {
   const [values, setValues] = useState({
@@ -42,7 +42,15 @@ export default function Ride() {
     }
     setSubmitted(true);
   }
-  
+  if(!ucsbAccount(user)){
+    return (
+      <Layout user={user}>
+        <Container>
+          <h1>Account Error: please login with your UCSB email!</h1>
+        </Container>
+      </Layout>
+    );
+  }
 
   return (
     <Layout user={user}>
