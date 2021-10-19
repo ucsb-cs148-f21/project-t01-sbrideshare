@@ -1,45 +1,32 @@
-import React, {Component} from 'react'
+import React, {useState} from 'react'
 
-class ListObject extends Component {
+export default function ListObject(props) {
+    var rideInfo = props.rideInfo;
+    
+    const [button,buttonChange] = useState({
+        text: "Sign up for this ride!",
+        //state false means ride not joined
+        //state true means ride joined
+        state: false,
+        color: 'green'
+    });
 
-    constructor(props/*id,name,startLocation,endLocation,dayLeave,timeLeave*/){
-        super()
-        this.state = {
-            id: props.id,
-            name: props.name,
-            startLocation: props.startLocation,
-            endLocation: props.endLocation,
-            dayLeave: props.dayLeave,
-            timeLeave: props.timeLeave,
-            buttonText: "Hello there!"
+    const buttonClick = (event) =>{
+        if(button.state == false){
+            buttonChange({...button, text: "You signed up!",
+            state: true,
+            color: 'blue'})
         }
     }
 
-    buttonFnc() {
-        if(this.state.buttonText === "Hello there!"){
-            this.setState({
-                buttonText: "General Kenobi!"
-            })
-        }
-        else{
-            this.setState({
-                buttonText: "Hello there!"
-            })
-        }
-    }
-
-    render() {
-        return (
-            // className="square"
-            <div>
-                <p>Name: {this.state.name}</p>
-                <p>Start Location: {this.state.startLocation}</p>
-                <p>Leaving: {this.state.dayLeave}, {this.state.timeLeave}</p>
-                <p>Destination: {this.state.endLocation}</p>
-                <button onClick={() => this.buttonFnc()}>{this.state.buttonText}</button>
-                <hr/>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <p>Name: {rideInfo.name}</p>
+            <p>Start Location: {rideInfo.startLocation}</p>
+            <p>Leaving: {rideInfo.dayLeave}, {rideInfo.timeLeave}</p>
+            <p>Destination: {rideInfo.endLocation}</p>
+            <button  style={{backgroundColor: button.color}} onClick={() => buttonClick()}>{button.text}</button>
+            <hr/>
+        </div>
+    );
 }
-export default ListObject;
