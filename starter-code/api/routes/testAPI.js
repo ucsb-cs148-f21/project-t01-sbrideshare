@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-//const Rides = require('../models/rides')
+const Rides = require('../models/rides')
 const TestRides = require('../models/rides')
 
 router.get("/", function(req, res, next) {
