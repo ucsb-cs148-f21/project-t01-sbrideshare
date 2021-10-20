@@ -1,0 +1,11 @@
+POST http://localhost:9000/rides
+content-type: application/json
+
+{
+    "name": "John",
+    "leave_datetime": "2021-10-12T00:07:46.443+00:00",
+    "start_location": "Santa Barbara",
+    "end_location": "Los Angeles",
+    "price": 1000,
+    "seats_available": 1.2
+}
