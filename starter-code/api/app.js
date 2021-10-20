@@ -5,12 +5,36 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+var mongoose = require("mongoose");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
 
+var ridesRouter = require("./routes/rides");
+
 var app = express();
+
+const connect = async() => {
+    var url = ""
+    if(process.env.NODE_ENV == "dev") {
+        url = process.env.MONGODB_URI
+    }
+    else if (process.env.NODE_ENV == "test") {
+        url = process.env.MONGODB_URI_TEST
+    }
+
+    console.log("connecting to " + url)
+    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
+    .then(result => {
+      console.log('connected to MongoDB')
+      app.emit("mongoConnected")
+    })
+    .catch((error) => {
+      console.log('error connecting to MongoDB:', error.message)
+    })
+    return mongoose.connection
+}
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -26,6 +50,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
+
+app.use("/rides", ridesRouter);
+
+const connection = connect();
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
