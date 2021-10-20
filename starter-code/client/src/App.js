@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import CheckingSignedIn from "./pages/CheckingSignedIn";
 import Login from "./pages/Login"
 import Home from "./pages/Home";
+import RidesList from "./pages/RidesList";
 import Profile from "./pages/Profile";
 import Ride from "./pages/Ride";
 import Private from "./pages/Private";
@@ -51,6 +52,7 @@ export default function App() {
         <Switch>
           {!isSignedIn && (<Route exact path="/" component={Login} />)}
           <Route exact path="/" component={Home} />
+          <PrivateRoute exact path="/rides" component={RidesList} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/ride" component={Ride} />
           <Route path="/" component={PageNotFound} />
