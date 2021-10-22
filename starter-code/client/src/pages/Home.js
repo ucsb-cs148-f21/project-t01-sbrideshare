@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Container from "react-bootstrap/Container";
+import axios from 'axios';
 
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
@@ -14,6 +15,13 @@ const TextWrapper = styled.div`
 
 export default function Home() {
   const user = getUser();
+
+  useEffect(() => {
+    axios.put("http://localhost:9000/users/createUser", user)
+    .then(() => console.log('User Created'))
+    .catch(function(error) {console.log(error)})
+  },[]);
+
   return (
     <Layout user={user}>
       <Container>
