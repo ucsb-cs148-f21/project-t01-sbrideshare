@@ -17,11 +17,14 @@ var app = express();
 
 const connect = async() => {
     var url = ""
-    if(process.env.NODE_ENV == "dev") {
-        url = process.env.MONGODB_URI
-    }
-    else if (process.env.NODE_ENV == "test") {
+    if (process.env.NODE_ENV == "test") {
         url = process.env.MONGODB_URI_TEST
+    }
+    else if (process.env.NODE_ENV == "dev"){
+        url = process.env.MONGODB_URI_DEV
+    }
+    else if (process.env.NODE_ENV == "production") {
+        url = process.env.MONGODB_URI
     }
 
     console.log("connecting to " + url)
