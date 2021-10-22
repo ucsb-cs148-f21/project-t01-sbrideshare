@@ -2,6 +2,10 @@ import React, {useState} from 'react'
 
 export default function ListObject(props) {
     var rideInfo = props.rideInfo;
+
+    const [seats,decrement] = useState({
+        numSeats: rideInfo.numSeats
+    });
     
     const [button,buttonChange] = useState({
         text: "Sign up for this ride!",
@@ -16,15 +20,16 @@ export default function ListObject(props) {
             buttonChange({...button, text: "You signed up!",
             state: true,
             color: 'blue'})
+            decrement({...seats, 
+            numSeats: seats.numSeats-1})
         }
     }
 
     return (
         <div>
-            <p>Name: {rideInfo.name}</p>
-            <p>Start Location: {rideInfo.startLocation}</p>
+            <h4>{rideInfo.startLocation} -> {rideInfo.endLocation}</h4>
             <p>Leaving: {rideInfo.dayLeave}, {rideInfo.timeLeave}</p>
-            <p>Destination: {rideInfo.endLocation}</p>
+            <p>Seats Available: {seats.numSeats}</p>
             <button  style={{backgroundColor: button.color}} onClick={() => buttonClick()}>{button.text}</button>
             <hr/>
         </div>

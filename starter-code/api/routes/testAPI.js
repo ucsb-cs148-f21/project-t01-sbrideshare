@@ -19,7 +19,8 @@ router.get("/testRides", function(req, res, next){
     var dayLeave = ["Today","Never","Tomorrow","Sometime","Monday",
         "Yesterday","Future","Now","Soon","idk"];
     var timeLeave = ["14:00","12:00","13:00","5:00","4:00",
-        "3:00","25:00","o'Clock","TM","in a bits"];
+        "3:00","25:00","o'Clock","TM","in a bit"];
+    var numSeats = [4,4,4,4,4,4,4,4,4,4]
     var list = [];
     for(var i=0;i<10;i++){
         var tempRide = new TestRides(
@@ -29,7 +30,8 @@ router.get("/testRides", function(req, res, next){
                 startLocation: startLocation[i],
                 endLocation: endLocation[i],
                 dayLeave: dayLeave[i],
-                timeLeave: timeLeave[i]
+                timeLeave: timeLeave[i],
+                numSeats: numSeats[i]
             }
         )
         list[i]=[tempRide];

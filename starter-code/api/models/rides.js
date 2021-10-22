@@ -22,12 +22,13 @@ const rideSchema = new mongoose.Schema({
 })
 
 const testRide = new mongoose.Schema({
-    id: String,
+    id: Number,
     name: String,
     startLocation: String,
     endLocation: String,
     dayLeave: String,
-    timeLeave: String
+    timeLeave: String,
+    numSeats: Number
 })
 
 module.exports = mongoose.model('Rides', rideSchema)
