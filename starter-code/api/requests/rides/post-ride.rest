@@ -7,6 +7,6 @@ content-type: application/json
     "start_location": "Santa Barbara",
     "end_location": "Los Angeles",
     "price": 1000,
-    "seats_available": 1,
+    "seats_available": 2,
     "driver_id": 123
 }

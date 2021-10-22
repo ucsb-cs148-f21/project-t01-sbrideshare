@@ -16,10 +16,6 @@ export default function RidesList() {
   const [list, makeList] = React.useState("Unable to connect to the server.");
 
   var baseURL = getBackendURL()+"/rides";
-
-  console.log(baseURL);
-
-
   useEffect(() => {
     axios.get(baseURL)
     .then(function (response) {
