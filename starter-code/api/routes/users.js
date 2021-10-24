@@ -1,26 +1,25 @@
 var express = require('express');
 var router = express.Router();
-var ObjectId = require('mongoose').Types.ObjectId;
+//var ObjectId = require('mongoose').Types.ObjectId;
 
 const Users = require('../models/users');
 
 router.get("/", function(req, res, next) {
   const body = req.body;
-
   Users.find({}, (err, users) => {
       return res.status(200).json(users).end();
   })
 
 });
 
-router.put("/createUser",    
+router.post("/",    
     function(req, res, next) {
         const body = req.body;
         Users.create({
-            _id: body.email,
-            fullName: body.fullName,
-            givenName: body.givenName,
-            familyName: body.familyName,
+            _id: body.id,
+            full_name: body.fullName,
+            given_name: body.givenName,
+            family_name: body.familyName,
             email: body.email,
             drives: [],
             rides: [],

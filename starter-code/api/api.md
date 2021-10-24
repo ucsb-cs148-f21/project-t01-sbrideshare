@@ -82,3 +82,64 @@ Returns HTTP 200 Success if successfully added to array.
 * 409 Conflict
     * The `rider_id` is already in the `rider` array
     * There are no more available seats for the ride
+
+--------
+# POST /users
+
+Submits a user with the specified data.
+
+## Request
+
+```
+{
+    "_id": $Number, //Required. 
+    "full_name": $String, //Required.
+    "given_name": $String, //Required.
+    "family_name": $String, //Required.
+    "email": $String, //Required.
+    "drives": $Array, //Required.
+    "rides": $Array, //Required.
+    "history": $Array, //Required.
+}
+```
+
+## Response
+
+Returns a HTTP 200 Success if submitted.
+Returns "User already in database" if duplicate user.
+
+## Errors
+
+* 400 Bad Request
+    * Something is wrong with the input request
+* 500 Internal Server Error
+    * The server could not save the request to MongoDB
+
+--------
+# GET /rides
+
+Retrieves an array of all rides. Note: Future implementation will allow search queries
+
+## Request
+```
+{
+    //empty object or no object
+}
+```
+
+## Response
+```
+[
+    {   
+        "_id": $Number,  
+        "full_name": $String,
+        "given_name": $String,
+        "family_name": $String,
+        "email": $String,
+        "drives": $Array,
+        "rides": $Array,
+        "history": $Array,
+    }
+    ...
+]
+```

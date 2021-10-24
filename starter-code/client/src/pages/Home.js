@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
-
+import getBackendURL from "../utils/get-backend-url";
 
 
 const TextWrapper = styled.div`
@@ -15,9 +15,9 @@ const TextWrapper = styled.div`
 
 export default function Home() {
   const user = getUser();
-
+  var baseURL = getBackendURL()+"/users";
   useEffect(() => {
-    axios.put("http://localhost:9000/users/createUser", user)
+    axios.post(baseURL, user)
     .then(() => console.log('User Created'))
     .catch(function(error) {console.log(error)})
   },[]);
