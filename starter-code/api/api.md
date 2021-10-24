@@ -131,7 +131,7 @@ Retrieves an array of all rides. Note: Future implementation will allow search q
 ```
 [
     {   
-        "_id": $Number,  
+        "_id": $Double,  
         "full_name": $String,
         "given_name": $String,
         "family_name": $String,
