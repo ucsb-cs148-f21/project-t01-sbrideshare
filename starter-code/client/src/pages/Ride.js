@@ -6,6 +6,7 @@ import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
 import ucsbAccount from "../utils/ucsb-account"
 import axios from "axios";
+import getBackendURL from "../utils/get-backend-url";
 
 export default function Ride() {
   const [values, setValues] = useState({
@@ -166,7 +167,7 @@ export default function Ride() {
     if(isError === false) {
       setValid(true);
       setSubmitted(true);
-      axios.post('http://localhost:9000/rides', values).then(response =>{
+      axios.post(getBackendURL()+"/rides", values).then(response =>{
         console.log(response.data)
         setHasErrors(false);
         setSubmitted(true);
