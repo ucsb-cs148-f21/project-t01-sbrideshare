@@ -31,3 +31,8 @@ A plan for each member to get familiarized with the tech that will be used.
  - Louie: Youtube and read documentation for React (week 3), and learn about Github (week 4)
  - Lucien: Look at code and read documentation for MongoDB (week 3), and React frontend libraries (week 4)
  - Robert: Watch tutorials to learn more about working with Express and React (week 3 and 4)
+
+ ## Articles Posted
+ - Louie 10-20-21 commented on Node.js app from Scratch Video
+ - Lucien 10-21-21 posted tutorial on backend testing
+ - Robert 10-22-21 commented on CSS tutorial
