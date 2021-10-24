@@ -28,3 +28,11 @@ What advice would you give to the next person leading a retro
   based on what you learned today?
 * Based on what I learned today, I think that the Start/Stop/Continue template works well with the Trello board, and is an effective way to 
 run a retrospective. However, it would also be interesting to see another format for the next retrospective.
+
+## Outcomes
+
+* After our retrospective, every time one of us makes a pull request to merge with the master branch, we are always diligent about communicating about it on 
+Slack and requesting others to review it. As a result, we no longer have many issues with our master branch because of careful review. Pull requests we have made and closed can be viewed here: https://github.com/ucsb-cs148-f21/project-t01-sbrideshare/pulls?q=is%3Apr+is%3Aclosed
+
+
+* We also made a private channel for our team, which we use to post sensitive data like the GoogleOAuth client ID, API and private keys, etc. This way it is not available to the public throiugh our public channel.

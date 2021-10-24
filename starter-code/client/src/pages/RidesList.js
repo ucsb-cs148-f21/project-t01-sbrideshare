@@ -6,14 +6,18 @@ import getUser from "../utils/get-user";
 import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
 import List from "./ride-files/List";
+import getBackendURL from "../utils/get-backend-url";
+
+
 
 export default function RidesList() {
   const user = getUser();
   
   const [list, makeList] = React.useState("Unable to connect to the server.");
 
+  var baseURL = getBackendURL()+"/rides";
   useEffect(() => {
-    axios.get("http://localhost:9000/testAPI/testRides")
+    axios.get(baseURL)
     .then(function (response) {
       makeList(<List rideInfo={response.data}/>);
     })
