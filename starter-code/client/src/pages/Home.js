@@ -6,11 +6,17 @@ import axios from 'axios';
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
 import getBackendURL from "../utils/get-backend-url";
-
+import CarImg from "../images/home_pic.png"
 
 const TextWrapper = styled.div`
   width: 700px;
   max-width: 100%;
+`;
+
+const Car = styled.img`
+  width: 500px;
+  max-width: 100%;
+  height: AudioTrack;
 `;
 
 export default function Home() {
@@ -25,22 +31,25 @@ export default function Home() {
   return (
     <Layout user={user}>
       <Container>
-        <h1>Hello! This is the Home page!</h1>
+        <h1>Welcome to SB RideShare!</h1>
+        <h5>A web application designed for UCSB students on the go.</h5>
+        <hr />
         <TextWrapper>
-          This project was built in React, specically in Create React App (the
-          officially supported version of React developed by Facebook). This
-          starter code will focus on setting up Google Authentication and
-          demonstrating examples of public and private pages. Notice that the{" "}
-          <a href="/profile">Profile</a> page is not located in the NavBar until
-          you login.
+          Users can either browse current rides and join them as passengers,
+          or post one of their own rides as drivers that they are willing to take passengers for.
         </TextWrapper>
         <br />
         <TextWrapper>
-          This Home page is a public page, meaning that users can view this page
-          without logging in. The Profile page is a private page, meaning that
-          users have to login.
+          To search for available rides, go to the <a href="/Rides">Find A Ride</a> page.
         </TextWrapper>
         <br />
+        <TextWrapper>
+          To post your own ride, go to the <a href="/Ride">Create A Ride</a> page.
+        </TextWrapper>
+        <br />
+        <TextWrapper>
+          Happy carpooling!
+        </TextWrapper>
       </Container>
     </Layout>
   );

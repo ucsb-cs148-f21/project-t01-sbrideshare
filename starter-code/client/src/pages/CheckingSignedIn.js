@@ -19,7 +19,7 @@ export default function CheckingSignedIn() {
     <>
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="/">ReactGoogleAuthStarter</Navbar.Brand>
+          <Navbar.Brand href="/">SB RideShare</Navbar.Brand>
         </Container>
       </Navbar>
       <CheckingSignedInWrapper>

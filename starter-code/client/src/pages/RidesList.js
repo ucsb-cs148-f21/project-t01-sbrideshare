@@ -13,7 +13,7 @@ import getBackendURL from "../utils/get-backend-url";
 export default function RidesList() {
   const user = getUser();
   
-  const [list, makeList] = React.useState("Unable to connect to the server.");
+  const [list, makeList] = React.useState("Attempting to connect to the server...");
 
   var baseURL = getBackendURL()+"/rides";
   useEffect(() => {
@@ -30,6 +30,7 @@ export default function RidesList() {
       <Container>
         <h1>Rides</h1>
         <br />
+        To join a ride, select the green sign-up button.
         <hr/>
         {list}
 
