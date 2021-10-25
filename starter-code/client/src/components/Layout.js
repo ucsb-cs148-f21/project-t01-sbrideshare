@@ -8,7 +8,7 @@ export default function Layout(props) {
     <div>
       <NavBar user={user} />
       {props.children}
-      <Footer />
+
     </div>
   );
 }

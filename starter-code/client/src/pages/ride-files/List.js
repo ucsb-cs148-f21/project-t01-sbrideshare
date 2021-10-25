@@ -5,7 +5,8 @@ import ListObject from "./ListObject";
 export default function List(props) {
     var rideInfo = props.rideInfo;
     var list=[];
-    if(rideInfo.length == 0){
+    //if there are no rides, tell the user that
+    if(rideInfo.length === 0){
         list = "No rides are available. :("
     }
     for(var i=0;i<rideInfo.length;i++){

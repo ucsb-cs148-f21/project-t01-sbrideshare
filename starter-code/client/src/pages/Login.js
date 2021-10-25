@@ -16,8 +16,8 @@ export default function Login() {
     return (
 
     <Container id="login-container">
-        <h1>SBRideShare Login Page!</h1>
-        <p>This splashpage is for the MVP</p>
+        <h1>SB RideShare</h1>
+        <p>To continue, please sign in with a valid "ucsb.edu" email.</p>
         <TextWrapper>
         </TextWrapper>
         <br />
