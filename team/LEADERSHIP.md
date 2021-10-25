@@ -11,3 +11,4 @@
 | Mon 10/18 | Lucien Luc        | Will lead sprint planning                                                  |
 | Wed 10/20 | Chris Stasiowski  | Will lead scrum meeting                                                    |
 | Fri 10/22 | Louie Aldana      | Will lead scrum meeting                                                    |
+| Mon 10/25 | Heather Dinh      | Will lead scrum meeting                                                    |
