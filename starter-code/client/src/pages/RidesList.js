@@ -13,7 +13,7 @@ import getBackendURL from "../utils/get-backend-url";
 export default function RidesList() {
   const user = getUser();
   
-  const [list, makeList] = React.useState("Unable to connect to the server.");
+  const [list, makeList] = React.useState("Attempting to connect to the server...");
 
   var baseURL = getBackendURL()+"/rides";
   useEffect(() => {
