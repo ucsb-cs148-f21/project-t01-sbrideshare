@@ -6,8 +6,7 @@ import axios from 'axios';
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
 import getBackendURL from "../utils/get-backend-url";
-import CarImg from "../images/home_pic.png"
-
+import CarImg from "../images/home_pic.png";
 
 const TextWrapper = styled.div`
   width: 700px;
