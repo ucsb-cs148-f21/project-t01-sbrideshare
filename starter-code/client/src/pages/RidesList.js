@@ -30,6 +30,7 @@ export default function RidesList() {
       <Container>
         <h1>Rides</h1>
         <br />
+        To join a ride, select the green sign-up button.
         <hr/>
         {list}
 

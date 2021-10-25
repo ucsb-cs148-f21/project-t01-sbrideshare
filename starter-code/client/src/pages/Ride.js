@@ -54,6 +54,13 @@ export default function Ride() {
 
   return (
     <Layout user={user}>
+      <Container>
+        <h1>Create A Ride</h1>
+        To make a personal drive available for passengers, please fill out the form below.
+        This will allow users to sign up for your ride!
+        <hr />
+      </Container>
+
       <br />
        <div class="form-box">
       <form className="register-form" onSubmit={handleSubmit}>
