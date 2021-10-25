@@ -11,14 +11,13 @@ export default function NavBar(props) {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="/">ReactGoogleAuthStarter</Navbar.Brand>
+        <Navbar.Brand href="/">SB RideShare</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
             {ucsbAccount(user) && <Nav.Link href="/rides">Find A Ride</Nav.Link>}
-            {ucsbAccount(user) && <Nav.Link href="/profile">Profile</Nav.Link>}
-            {ucsbAccount(user) && <Nav.Link href="/ride">Ride</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link href="/ride">Create A Ride</Nav.Link>}
           </Nav>
           <Nav>
             {!user ? (
