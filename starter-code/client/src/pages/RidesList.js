@@ -29,7 +29,6 @@ export default function RidesList() {
     <Layout user={user}>
       <Container>
         <h1>Rides</h1>
-        <br />
         To join a ride, select the green sign-up button.
         <hr/>
         {list}

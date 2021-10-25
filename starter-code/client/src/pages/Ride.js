@@ -9,6 +9,10 @@ import axios from "axios";
 import getBackendURL from "../utils/get-backend-url";
 
 export default function Ride() {
+
+  const google_user = getUser()
+  const user_id = google_user.id
+
   const [values, setValues] = useState({
     name:"",
     leave_datetime: "",
@@ -16,7 +20,7 @@ export default function Ride() {
     end_location:"",
     price: "",
     seats_available: "",
-    driver_id:"",
+    driver_id: user_id,
   });
   const [submitted, setSubmitted] = useState(false);
   const [valid, setValid] = useState(false);
@@ -41,9 +45,6 @@ export default function Ride() {
   }
   const handleSeats_AvailableInputChange = (event) =>{
     setValues({...values, seats_available: event.target.value})
-  }
-  const handleDriver_IdInputChange = (event) =>{
-    setValues({...values, driver_id: event.target.value})
   }
 
   const handleSubmit = (event) => {
@@ -137,24 +138,6 @@ export default function Ride() {
             isValid = false;
             errors["price"] =  "Please enter value in the format 00.00.";
           }
-
-      case keys.includes('driver_id'):
-
-          // 36 Characters in length 
-          // 1fe35579-5ce7-46ec-89e0-7e7236700297
-
-        if(values.driver_id === "") {
-          isValid = false;
-          errors["driver_id"] =  "This is a required field.";
-        } else if(values.driver_id.length < 36 || values.driver_id.length > 36) {
-          isValid = false;
-          errors["driver_id"] =  "Please enter correct UUID Driver ID."
-        } else {
-          isValid = true;
-          errors["driver_id"] =  ""
-        }
-        default:
-            console.log('Invalid');
     }
 
     setErrorMsgs(errors);
@@ -253,13 +236,6 @@ export default function Ride() {
           placeholder="Seats Available"
           name="seats_available" />
           {errorMsgs.seats_available && <p>{errorMsgs.seats_available}</p>} 
-        <input
-          onChange={handleDriver_IdInputChange}
-          value={values.driver_id}
-          className="form-field"
-          placeholder="Driver ID"
-          name="driver_id" />
-          {errorMsgs.driver_id && <p>{errorMsgs.driver_id}</p>} 
         <button className="form-field" type="submit">
           Submit
         </button>
