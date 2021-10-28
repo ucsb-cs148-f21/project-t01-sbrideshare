@@ -468,6 +468,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
     .then(res => {
       const body = res.body[0]
       assert(body.riders.indexOf(rider_id) === -1)
+      assert(body.seats_available === 2)
     })
     .then(res => {
       done();
