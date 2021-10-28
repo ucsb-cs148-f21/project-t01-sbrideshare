@@ -220,31 +220,23 @@ describe("POST /rides", function() {
   });
 });
 
-describe("Test add rider validation", function() {
+describe("POST /rides/:ride_id/riders", function() {
 
-  after(function(done) {
+  afterEach(function(done) {
     mongoose.connection.db.dropDatabase().then(res => {
       done();
     })
   });
 
-  const data = {
-    name: "Will",
-    leave_datetime: "2021-10-12T00:07:46.443+00:00",
-    start_location: "Santa Barbara",
-    end_location: "Los Angeles",
-    price: 1000.23,
-    seats_available: 2,
-    driver_id: 123
-  }
-
   it("400 on missing rider_id", function(done){
-      request(app)
-      .post('/rides/1234/riders')
-      .set('Accept', 'application/json')
-      .expect(400)
-      .then(done())
-      .catch(err => done(err))
+    request(app)
+    .post('/rides/1234/riders')
+    .set('Accept', 'application/json')
+    .expect(400)
+    .then(res => {
+      done()
+    })
+    .catch(err => done(err))
   });
 
   it("404 on unknown ride _id", function(done){
@@ -253,17 +245,10 @@ describe("Test add rider validation", function() {
     .send({rider_id: 877})
     .set('Accept', 'application/json')
     .expect(404)
-    .then(done())
-    .catch(err => done(err))
-  });
-});
-
-describe("POST /rides/:ride_id/riders", function() {
-
-  afterEach(function(done) {
-    mongoose.connection.db.dropDatabase().then(res => {
-      done();
+    .then(res=> {
+      done()
     })
+    .catch(err => done(err))
   });
 
   const data = {
@@ -391,6 +376,104 @@ describe("POST /rides/:ride_id/riders", function() {
       done();
     })
     .catch(err => done(err))
+  });
+
+});
+
+describe("DELETE /rides/:ride_id/riders", function() {
+
+  afterEach(function(done) {
+    mongoose.connection.db.dropDatabase().then(res => {
+      done();
+    })
+  });
+
+  it("404 on unknown ride_id", function(done){
+    const invalid_ride_id = 21348
+
+    request(app)
+          .delete(`/rides/${invalid_ride_id}/riders`)
+          .send({rider_id: 1234})
+          .set('Accept', 'application/json')
+          .expect(404)
+    .then(res => {
+      done();
+    })
+  })
+
+  it("400 on missing rider_id", function(done){
+    request(app)
+    .delete('/rides/1234/riders')
+    .set('Accept', 'application/json')
+    .expect(400)
+    .then(done())
+    .catch(err => done(err))
+  });
+
+  it("test invalid and valid delete", function(done){
+
+    const data = {
+      name: "Will",
+      leave_datetime: "2021-10-12T00:07:46.443+00:00",
+      start_location: "Santa Barbara",
+      end_location: "Los Angeles",
+      price: 1000.23,
+      seats_available: 2,
+      driver_id: 123
+    }
+    var id = "";
+    const rider_id = 2134871290;
+
+    request(app)
+        .post("/rides")
+        .send(data)
+        .set('Accept', 'application/json')
+        .expect(200)
+    .then(res => {
+      return request(app)
+          .get("/rides")
+          .set('Accept', 'application/json')
+          .expect(200)
+    })
+    // Fail on rider not part of rider array
+    .then(res => {
+      const body = res.body[0];
+      id = body._id;
+      return request(app)
+          .delete(`/rides/${id}/riders`)
+          .send({rider_id: rider_id})
+          .set('Accept', 'application/json')
+          .expect(409)
+    })
+    .then(res => {
+      return request(app)
+        .post(`/rides/${id}/riders`)
+        .send({rider_id: rider_id})
+        .set('Accept', 'application/json')
+        .expect(200)
+    })
+    .then(res => {
+      return request(app)
+          .delete(`/rides/${id}/riders`)
+          .send({rider_id: rider_id})
+          .set('Accept', 'application/json')
+          .expect(200)
+    })
+    .then(res => {
+      return request(app)
+          .get("/rides")
+          .set('Accept', 'application/json')
+          .expect(200)
+    })
+    .then(res => {
+      const body = res.body[0]
+      assert(body.riders.indexOf(rider_id) === -1)
+    })
+    .then(res => {
+      done();
+    })
+    .catch(err => done(err))
+
   });
 
 });
