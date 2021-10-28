@@ -75,7 +75,7 @@ router.post("/:ride_id/riders",
     body("rider_id")
         .exists().withMessage('rider_id is required.').bail()
         .notEmpty().withMessage('rider_id is required.').bail(),
-        function(req, res, next) {
+    function(req, res, next) {
 
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -127,8 +127,8 @@ router.post("/:ride_id/riders",
 
 router.delete("/:ride_id/riders",
     body("rider_id")
-    .exists().withMessage('rider_id is required.').bail()
-    .notEmpty().withMessage('rider_id is required.').bail(),
+        .exists().withMessage('rider_id is required.').bail()
+        .notEmpty().withMessage('rider_id is required.').bail(),
     function(req, res, next) {
 
         const errors = validationResult(req);
