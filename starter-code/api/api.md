@@ -84,62 +84,27 @@ Returns HTTP 200 Success if successfully added to array.
     * There are no more available seats for the ride
 
 --------
-# POST /users
+# DELETE /rides/:ride_id/riders
 
-Submits a user with the specified data.
+Removes the rider with `rider_id` from the `riders` array of the ride of the specifed `:ride_id`.
 
 ## Request
 
 ```
 {
-    "_id": $Number, //Required. 
-    "full_name": $String, //Required.
-    "given_name": $String, //Required.
-    "family_name": $String, //Required.
-    "email": $String, //Required.
-    "drives": $Array, //Required.
-    "rides": $Array, //Required.
-    "history": $Array, //Required.
+    "rider_id": $UUID, //Required. 
 }
 ```
 
 ## Response
 
-Returns a HTTP 200 Success if submitted.
-Returns "User already in database" if duplicate user.
+Returns HTTP 200 Success if successfully removed from array.
 
 ## Errors
 
 * 400 Bad Request
     * Something is wrong with the input request
-* 500 Internal Server Error
-    * The server could not save the request to MongoDB
-
---------
-# GET /rides
-
-Retrieves an array of all rides. Note: Future implementation will allow search queries
-
-## Request
-```
-{
-    //empty object or no object
-}
-```
-
-## Response
-```
-[
-    {   
-        "_id": $Double,  
-        "full_name": $String,
-        "given_name": $String,
-        "family_name": $String,
-        "email": $String,
-        "drives": $Array,
-        "rides": $Array,
-        "history": $Array,
-    }
-    ...
-]
-```
+* 404 Not Found
+    * `:ride_id` is invalid or does not exist
+* 409 Conflict
+    * The `rider_id` is not in the `rider` array
