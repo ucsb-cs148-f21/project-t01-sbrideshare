@@ -82,3 +82,29 @@ Returns HTTP 200 Success if successfully added to array.
 * 409 Conflict
     * The `rider_id` is already in the `rider` array
     * There are no more available seats for the ride
+
+--------
+# DELETE /rides/:ride_id/riders
+
+Removes the rider with `rider_id` from the `riders` array of the ride of the specifed `:ride_id`.
+
+## Request
+
+```
+{
+    "rider_id": $UUID, //Required. 
+}
+```
+
+## Response
+
+Returns HTTP 200 Success if successfully removed from array.
+
+## Errors
+
+* 400 Bad Request
+    * Something is wrong with the input request
+* 404 Not Found
+    * `:ride_id` is invalid or does not exist
+* 409 Conflict
+    * The `rider_id` is not in the `rider` array

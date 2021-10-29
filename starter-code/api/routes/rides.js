@@ -75,7 +75,7 @@ router.post("/:ride_id/riders",
     body("rider_id")
         .exists().withMessage('rider_id is required.').bail()
         .notEmpty().withMessage('rider_id is required.').bail(),
-        function(req, res, next) {
+    function(req, res, next) {
 
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -123,6 +123,57 @@ router.post("/:ride_id/riders",
 
             })
         }
+);
+
+router.delete("/:ride_id/riders",
+    body("rider_id")
+        .exists().withMessage('rider_id is required.').bail()
+        .notEmpty().withMessage('rider_id is required.').bail(),
+    function(req, res, next) {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+
+        const body = req.body;
+        var ride_id = "";
+        try {
+            ride_id = ObjectId(req.params.ride_id);
+        }
+        catch {
+            return res.status(404).send("Unable to find ride with specified ride_id.").end()
+        }
+
+        Rides.findOne({"_id": ride_id}, (err, ride) => {
+            if (err) {
+                return res.status(500).end();
+            }
+
+            if (ride === null) {
+                return res.status(404).send("Unable to find ride with specified ride_id.").end();
+            }
+
+            const index = ride.riders.indexOf(body.rider_id)
+
+            if (index == -1) {
+                return res.status(409).send("rider_id is not a rider on this ride.").end();
+            }
+
+            ride.riders.splice(index, 1)
+            ride.seats_available += 1
+
+            ride.save(err => {
+                if (err){
+                    console.log(err);
+                    return res.status(500).end();
+                }
+                return res.status(200).end();
+            })
+
+        })
+
+    }
 );
 
 module.exports = router;
