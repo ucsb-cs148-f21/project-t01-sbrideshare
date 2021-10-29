@@ -108,3 +108,64 @@ Returns HTTP 200 Success if successfully removed from array.
     * `:ride_id` is invalid or does not exist
 * 409 Conflict
     * The `rider_id` is not in the `rider` array
+
+--------
+
+# POST /users
+
+Submits a user with the specified data.
+
+## Request
+
+```
+{
+    "full_name": $String, //Required. 
+    "given_name": $String, //Required.
+    "family_name": $String, //Required.
+    "email": $String, //Required.
+    "drives": $Array, //Required
+    "rides": $Array, //Required.
+    "history": $Array //Required. 
+}
+```
+
+## Response
+
+Returns a HTTP 200 Success if submitted.
+
+## Errors
+
+* 400 Bad Request
+    * Something is wrong with the input request
+* 500 Internal Server Error
+    * The server could not save the request to MongoDB
+
+--------
+# GET /users
+
+Retrieves an array of all users.
+
+## Request
+```
+{
+    //empty object or no object
+}
+```
+
+## Response
+```
+[
+    {   
+        "full_name": $String, 
+        "given_name": $String,
+        "family_name": $String,
+        "email": $String,
+        "drives": $Array,
+        "rides": $Array,
+        "history": $Array 
+    }
+    ...
+]
+```
+
+--------
