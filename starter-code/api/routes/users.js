@@ -42,7 +42,7 @@ router.post("/",
             }
 
             if (!errors.isEmpty() || exists) {
-                return res.status(400).end();
+                return res.status(400).json({errors: errors.array()});
             }    
 
             Users.create({
