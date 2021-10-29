@@ -1,0 +1,12 @@
+POST http://localhost:9000/users
+content-type: application/json
+
+{
+    "full_name": "Joe Goldberg",  
+    "given_name": "Joe", 
+    "family_name": "Goldberg", 
+    "email": "joegoldberg@ucsb.edu", 
+    "drives": [], 
+    "rides": [],
+    "history": []
+}

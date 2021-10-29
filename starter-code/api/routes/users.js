@@ -23,41 +23,48 @@ router.post("/",
     body("family_name")
         .exists().withMessage('family_name is required.').bail()
         .notEmpty().withMessage('family_name is required.').bail(), 
-    body("_id")
-        .exists().withMessage('_id is required.').bail()
-        .notEmpty().withMessage('_id is required.').bail(), 
     body("email")
         .exists().withMessage('email is required.').bail()
         .notEmpty().withMessage('email is required.').bail(), 
-        
+
     function(req, res, next) {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()});
-        }
-
         const body = req.body;
-        Users.create({
-            _id: body.id,
-            full_name: body.fullName,
-            given_name: body.givenName,
-            family_name: body.familyName,
-            email: body.email,
-            drives: [],
-            rides: [],
-            history: []
-        }).then(user => {
-            user.save(err => {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).end();
-                }
-                return res.status(200).end();
+
+        /*Users.findOne({email: body.email}, (err, user) => {
+            exists = true;
+        });*/
+
+       Users.find({email : body.email}, function (err, docs) {
+            let exists = false;
+            if (docs.length){
+                exists = true;
+            }
+
+            if (!errors.isEmpty() || exists) {
+                return res.status(400).end();
+            }    
+
+            Users.create({
+                full_name: body.full_name,
+                given_name: body.given_name,
+                family_name: body.family_name,
+                email: body.email,
+                drives: [],
+                rides: [],
+                history: []
+            }).then(user => {
+                user.save(err => {
+                    if (err) {
+                        return res.status(500).end();
+                    }
+                    return res.status(200).end();
+                })
+            }).catch((error) => {
+              console.log(error.message);
+              return res.status(409).end();
             })
-        }).catch((error) => {
-          console.log(error.message);
-          return res.status(409).end();
-        })
+        });
     }
 );
 

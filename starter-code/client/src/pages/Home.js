@@ -23,7 +23,13 @@ export default function Home() {
   const user = getUser();
   var baseURL = getBackendURL()+"/users";
   useEffect(() => {
-    axios.post(baseURL, user)
+    const formattedUser = {
+      full_name: user.fullName,
+      given_name: user.givenName,
+      family_name: user.familyName,
+      email: user.email
+    };
+    axios.post(baseURL, formattedUser)
     .then(() => console.log('User Created'))
     .catch(function(error) {console.log(error)})
   },[]);

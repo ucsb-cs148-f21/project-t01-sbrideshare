@@ -40,31 +40,11 @@ describe("POST /users validation", function() {
         done();
       })
     });
-
-    it("400 on missing _id", function(done) {
-        request(app)
-            .post("/users")
-            .send({
-                "full_name": "Joe Goldberg",
-                "given_name": "Joe", 
-                "family_name": "Goldberg",
-                "email": "joegoldber@ucsb.edu", 
-                "drives": [], 
-                "rides": [],
-                "history": [],
-            })
-            .set('Accept', 'application/json')
-            .expect(400)
-            .then(res => {
-            done();
-            })
-        });
   
     it("400 on missing full_name", function(done) {
       request(app)
         .post("/users")
         .send({
-            "_id": "123",
             "given_name": "Joe", 
             "family_name": "Goldberg", 
             "email": "joegoldber@ucsb.edu", 
@@ -83,7 +63,6 @@ describe("POST /users validation", function() {
         request(app)
           .post("/users")
           .send({
-              "_id": "123",
               "full_name": "Joe Goldberg",
               "family_name": "Goldberg", 
               "email": "joegoldber@ucsb.edu", 
@@ -102,7 +81,6 @@ describe("POST /users validation", function() {
     request(app)
         .post("/users")
         .send({
-            "_id": "123",
             "full_name": "Joe Goldberg",
             "given_name": "Joe", 
             "email": "joegoldber@ucsb.edu", 
@@ -121,7 +99,6 @@ describe("POST /users validation", function() {
     request(app)
         .post("/users")
         .send({
-            "_id": "123",
             "full_name": "Joe Goldberg",
             "given_name": "Joe", 
             "family_name": "Goldberg", 
@@ -140,7 +117,6 @@ describe("POST /users validation", function() {
       request(app)
         .post("/users")
         .send({
-          "_id": "123",
           "full_name": "Joe Goldberg",
           "given_name": "Joe", 
           "family_name": "Goldberg", 
@@ -166,26 +142,23 @@ describe("POST /users", function() {
     });
   
     const data = {
-      _id: "123",
       full_name: "Joe Goldberg",  
       given_name: "Joe", 
       family_name: "Goldberg", 
-      email: "joegoldber@ucsb.edu", 
+      email: "joegoldberg@ucsb.edu", 
       drives: [], 
       rides: [],
-      history: [],
-    }
+      history: []
+    };
   
     it("no lost data on post and get", function(done) {
-  
       request(app)
         .post("/users")
         .send({
-          "_id": "123",
-          "full_name": "Joe Goldberg",
+          "full_name": "Joe Goldberg",  
           "given_name": "Joe", 
           "family_name": "Goldberg", 
-          "email": "joegoldberg@ucsb.edu",
+          "email": "joegoldberg@ucsb.edu", 
           "drives": [], 
           "rides": [],
           "history": []
@@ -199,10 +172,7 @@ describe("POST /users", function() {
             .expect(200)
         })
         .then(res => {
-          console.log(body._id);
-          console.log(data._id);
-          const body = res.body[0]
-          assert(body._id === data._id);
+          const body = res.body[0];
           assert(body.full_name === data.full_name);
           assert(body.given_name === data.given_name);
           assert(body.family_name === data.family_name);
@@ -210,11 +180,40 @@ describe("POST /users", function() {
           assert(body.drives.length === 0);
           assert(body.rides.length === 0);
           assert(body.history.length === 0);
+
         })
         .then(res => {
           done();
         })
-        .catch(err => done('User already in database. \n[', error.message, ']\n'))
+        .catch(err => done(err))
     });
+
+    it("400 on duplicate inputs", function(done) {
+      request(app)
+          .post("/users")
+          .send({
+              "full_name": "Joe Goldberg",
+              "given_name": "Joe", 
+              "family_name": "Goldberg", 
+              "email": "joegoldberg@ucsb.edu", 
+              "drives": [], 
+              "rides": [],
+              "history": [],
+          })
+          .send({
+            "full_name": "Joe Goldberg",
+            "given_name": "Joe", 
+            "family_name": "Goldberg", 
+            "email": "joegoldberg@ucsb.edu", 
+            "drives": [], 
+            "rides": [],
+            "history": [],
+        })
+          .set('Accept', 'application/json')
+          .expect(400)
+          .then(res => {
+          done();
+          })
+      });
   });
   
