@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Container from "react-bootstrap/Container";
+import axios from 'axios';
 
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
-import CarImg from "../images/home_pic.png"
-
+import getBackendURL from "../utils/get-backend-url";
+import CarImg from "../images/home_pic.png";
 
 const TextWrapper = styled.div`
   width: 700px;
@@ -20,6 +21,19 @@ const Car = styled.img`
 
 export default function Home() {
   const user = getUser();
+  var baseURL = getBackendURL()+"/users";
+  useEffect(() => {
+    const formattedUser = {
+      full_name: user.fullName,
+      given_name: user.givenName,
+      family_name: user.familyName,
+      email: user.email
+    };
+    axios.post(baseURL, formattedUser)
+    .then(() => console.log('User Created'))
+    .catch(function(error) {console.log(error)})
+  },[]);
+
   return (
     <Layout user={user}>
       <Container>
