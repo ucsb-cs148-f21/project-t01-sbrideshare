@@ -123,9 +123,6 @@ Submits a user with the specified data.
     "given_name": $String, //Required.
     "family_name": $String, //Required.
     "email": $String, //Required.
-    "drives": $Array, //Required
-    "rides": $Array, //Required.
-    "history": $Array //Required. 
 }
 ```
 
