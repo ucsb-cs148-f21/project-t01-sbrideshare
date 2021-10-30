@@ -57,6 +57,31 @@ Retrieves an array of all rides. Note: Future implementation will allow search q
 ```
 
 --------
+# PATCH /rides/:ride_id
+
+Updates an existing ride with new values. Values not specified are kept the same.
+
+## Request
+```
+{
+    "leave_datetime": $String, // In ISO8601 format.
+    "start_location": $String, 
+    "end_location": $String, 
+    "price": $Double, 
+    "seats_available": $Integer
+}
+```
+
+## Response
+Returns HTTP 200 Success if successfully updated. 
+
+* 400 Bad Request
+    * Something is wrong with the input request
+* 404 Not Found
+    * `:ride_id` is invalid or does not exist
+
+
+--------
 # POST /rides/:ride_id/riders
 
 Adds a rider with `rider_id` to the `riders` array of the ride to the specifed `:ride_id`.

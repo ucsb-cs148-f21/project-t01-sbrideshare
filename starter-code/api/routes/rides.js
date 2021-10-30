@@ -9,10 +9,48 @@ const Rides = require('../models/rides')
 router.get("/", function(req, res, next) {
     const body = req.body;
 
+
+
     Rides.find({}, (err, rides) => {
         return res.status(200).json(rides).end();
     })
 
+});
+
+router.patch("/:ride_id", 
+    body("leave_datetime")
+    .isISO8601().withMessage('leave_datetime must be in ISO8601'), 
+    body("price")
+        .isFloat({min: 0}).withMessage('price must be a positive number.'),
+    // Maybe add check so that you can't remove seats when riders are alrady signed up for them?
+    body("seats_available")
+        .isInt({min: 1}).withMessage('seats_available must be an integer at least 1.'),
+    function(req, res, next) {
+        const body = req.body;
+
+        var ride_id = "";
+        try {
+            ride_id = ObjectId(req.params.ride_id);
+        }
+        catch {
+            return res.status(404).send("Unable to find ride with specified ride_id.").end()
+        }
+
+        const update_doc = {
+            leave_datetime: body.leave_datetime,
+            start_location: body.start_location,
+            end_location: body.end_location,
+            price: body.price,
+            seats_available: body.seats_available
+        }
+
+        Rides.findByIdAndUpdate(ride_id, update_doc, (err, docs) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).end();
+            }
+            return res.status(200).end();
+        });
 });
 
 router.post("/", 
@@ -91,7 +129,7 @@ router.post("/:ride_id/riders",
                 return res.status(404).send("Unable to find ride with specified ride_id.").end()
             }
 
-            Rides.findOne({"_id": ride_id}, (err, ride) => {
+            Rides.findById(ride_id, (err, ride) => {
                 if (err) {
                     return res.status(500).end();
                 }
@@ -145,7 +183,7 @@ router.delete("/:ride_id/riders",
             return res.status(404).send("Unable to find ride with specified ride_id.").end()
         }
 
-        Rides.findOne({"_id": ride_id}, (err, ride) => {
+        Rides.findById(ride_id, (err, ride) => {
             if (err) {
                 return res.status(500).end();
             }

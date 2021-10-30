@@ -380,6 +380,159 @@ describe("POST /rides/:ride_id/riders", function() {
 
 });
 
+describe("PATCH /rides/:ride_id validation", function() {
+
+  var id = "";
+  const data = {
+    name: "Will",
+    leave_datetime: "2021-10-12T00:07:46.443+00:00",
+    start_location: "Santa Barbara",
+    end_location: "Los Angeles",
+    price: 1000.23,
+    seats_available: 2,
+    driver_id: 123
+  }
+
+  const update_data = {
+    price: 10,
+    start_location: "Texas"
+  }
+
+  // put something in rides table first
+  before(function(done){
+    request(app)
+      .post("/rides")
+      .send(data)
+      .set('Accept', 'application/json')
+      .expect(200)
+    .then(res => {
+      return request(app)
+      .get("/rides")
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      const body = res.body[0];
+      id = body._id;
+    })
+    .then(done())
+  })
+
+  after(function(done) {
+    mongoose.connection.db.dropDatabase().then(res => {
+      done();
+    })
+  });
+
+  it("404 on ride doesn't exist", function(done) { 
+    const invalid_id = 321512351;
+    request(app)
+      .patch(`/rides/${invalid_id}`)
+      .send(data)
+      .set('Accept', 'application/json')
+      .expect(404)
+    .then(done())
+  })
+
+  it("400 on invalid datetime", function(done) { 
+    request(app)
+      .patch(`/rides/${id}`)
+      .send({leave_datetime: "202-10-12T00:07:46.443+00:00",})
+      .set('Accept', 'application/json')
+      .expect(400)
+    .then(done())
+  })
+
+  it("400 on invalid price", function(done) { 
+    request(app)
+      .patch(`/rides/${id}`)
+      .send({price: "-1",})
+      .set('Accept', 'application/json')
+      .expect(400)
+    .then(done())
+  })
+
+  it("400 on invalid seats_available", function(done) { 
+    request(app)
+      .patch(`/rides/${id}`)
+      .send({seats_available: "-1",})
+      .set('Accept', 'application/json')
+      .expect(400)
+    .then(done())
+  })
+
+})
+
+describe("PATCH /rides/:ride_id", function() {
+
+  afterEach(function(done) {
+    mongoose.connection.db.dropDatabase().then(res => {
+      done();
+    })
+  });
+
+  it("200 on PATCH without lost data", function(done){
+
+    const data = {
+      name: "Will",
+      leave_datetime: "2021-10-12T00:07:46.443+00:00",
+      start_location: "Santa Barbara",
+      end_location: "Los Angeles",
+      price: 1000.23,
+      seats_available: 2,
+      driver_id: 123
+    }
+
+    const update_data = {
+      leave_datetime: "2021-10-13T00:07:46.443+00:00",
+      start_location: "Goleta",
+      seats_available: 5,
+    }
+
+    var id = "";
+
+    request(app)
+      .post("/rides")
+      .send(data)
+      .set('Accept', 'application/json')
+      .expect(200)
+    .then(res => {
+      return request(app)
+        .get("/rides")
+        .set('Accept', 'application/json')
+        .expect(200)
+    })
+    .then(res => {
+      const body = res.body[0];
+      id = body._id;
+      return request(app)
+        .patch(`/rides/${id}`)
+        .send(update_data)
+        .set('Accept', 'application/json')
+        .expect(200)
+    })
+    .then(res => {
+      return request(app)
+        .get("/rides")
+        .set('Accept', 'application/json')
+        .expect(200)
+    })
+    .then(res => {
+      const body = res.body[0]
+      assert(body.name === data.name)
+      assert(body.leave_datetime === update_data.leave_datetime)
+      assert(body.start_location === update_data.start_location)
+      assert(body.end_location === data.end_location)
+      assert(body.price  === data.price)
+      assert(body.seats_available === update_data.seats_available)
+      assert(body.driver_id === data.driver_id)
+      assert(body.riders === [])
+    })
+    .then(done())
+
+  })
+});
+
 describe("DELETE /rides/:ride_id/riders", function() {
 
   afterEach(function(done) {
