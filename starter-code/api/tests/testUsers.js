@@ -47,7 +47,8 @@ describe("POST /users validation", function() {
         .send({
             "given_name": "Joe", 
             "family_name": "Goldberg", 
-            "email": "joegoldber@ucsb.edu"
+            "email": "joegoldber@ucsb.edu",
+            "id": "21358971895"
         })
         .set('Accept', 'application/json')
         .expect(400)
@@ -62,7 +63,8 @@ describe("POST /users validation", function() {
           .send({
               "full_name": "Joe Goldberg",
               "family_name": "Goldberg", 
-              "email": "joegoldber@ucsb.edu"
+              "email": "joegoldber@ucsb.edu",
+              "id": "21358971895"
           })
           .set('Accept', 'application/json')
           .expect(400)
@@ -77,7 +79,8 @@ describe("POST /users validation", function() {
         .send({
             "full_name": "Joe Goldberg",
             "given_name": "Joe", 
-            "email": "joegoldber@ucsb.edu"
+            "email": "joegoldber@ucsb.edu",
+            "id": "21358971895"
         })
         .set('Accept', 'application/json')
         .expect(400)
@@ -92,7 +95,8 @@ describe("POST /users validation", function() {
         .send({
           "full_name": "Joe Goldberg",
           "given_name": "Joe", 
-          "family_name": "Goldberg"
+          "family_name": "Goldberg", 
+          "id": "21358971895"
         })
         .set('Accept', 'application/json')
         .expect(400)
