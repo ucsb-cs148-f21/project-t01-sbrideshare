@@ -47,10 +47,7 @@ describe("POST /users validation", function() {
         .send({
             "given_name": "Joe", 
             "family_name": "Goldberg", 
-            "email": "joegoldber@ucsb.edu", 
-            "drives": [], 
-            "rides": [],
-            "history": [],
+            "email": "joegoldber@ucsb.edu"
         })
         .set('Accept', 'application/json')
         .expect(400)
@@ -65,10 +62,7 @@ describe("POST /users validation", function() {
           .send({
               "full_name": "Joe Goldberg",
               "family_name": "Goldberg", 
-              "email": "joegoldber@ucsb.edu", 
-              "drives": [], 
-              "rides": [],
-              "history": [],
+              "email": "joegoldber@ucsb.edu"
           })
           .set('Accept', 'application/json')
           .expect(400)
@@ -83,10 +77,7 @@ describe("POST /users validation", function() {
         .send({
             "full_name": "Joe Goldberg",
             "given_name": "Joe", 
-            "email": "joegoldber@ucsb.edu", 
-            "drives": [], 
-            "rides": [],
-            "history": [],
+            "email": "joegoldber@ucsb.edu"
         })
         .set('Accept', 'application/json')
         .expect(400)
@@ -96,21 +87,33 @@ describe("POST /users validation", function() {
     });
   
     it("400 on missing email", function(done) {
-    request(app)
+      request(app)
         .post("/users")
         .send({
-            "full_name": "Joe Goldberg",
-            "given_name": "Joe", 
-            "family_name": "Goldberg", 
-            "drives": [], 
-            "rides": [],
-            "history": [],
+          "full_name": "Joe Goldberg",
+          "given_name": "Joe", 
+          "family_name": "Goldberg"
         })
         .set('Accept', 'application/json')
         .expect(400)
         .then(res => {
-        done();
+          done();
         })
+
+    it("400 on missing id", function(done) {
+    request(app)
+            .post("/users")
+            .send({
+              "full_name": "Joe Goldberg",
+              "given_name": "Joe", 
+              "family_name": "Goldberg", 
+              "email": "joegoldber@ucsb.edu"
+            })
+          .set('Accept', 'application/json')
+          .expect(400)
+          .then(res => {
+            done();
+          })
     });
   
     it("200 on valid inputs", function(done) {
@@ -121,9 +124,7 @@ describe("POST /users validation", function() {
           "given_name": "Joe", 
           "family_name": "Goldberg", 
           "email": "joegoldberg@ucsb.edu",
-          "drives": [], 
-          "rides": [],
-          "history": []
+          "id": "21358971895"
         })
         .set('Accept', 'application/json')
         .expect(200)
@@ -132,6 +133,7 @@ describe("POST /users validation", function() {
         })
     });
   });
+});
   
 describe("POST /users", function() {
   
@@ -146,23 +148,13 @@ describe("POST /users", function() {
       given_name: "Joe", 
       family_name: "Goldberg", 
       email: "joegoldberg@ucsb.edu", 
-      drives: [], 
-      rides: [],
-      history: []
+      id: 21358971895
     };
   
     it("no lost data on post and get", function(done) {
       request(app)
         .post("/users")
-        .send({
-          "full_name": "Joe Goldberg",  
-          "given_name": "Joe", 
-          "family_name": "Goldberg", 
-          "email": "joegoldberg@ucsb.edu", 
-          "drives": [], 
-          "rides": [],
-          "history": []
-        })
+        .send(data)
         .set('Accept', 'application/json')
         .expect(200)
         .then(res => {
@@ -177,6 +169,7 @@ describe("POST /users", function() {
           assert(body.given_name === data.given_name);
           assert(body.family_name === data.family_name);
           assert(body.email === data.email);
+          assert(body.id === data.id);
           assert(body.drives.length === 0);
           assert(body.rides.length === 0);
           assert(body.history.length === 0);
@@ -191,29 +184,13 @@ describe("POST /users", function() {
     it("400 on duplicate inputs", function(done) {
       request(app)
           .post("/users")
-          .send({
-              "full_name": "Joe Goldberg",
-              "given_name": "Joe", 
-              "family_name": "Goldberg", 
-              "email": "joegoldberg@ucsb.edu", 
-              "drives": [], 
-              "rides": [],
-              "history": [],
-          })
-          .send({
-            "full_name": "Joe Goldberg",
-            "given_name": "Joe", 
-            "family_name": "Goldberg", 
-            "email": "joegoldberg@ucsb.edu", 
-            "drives": [], 
-            "rides": [],
-            "history": [],
-        })
+          .send(data)
+          .send(data)
           .set('Accept', 'application/json')
           .expect(400)
           .then(res => {
-          done();
+            done();
           })
-      });
-  });
+    });
+});
   

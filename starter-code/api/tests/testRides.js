@@ -34,6 +34,21 @@ describe("GET /testAPI", function() {
 // validation tests
 describe("POST /rides validation", function() {
 
+  before(function (done) {
+    request(app)
+      .post("/users")
+      .send({
+        "full_name": "Joe Goldberg",
+        "given_name": "Joe", 
+        "family_name": "Goldberg", 
+        "email": "joegoldberg@ucsb.edu",
+        "id": "123"
+      })
+      .then(res => {
+        done()
+      })
+  }); 
+
   after(function(done) {
     mongoose.connection.db.dropDatabase().then(res => {
       done();
@@ -174,6 +189,21 @@ describe("POST /rides validation", function() {
 
 describe("POST /rides", function() {
 
+  before(function (done) {
+    request(app)
+      .post("/users")
+      .send({
+        "full_name": "Joe Goldberg",
+        "given_name": "Joe", 
+        "family_name": "Goldberg", 
+        "email": "joegoldberg@ucsb.edu",
+        "id": "123"
+      })
+      .then(res => {
+        done()
+      })
+  }); 
+
   after(function(done) {
     mongoose.connection.db.dropDatabase().then(res => {
       done();
@@ -192,6 +222,8 @@ describe("POST /rides", function() {
 
   it("no lost data on post and get", function(done) {
 
+    var drive_id = "";
+
     request(app)
       .post("/rides")
       .send(data)
@@ -205,6 +237,8 @@ describe("POST /rides", function() {
       })
       .then(res => {
         const body = res.body[0]
+        drive_id = body._id;
+
         assert(body.name === data.name);
         assert(Date.parse(body.leave_datetime) === Date.parse(data.leave_datetime));
         assert(body.start_location === data.start_location);
@@ -212,6 +246,19 @@ describe("POST /rides", function() {
         assert(body.price === data.price);
         assert(body.seats_available === data.seats_available);
         assert(body.riders.length === 0);
+      })
+      // Ensure ride is added to user
+      .then(() => {
+        return request(app)
+          .get("/users")
+          .set('Accept', 'application/json')
+          .expect(200)
+      })
+      .then(res => {
+        const body = res.body[0]
+
+        assert(body.drives.length === 1);
+        assert(body.drives[0] === drive_id);
       })
       .then(res => {
         done();
@@ -221,6 +268,21 @@ describe("POST /rides", function() {
 });
 
 describe("POST /rides/:ride_id/riders", function() {
+
+  beforeEach(function (done) {
+    request(app)
+      .post("/users")
+      .send({
+        "full_name": "Joe Goldberg",
+        "given_name": "Joe", 
+        "family_name": "Goldberg", 
+        "email": "joegoldberg@ucsb.edu",
+        "id": "123"
+      })
+      .then(res => {
+        done()
+      })
+  }); 
 
   afterEach(function(done) {
     mongoose.connection.db.dropDatabase().then(res => {
@@ -534,6 +596,21 @@ describe("PATCH /rides/:ride_id", function() {
 });
 
 describe("DELETE /rides/:ride_id/riders", function() {
+
+  beforeEach(function (done) {
+    request(app)
+      .post("/users")
+      .send({
+        "full_name": "Joe Goldberg",
+        "given_name": "Joe", 
+        "family_name": "Goldberg", 
+        "email": "joegoldberg@ucsb.edu",
+        "id": "123"
+      })
+      .then(res => {
+        done()
+      })
+  }); 
 
   afterEach(function(done) {
     mongoose.connection.db.dropDatabase().then(res => {

@@ -1,7 +1,7 @@
 
 # POST /rides
 
-Submits a ride with the specified data.
+Submits a ride with the specified data. Also adds a reference to this ride of the user `driver_id` rides array.
 
 ## Request
 
@@ -25,6 +25,8 @@ Returns a HTTP 200 Success if submitted.
 
 * 400 Bad Request
     * Something is wrong with the input request
+* 404 Not Found
+    * The user with the specified `driver_id` cannot be found
 * 500 Internal Server Error
     * The server could not save the request to MongoDB
 
@@ -147,6 +149,7 @@ Submits a user with the specified data.
     "full_name": $String, //Required. 
     "given_name": $String, //Required.
     "family_name": $String, //Required.
+    "id": $UUID, //Required.
     "email": $String, //Required.
 }
 ```
@@ -182,6 +185,7 @@ Retrieves an array of all users.
         "given_name": $String,
         "family_name": $String,
         "email": $String,
+        "id": $UUID,
         "drives": $Array,
         "rides": $Array,
         "history": $Array 

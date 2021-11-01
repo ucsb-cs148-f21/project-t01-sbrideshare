@@ -5,11 +5,10 @@ var ObjectId = require('mongoose').Types.ObjectId
 const { body, validationResult } = require('express-validator');
 
 const Rides = require('../models/rides')
+const Users = require('../models/users')
 
 router.get("/", function(req, res, next) {
     const body = req.body;
-
-
 
     Rides.find({}, (err, rides) => {
         return res.status(200).json(rides).end();
@@ -19,7 +18,7 @@ router.get("/", function(req, res, next) {
 
 router.patch("/:ride_id", 
     body("leave_datetime")
-    .isISO8601().withMessage('leave_datetime must be in ISO8601'), 
+        .isISO8601().withMessage('leave_datetime must be in ISO8601'), 
     body("price")
         .isFloat({min: 0}).withMessage('price must be a positive number.'),
     // Maybe add check so that you can't remove seats when riders are alrady signed up for them?
@@ -88,7 +87,7 @@ router.post("/",
 
         const body = req.body;
         
-        Rides.create({
+        const ride = new Rides({
             name: body.name,
             leave_datetime: body.leave_datetime,
             start_location: body.start_location,
@@ -97,17 +96,32 @@ router.post("/",
             seats_available: body.seats_available,
             driver_id: body.driver_id,
             riders: []
-        }).then(ride => {
-            ride.save(err => {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).end();
-                }
-                return res.status(200).end();
-            })
         })
-    }
-);
+
+        // Put reference of drive into user's drives
+        Users.findOne({id: body.driver_id}, (err, doc) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).end();
+            }
+
+            if (doc == undefined || doc == null) {
+                return res.status(404).send("driver_id does not exist as a user.")
+            }
+
+            ride.save().then(saved_doc => {
+                const ride_id = saved_doc._id
+                doc.drives.push(ride_id)
+                doc.save()
+                return res.status(200).end()
+            })
+            .catch(err => {
+                console.log(err)
+                return res.status(500).end()
+            })
+        
+        })
+});
 
 router.post("/:ride_id/riders",
     body("rider_id")

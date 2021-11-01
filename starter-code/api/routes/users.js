@@ -26,6 +26,9 @@ router.post("/",
     body("email")
         .exists().withMessage('email is required.').bail()
         .notEmpty().withMessage('email is required.').bail(), 
+    body("id")
+        .exists().withMessage('id is required.').bail()
+        .notEmpty().withMessage('id is required.').bail(), 
 
     function(req, res, next) {
         const errors = validationResult(req);
@@ -50,6 +53,7 @@ router.post("/",
                 given_name: body.given_name,
                 family_name: body.family_name,
                 email: body.email,
+                id: body.id,
                 drives: [],
                 rides: [],
                 history: []
