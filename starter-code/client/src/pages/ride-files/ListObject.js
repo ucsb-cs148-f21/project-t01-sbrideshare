@@ -29,7 +29,6 @@ function rideFullValues(){
     buttonColor = 'gray';
     return [buttonText,buttonState,buttonColor];
 }
-
 //button values for if there is an error
 function getErrorValues(){
     var buttonText, buttonState, buttonColor;
@@ -37,6 +36,33 @@ function getErrorValues(){
     buttonState = false;
     buttonColor = 'red';
     return [buttonText,buttonState,buttonColor];
+}
+function getCanRemove(){
+    var buttonText, buttonState, buttonColor;
+    buttonText = "Leave this ride";
+    buttonState = true;
+    buttonColor = 'red';
+    return [buttonText,buttonState,buttonColor];
+}
+function getCannotRemove(){
+    var buttonText, buttonState, buttonColor;
+    buttonText = "You are not in this ride.";
+    buttonState = false;
+    buttonColor = 'gray';
+    return [buttonText,buttonState,buttonColor];
+}
+//button values for the remove self button
+function getSelfRemoveValues(rideInfo,user){
+    //console.log(rideInfo);
+    var userInRide = rideInfo.riders.indexOf(user.id) > -1;
+    //if the user is in the ride
+    if(userInRide){
+        return getCanRemove();
+    }
+    //if they are not in the ride, they cannot have a leave button
+    else {
+        return getCannotRemove();
+    }
 }
 
 //default button values for when the user first opens the page
@@ -64,9 +90,9 @@ export default function ListObject(props) {
 
     var rideInfo = props.rideInfo;
 
-    var postRiderURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
+    var rideURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
 
-    const [seats,decrement] = useState({
+    const [seats,update] = useState({
         numSeats: rideInfo.seats_available
     });
 
@@ -80,11 +106,21 @@ export default function ListObject(props) {
         color: buttonColor
     });
 
+    var selfRemoveValues = getSelfRemoveValues(rideInfo,user);
+    const [removeSelfButton,removeButtonChange] = useState({
+        text: selfRemoveValues[0],
+        //state true means ride not joined
+        //state false means ride joined
+        visible: selfRemoveValues[1],
+        state: selfRemoveValues[1],
+        color: selfRemoveValues[2]
+    });
+
     const buttonClick = (event) =>{
         //if the user is allowed to click the signup button
         if(button.state === true){
             //send the signup request
-            axios.post(postRiderURL, {
+            axios.post(rideURL, {
                 "rider_id": user.id
             })
             //then change the button colors
@@ -93,14 +129,45 @@ export default function ListObject(props) {
                 buttonChange({...button, text: buttonText,
                 state: buttonState,
                 color: buttonColor});
-                decrement({...seats, 
+                update({...seats, 
                 numSeats: seats.numSeats-1});
             })
             //if there is an error, log it and change button colors
             .catch(function(error) {
-                console.log(error);
                 [buttonText,buttonState,buttonColor] = getErrorValues();
                 buttonChange({...button, text: buttonText,
+                state: buttonState,
+                color: buttonColor});
+            });
+        }
+    }
+
+    const removeButtonClick = (event) =>{
+        //if the user is allowed to click the remove button
+        const id=101;
+        if(removeSelfButton.state === true){
+            //send the delete request
+            axios.delete(rideURL, {
+                "rider_id": id
+            })
+            //then change the button colors
+            .then(function (response) {
+                [buttonText,buttonState,buttonColor] = getCannotRemove();
+                removeButtonChange({...button, text: buttonText,
+                visible: buttonState,
+                state: buttonState,
+                color: buttonColor});
+                update({...seats, 
+                numSeats: seats.numSeats+1});
+            })
+            //if there is an error, log it and change button colors
+            .catch(function(error) {
+                console.log(error.response);
+                console.log(rideURL);
+                console.log(id);
+                [buttonText,buttonState,buttonColor] = getErrorValues();
+                removeButtonChange({...button, text: buttonText,
+                visible: true,
                 state: buttonState,
                 color: buttonColor});
             });
@@ -114,6 +181,10 @@ export default function ListObject(props) {
             <p>Leaving: {rideInfo.leave_datetime}</p>
             <p>Seats Available: {seats.numSeats}</p>
             <button  style={{backgroundColor: button.color}} onClick={() => buttonClick()}>{button.text}</button>
+            <p />
+            {removeSelfButton.visible===true &&
+                <button  style={{backgroundColor: removeSelfButton.color}} onClick={() => removeButtonClick()}>{removeSelfButton.text}</button>
+            }
             <hr/>
         </div>
     );
