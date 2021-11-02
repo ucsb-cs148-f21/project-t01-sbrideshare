@@ -1,17 +1,17 @@
 # Table of Contents
 ## /rides
-* [POST /rides](#POST-/rides)
-* [GET /rides](#GET-/rides)
-* [PATCH /rides/:ride_id](PATCH-/rides/:ride_id)
-* [POST /rides/:ride_id/riders](POST-/rides/:ride_id/riders)
-* [DELETE /rides/:ride_id/riders/:rider_id](DELETE-/rides/:ride_id/riders/:rider_id)
+* [POST /rides](#post-/rides)
+* [GET /rides](#get-/rides)
+* [PATCH /rides/:ride_id](patch-/rides/:ride_id)
+* [POST /rides/:ride_id/riders](post-/rides/:ride_id/riders)
+* [DELETE /rides/:ride_id/riders/:rider_id](delete-/rides/:ride_id/riders/:rider_id)
 
 
 ## /users
-* [POST /users](POST-/users)
-* [GET /users/:user_id](GET-/users/:user_id)
-* [GET /users/:user_id/drives](GET-/users/:user_id/drives)
-* [GET /users/:user_id/rides](GET-/users/:user_id/rides)
+* [POST /users](post-/users)
+* [GET /users/:user_id](get-/users/:user_id)
+* [GET /users/:user_id/drives](get-/users/:user_id/drives)
+* [GET /users/:user_id/rides](get-/users/:user_id/rides)
 
 --------
 # POST /rides
