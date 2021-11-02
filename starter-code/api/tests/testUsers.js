@@ -146,13 +146,14 @@ describe("POST /users", function() {
         done();
       })
     });
-  
+
+    const user_id = 21358971895
     const data = {
       full_name: "Joe Goldberg",  
       given_name: "Joe", 
       family_name: "Goldberg", 
       email: "joegoldberg@ucsb.edu", 
-      id: 21358971895
+      id: user_id
     };
   
     it("no lost data on post and get", function(done) {
@@ -163,12 +164,12 @@ describe("POST /users", function() {
         .expect(200)
         .then(res => {
           return request(app)
-            .get("/users")
+            .get(`/users/${user_id}`)
             .set('Accept', 'application/json')
             .expect(200)
         })
         .then(res => {
-          const body = res.body[0];
+          const body = res.body;
           assert(body.full_name === data.full_name);
           assert(body.given_name === data.given_name);
           assert(body.family_name === data.family_name);

@@ -86,7 +86,7 @@ Returns HTTP 200 Success if successfully updated.
 --------
 # POST /rides/:ride_id/riders
 
-Adds a rider with `rider_id` to the `riders` array of the ride to the specifed `:ride_id`.
+Adds a rider with `rider_id` to the `riders` array of the ride to the specifed `:ride_id`. Also adds to the user `rider_id` rides array.
 
 ## Request
 
@@ -113,7 +113,7 @@ Returns HTTP 200 Success if successfully added to array.
 --------
 # DELETE /rides/:ride_id/riders/:rider_id
 
-Removes the rider with `rider_id` from the `riders` array of the ride of the specifed `:ride_id`.
+Removes the rider with `rider_id` from the `riders` array of the ride of the specifed `ride_id`. Also removes ride from user `rider_id` rides array.
 
 ## Request
 

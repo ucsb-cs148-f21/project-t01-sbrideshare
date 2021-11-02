@@ -165,12 +165,29 @@ router.post("/:ride_id/riders",
                     ride.riders.push(body.rider_id)
                 }
 
-                ride.save(err => {
-                    if (err){
+                Users.findOne({id: body.rider_id}, (err, user) => {
+                    if (err) {
                         console.log(err);
                         return res.status(500).end();
                     }
-                    return res.status(200).end();
+        
+                    if (user == undefined || user == null) {
+                        return res.status(404).send("rider_id does not exist as a user.")
+                    }
+
+                    const ride_id = ride._id
+                    user.rides.push(ride_id)
+
+                    user.save().then(saved_doc => {
+                        ride.save().then(saved_doc => {
+                            return res.status(200).end()
+                        })
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        return res.status(500).end()
+                    })
+                
                 })
 
             })
@@ -211,12 +228,30 @@ router.delete("/:ride_id/riders/:rider_id",
             ride.riders.splice(index, 1)
             ride.seats_available += 1
 
-            ride.save(err => {
-                if (err){
+            Users.findOne({id: req.params.rider_id}, (err, user) => {
+                if (err) {
                     console.log(err);
                     return res.status(500).end();
                 }
-                return res.status(200).end();
+    
+                if (user == undefined || user == null) {
+                    return res.status(404).send("rider_id does not exist as a user.")
+                }
+
+                const ride_id = ride._id
+                const index = user.rides.indexOf(ride_id)
+                
+                user.rides.splice(index, 1);
+
+                user.save().then(saved_doc => {
+                    ride.save().then(saved_doc => {
+                        return res.status(200).end()
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                    return res.status(500).end()
+                })
             })
 
         })

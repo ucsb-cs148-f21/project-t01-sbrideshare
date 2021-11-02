@@ -210,6 +210,7 @@ describe("POST /rides", function() {
     })
   });
 
+  const driver_id = 123
   const data = {
     name: "Will",
     leave_datetime: "2021-10-12T00:07:46.443+00:00",
@@ -217,7 +218,7 @@ describe("POST /rides", function() {
     end_location: "Los Angeles",
     price: 1000.23,
     seats_available: 2,
-    driver_id: 123
+    driver_id: driver_id
   }
 
   it("no lost data on post and get", function(done) {
@@ -250,12 +251,12 @@ describe("POST /rides", function() {
       // Ensure ride is added to user
       .then(() => {
         return request(app)
-          .get("/users")
+          .get(`/users/${driver_id}`)
           .set('Accept', 'application/json')
           .expect(200)
       })
       .then(res => {
-        const body = res.body[0]
+        const body = res.body
 
         assert(body.drives.length === 1);
         assert(body.drives[0] === drive_id);
@@ -269,19 +270,50 @@ describe("POST /rides", function() {
 
 describe("POST /rides/:ride_id/riders", function() {
 
+  const driver_id = 123
+  const rider_id = 877
+
+  const data = {
+    name: "Will",
+    leave_datetime: "2021-10-12T00:07:46.443+00:00",
+    start_location: "Santa Barbara",
+    end_location: "Los Angeles",
+    price: 1000.23,
+    seats_available: 2,
+    driver_id: driver_id
+  }
+
+  const users = [
+    {
+      "full_name": "Will Wilkins",
+      "given_name": "Will", 
+      "family_name": "Wilkins", 
+      "email": "willwilkins@ucsb.edu",
+      "id": driver_id,
+    },
+    {
+    "full_name": "Joe Goldberg",
+    "given_name": "Joe", 
+    "family_name": "Goldberg", 
+    "email": "joegoldberg@ucsb.edu",
+    "id": rider_id,
+    }
+]
+
   beforeEach(function (done) {
     request(app)
       .post("/users")
-      .send({
-        "full_name": "Joe Goldberg",
-        "given_name": "Joe", 
-        "family_name": "Goldberg", 
-        "email": "joegoldberg@ucsb.edu",
-        "id": "123"
-      })
-      .then(res => {
-        done()
-      })
+      .send(users[0])
+      .set('Accept', 'application/json')
+    .then(res => {
+      return request(app)
+      .post("/users")
+      .send(users[1])
+      .set('Accept', 'application/json')
+    })
+    .then(res => {
+      done()
+    })
   }); 
 
   afterEach(function(done) {
@@ -304,7 +336,7 @@ describe("POST /rides/:ride_id/riders", function() {
   it("404 on unknown ride _id", function(done){
     request(app)
     .post('/rides/2134/riders')
-    .send({rider_id: 877})
+    .send({rider_id: rider_id})
     .set('Accept', 'application/json')
     .expect(404)
     .then(res=> {
@@ -313,36 +345,40 @@ describe("POST /rides/:ride_id/riders", function() {
     .catch(err => done(err))
   });
 
-  const data = {
-    name: "Will",
-    leave_datetime: "2021-10-12T00:07:46.443+00:00",
-    start_location: "Santa Barbara",
-    end_location: "Los Angeles",
-    price: 1000.23,
-    seats_available: 2,
-    driver_id: 123
-  }
-
   it("200 on successful rider add", function(done){
+    var ride_id = ""
+
     request(app)
       .post("/rides")
       .send(data)
       .set('Accept', 'application/json')
       .expect(200)
-      .then(res => {
+    .then(res => {
         return request(app)
           .get("/rides")
           .set('Accept', 'application/json')
           .expect(200)
+    })
+    .then(res => {
+      const body = res.body[0];
+      ride_id = body._id;
+      return request(app)
+        .post(`/rides/${ride_id}/riders`)
+        .send({rider_id: rider_id})
+        .set('Accept', 'application/json')
+        .expect(200)
       })
       .then(res => {
-        const body = res.body[0];
-        const id = body._id;
         return request(app)
-          .post(`/rides/${id}/riders`)
-          .send({rider_id: 877})
+          .get(`/users/${rider_id}`)
           .set('Accept', 'application/json')
           .expect(200)
+      })
+      .then(res => {
+        const body = res.body
+        
+        assert(body.rides.length === 1)
+        assert(body.rides[0] === ride_id)
       })
       .then(res => {
         done()
@@ -351,15 +387,6 @@ describe("POST /rides/:ride_id/riders", function() {
   })
 
   it("409 on rider_id already a rider", function(done){
-    const data = {
-      name: "Will",
-      leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Santa Barbara",
-      end_location: "Los Angeles",
-      price: 1000.23,
-      seats_available: 2,
-      driver_id: 123
-    }
     var id = "";
 
     request(app)
@@ -597,19 +624,50 @@ describe("PATCH /rides/:ride_id", function() {
 
 describe("DELETE /rides/:ride_id/riders", function() {
 
+  const driver_id = 2341;
+  const rider_id = 75889;
+
+  const users = [
+    {
+      "full_name": "Will Wilkins",
+      "given_name": "Will", 
+      "family_name": "Wilkins", 
+      "email": "willwilkins@ucsb.edu",
+      "id": driver_id,
+    },
+    {
+    "full_name": "Joe Goldberg",
+    "given_name": "Joe", 
+    "family_name": "Goldberg", 
+    "email": "joegoldberg@ucsb.edu",
+    "id": rider_id,
+    }
+  ]
+
+  const data = {
+    name: "Will",
+    leave_datetime: "2021-10-12T00:07:46.443+00:00",
+    start_location: "Santa Barbara",
+    end_location: "Los Angeles",
+    price: 1000.23,
+    seats_available: 2,
+    driver_id: driver_id
+  }
+
   beforeEach(function (done) {
     request(app)
       .post("/users")
-      .send({
-        "full_name": "Joe Goldberg",
-        "given_name": "Joe", 
-        "family_name": "Goldberg", 
-        "email": "joegoldberg@ucsb.edu",
-        "id": "123"
-      })
-      .then(res => {
-        done()
-      })
+      .send(users[0])
+      .set('Accept', 'application/json')
+    .then(res => {
+      return request(app)
+      .post("/users")
+      .send(users[1])
+      .set('Accept', 'application/json')
+    })
+    .then(res => {
+      done()
+    })
   }); 
 
   afterEach(function(done) {
@@ -623,7 +681,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
 
     request(app)
           .delete(`/rides/${invalid_ride_id}/riders`)
-          .send({rider_id: 1234})
+          .send({rider_id: rider_id})
           .set('Accept', 'application/json')
           .expect(404)
     .then(res => {
@@ -633,17 +691,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
 
   it("test invalid and valid delete", function(done){
 
-    const data = {
-      name: "Will",
-      leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Santa Barbara",
-      end_location: "Los Angeles",
-      price: 1000.23,
-      seats_available: 2,
-      driver_id: 123
-    }
     var id = "";
-    const rider_id = 2134871290;
 
     request(app)
         .post("/rides")
@@ -677,6 +725,17 @@ describe("DELETE /rides/:ride_id/riders", function() {
           .delete(`/rides/${id}/riders/${rider_id}`)
           .set('Accept', 'application/json')
           .expect(200)
+    })
+    .then(res => {
+      return request(app)
+          .get(`/users/${rider_id}`)
+          .set('Accept', 'application/json')
+          .expect(200)
+    })
+    .then(res => {
+      const body = res.body
+
+      assert.equal(body.rides.length, 0)
     })
     .then(res => {
       return request(app)

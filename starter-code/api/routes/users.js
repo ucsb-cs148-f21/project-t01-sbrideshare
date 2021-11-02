@@ -5,10 +5,10 @@ const { body, validationResult } = require('express-validator');
 
 const Users = require('../models/users');
 
-router.get("/", function(req, res, next) {
-  const body = req.body;
-  Users.find({}, (err, users) => {
-      return res.status(200).json(users).end();
+router.get("/:user_id", function(req, res, next) {
+
+  Users.findOne({id: req.params.user_id}, (err, user) => {
+      return res.status(200).json(user).end();
   })
 
 });
