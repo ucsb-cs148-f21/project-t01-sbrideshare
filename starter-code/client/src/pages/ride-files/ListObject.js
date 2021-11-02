@@ -3,31 +3,23 @@ import axios from 'axios';
 import getBackendURL from "../../utils/get-backend-url";
 import getUser from "../../utils/get-user";
 
-
-
-//button values for if the user is in the ride
-function isInRideValues(){
-    var buttonText, buttonState, buttonColor;
-    buttonText = "You signed up!";
-    buttonState = false;
-    buttonColor = 'blue';
-    return [buttonText,buttonState,buttonColor];
-}
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
-    var buttonText, buttonState, buttonColor;
+    var buttonText, buttonState, inRide, buttonColor;
     buttonText = "Sign up for this ride!";
     buttonState = true;
-    buttonColor = 'green';
-    return [buttonText,buttonState,buttonColor];
+    inRide = false;
+    buttonColor = 'blue';
+    return [buttonText,buttonState,inRide,buttonColor];
 }
 //button values for if the ride is already full
 function rideFullValues(){
-    var buttonText, buttonState, buttonColor;
+    var buttonText, buttonState, inRide, buttonColor;
     buttonText = "Ride is full."
     buttonState = false;
+    inRide = false;
     buttonColor = 'gray';
-    return [buttonText,buttonState,buttonColor];
+    return [buttonText,buttonState,inRide,buttonColor];
 }
 //button values for if there is an error
 function getErrorValues(){
@@ -38,31 +30,20 @@ function getErrorValues(){
     return [buttonText,buttonState,buttonColor];
 }
 function getCanRemove(){
-    var buttonText, buttonState, buttonColor;
+    var buttonText, buttonState, inRide, buttonColor;
     buttonText = "Leave this ride";
     buttonState = true;
+    inRide = true;
     buttonColor = 'red';
-    return [buttonText,buttonState,buttonColor];
+    return [buttonText,buttonState,inRide,buttonColor];
 }
-function getCannotRemove(){
-    var buttonText, buttonState, buttonColor;
-    buttonText = "You are not in this ride.";
+function userIsDriver(){
+    var buttonText, buttonState, inRide, buttonColor;
+    buttonText = "You're the driver.";
     buttonState = false;
-    buttonColor = 'gray';
-    return [buttonText,buttonState,buttonColor];
-}
-//button values for the remove self button
-function getSelfRemoveValues(rideInfo,user){
-    //console.log(rideInfo);
-    var userInRide = rideInfo.riders.indexOf(user.id) > -1;
-    //if the user is in the ride
-    if(userInRide){
-        return getCanRemove();
-    }
-    //if they are not in the ride, they cannot have a leave button
-    else {
-        return getCannotRemove();
-    }
+    inRide = true;
+    buttonColor = 'maroon';
+    return [buttonText,buttonState,inRide,buttonColor];
 }
 
 //default button values for when the user first opens the page
@@ -70,9 +51,12 @@ function getSelfRemoveValues(rideInfo,user){
     //the page being opened/refreshed
 function getInitialButtonValues(rideInfo,user){
     var userInRide = rideInfo.riders.indexOf(user.id) > -1;
+    if(rideInfo.driver_id === user.id){
+        return userIsDriver();
+    }
     //if the user is already in the ride
-    if(userInRide){
-        return isInRideValues();
+    else if(userInRide){
+        return getCanRemove();
     }
     //if there are seats left
     else if(rideInfo.seats_available>0){
@@ -96,84 +80,70 @@ export default function ListObject(props) {
         numSeats: rideInfo.seats_available
     });
 
-    var [buttonText,buttonState,buttonColor] = getInitialButtonValues(rideInfo,user);
+    var [buttonText,buttonState,inRide,buttonColor] = getInitialButtonValues(rideInfo,user);
     
     const [button,buttonChange] = useState({
         text: buttonText,
-        //state true means ride not joined
-        //state false means ride joined
         state: buttonState,
+        inRide: inRide,
         color: buttonColor
-    });
-
-    var selfRemoveValues = getSelfRemoveValues(rideInfo,user);
-    const [removeSelfButton,removeButtonChange] = useState({
-        text: selfRemoveValues[0],
-        //state true means ride not joined
-        //state false means ride joined
-        visible: selfRemoveValues[1],
-        state: selfRemoveValues[1],
-        color: selfRemoveValues[2]
     });
 
     const buttonClick = (event) =>{
         //if the user is allowed to click the signup button
         if(button.state === true){
-            //send the signup request
-            axios.post(rideURL, {
-                "rider_id": user.id
-            })
-            //then change the button colors
-            .then(function (response) {
-                [buttonText,buttonState,buttonColor] = isInRideValues();
-                buttonChange({...button, text: buttonText,
-                state: buttonState,
-                color: buttonColor});
-                update({...seats, 
-                numSeats: seats.numSeats-1});
-            })
-            //if there is an error, log it and change button colors
-            .catch(function(error) {
-                [buttonText,buttonState,buttonColor] = getErrorValues();
-                buttonChange({...button, text: buttonText,
-                state: buttonState,
-                color: buttonColor});
-            });
+            if(button.inRide === false){
+                //send the signup request
+                axios.post(rideURL, {
+                    "rider_id": user.id
+                })
+                //then change the button colors
+                .then(function (response) {
+                    //change button to be signed up
+                    [buttonText,buttonState,inRide,buttonColor] = getCanRemove();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    inRide: inRide,
+                    color: buttonColor});
+
+                    update({...seats, 
+                    numSeats: seats.numSeats-1});
+                })
+                //if there is an error, log it and change button colors
+                .catch(function(error) {
+                    console.log(error.response);
+                    [buttonText,buttonState,inRide,buttonColor] = getErrorValues();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    color: buttonColor});
+                });
+            }
+            else {
+                axios.delete(rideURL+"/"+user.id+"/", {
+
+                })
+                //then change the button colors
+                .then(function (response) {
+                    [buttonText,buttonState,inRide,buttonColor] = signupAvailableValues();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    inRide: inRide,
+                    color: buttonColor});
+
+                    update({...seats, 
+                    numSeats: seats.numSeats+1});
+                })
+                //if there is an error, log it and change button colors
+                .catch(function(error) {
+                    console.log(error.response);
+                    [buttonText,buttonState,buttonColor] = getErrorValues();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    color: buttonColor});
+                });
+            }
         }
     }
-
-    const removeButtonClick = (event) =>{
-        //if the user is allowed to click the remove button
-        const id=101;
-        if(removeSelfButton.state === true){
-            //send the delete request
-            axios.delete(rideURL, {
-                "rider_id": id
-            })
-            //then change the button colors
-            .then(function (response) {
-                [buttonText,buttonState,buttonColor] = getCannotRemove();
-                removeButtonChange({...button, text: buttonText,
-                visible: buttonState,
-                state: buttonState,
-                color: buttonColor});
-                update({...seats, 
-                numSeats: seats.numSeats+1});
-            })
-            //if there is an error, log it and change button colors
-            .catch(function(error) {
-                console.log(error.response);
-                console.log(rideURL);
-                console.log(id);
-                [buttonText,buttonState,buttonColor] = getErrorValues();
-                removeButtonChange({...button, text: buttonText,
-                visible: true,
-                state: buttonState,
-                color: buttonColor});
-            });
-        }
-    }
-
     return (
         <div>
             <h4>{rideInfo.start_location} to {rideInfo.end_location}</h4>
@@ -181,10 +151,6 @@ export default function ListObject(props) {
             <p>Leaving: {rideInfo.leave_datetime}</p>
             <p>Seats Available: {seats.numSeats}</p>
             <button  style={{backgroundColor: button.color}} onClick={() => buttonClick()}>{button.text}</button>
-            <p />
-            {removeSelfButton.visible===true &&
-                <button  style={{backgroundColor: removeSelfButton.color}} onClick={() => removeButtonClick()}>{removeSelfButton.text}</button>
-            }
             <hr/>
         </div>
     );
