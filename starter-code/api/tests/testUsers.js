@@ -32,6 +32,26 @@ describe("GET /testAPI", function() {
   });
 });
 
+describe("GET /users validation", function() {
+
+  after(function(done) {
+    mongoose.connection.db.dropDatabase().then(res => {
+      done();
+    })
+  });
+
+  it("404 on non existent user", function(done) {
+    request(app)
+      .get(`/users/123`)
+      .set('Accept', 'application/json')
+      .expect(404)
+    .then(res => {
+      done()
+    })
+  })
+
+});
+
 // validation tests
 describe("POST /users validation", function() {
 
@@ -199,3 +219,228 @@ describe("POST /users", function() {
     });
 });
   
+describe("GET /:user_id/drives", function() {
+
+  const id1 = 2341;
+  const id2 = 75889;
+
+  const users = [
+    {
+      "full_name": "Will Wilkins",
+      "given_name": "Will", 
+      "family_name": "Wilkins", 
+      "email": "willwilkins@ucsb.edu",
+      "id": id1,
+    },
+    {
+    "full_name": "Joe Goldberg",
+    "given_name": "Joe", 
+    "family_name": "Goldberg", 
+    "email": "joegoldberg@ucsb.edu",
+    "id": id2,
+    }
+  ]
+
+  const drives = [
+    {
+      name: "Will",
+      leave_datetime: "2021-10-12T00:07:46.443+00:00",
+      start_location: "Santa Barbara",
+      end_location: "Los Angeles",
+      price: 1000.23,
+      seats_available: 2,
+      driver_id: id1
+    },
+    {
+      name: "Joe",
+      leave_datetime: "2021-10-12T00:07:46.443+00:00",
+      start_location: "Isla Vista",
+      end_location: "San Diego",
+      price: 10.23,
+      seats_available: 1,
+      driver_id: id2
+    }
+  ]
+
+  before(function (done) {
+    request(app)
+      .post("/users")
+      .send(users[0])
+      .set('Accept', 'application/json')
+    .then(res => {
+      return request(app)
+      .post("/users")
+      .send(users[1])
+      .set('Accept', 'application/json')
+    })
+    .then(res => {
+      done()
+    })
+  }); 
+
+  after(function(done) {
+    mongoose.connection.db.dropDatabase().then(res => {
+      done();
+    })
+  });
+
+  it("test get correct drives which belong to user", function(done) {
+    request(app)
+      .post("/rides")
+      .send(drives[0])
+      .set('Accept', 'application/json')
+      .expect(200)
+    .then(res => {
+      return request(app)
+      .post("/rides")
+      .send(drives[1])
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      return request(app)
+      .get(`/users/${id1}/drives`)
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      const body = res.body
+      const drive = body[0]
+
+      assert.equal(body.length, 1)
+      assert.equal(drive.name, "Will")
+      assert.equal(Date.parse(drive.leave_datetime), Date.parse("2021-10-12T00:07:46.443+00:00"))
+      assert.equal(drive.start_location, "Santa Barbara")
+      assert.equal(drive.end_location, "Los Angeles")
+      assert.equal(drive.price, 1000.23)
+      assert.equal(drive.seats_available, 2)
+    })
+    .then(res => {
+      done()
+    })
+    .catch(err => done(err))
+  })
+
+});
+
+describe("GET /:user_id/rides", function() {
+
+  const id1 = 2341;
+  const id2 = 75889;
+
+  const users = [
+    {
+      "full_name": "Will Wilkins",
+      "given_name": "Will", 
+      "family_name": "Wilkins", 
+      "email": "willwilkins@ucsb.edu",
+      "id": id1,
+    },
+    {
+    "full_name": "Joe Goldberg",
+    "given_name": "Joe", 
+    "family_name": "Goldberg", 
+    "email": "joegoldberg@ucsb.edu",
+    "id": id2,
+    }
+  ]
+
+  const drives = [
+    {
+      name: "Will",
+      leave_datetime: "2021-10-12T00:07:46.443+00:00",
+      start_location: "Santa Barbara",
+      end_location: "Los Angeles",
+      price: 1000.23,
+      seats_available: 2,
+      driver_id: id1
+    },
+    {
+      name: "Joe",
+      leave_datetime: "2021-10-12T00:07:46.443+00:00",
+      start_location: "Isla Vista",
+      end_location: "San Diego",
+      price: 10.23,
+      seats_available: 1,
+      driver_id: id2
+    }
+  ]
+
+  before(function (done) {
+    request(app)
+      .post("/users")
+      .send(users[0])
+      .set('Accept', 'application/json')
+    .then(res => {
+      return request(app)
+      .post("/users")
+      .send(users[1])
+      .set('Accept', 'application/json')
+    })
+    .then(res => {
+      done()
+    })
+  }); 
+
+  after(function(done) {
+    mongoose.connection.db.dropDatabase().then(res => {
+      done();
+    })
+  });
+
+  it("test get correct rides which belong to user", function(done) {
+    var ride_id = ""
+
+    request(app)
+      .post("/rides")
+      .send(drives[0])
+      .set('Accept', 'application/json')
+      .expect(200)
+    .then(res => {
+      return request(app)
+      .post("/rides")
+      .send(drives[1])
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      return request(app)
+      .get('/rides')
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      const body = res.body;
+      ride_id = body[0]._id
+
+      return request(app)
+      .post(`/rides/${ride_id}/riders`)
+      .send({rider_id: id2})
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      return request(app)
+      .get(`/users/${id2}/rides`)
+      .set('Accept', 'application/json')
+      .expect(200)
+    })
+    .then(res => {
+      const body = res.body
+      const ride = body[0]
+
+      assert.equal(body.length, 1)
+      assert.equal(ride.name, "Will")
+      assert.equal(Date.parse(ride.leave_datetime), Date.parse("2021-10-12T00:07:46.443+00:00"))
+      assert.equal(ride.start_location, "Santa Barbara")
+      assert.equal(ride.end_location, "Los Angeles")
+      assert.equal(ride.price, 1000.23)
+      assert.equal(ride.seats_available, 1)
+    })
+    .then(res => {
+      done()
+    })
+    .catch(err => done(err))
+  })
+
+});

@@ -4,13 +4,68 @@ var router = express.Router();
 const { body, validationResult } = require('express-validator');
 
 const Users = require('../models/users');
+const Rides = require('../models/rides');
 
 router.get("/:user_id", function(req, res, next) {
 
   Users.findOne({id: req.params.user_id}, (err, user) => {
-      return res.status(200).json(user).end();
+    if (user == undefined || user == null) {
+        return res.status(404).send("user does not exist.").end()
+    }
+
+    return res.status(200).json(user).end();
   })
 
+});
+
+router.get("/:user_id/drives", function(req, res, next) {
+
+    Users.findOne({id: req.params.user_id}, (err, user) => {
+
+        if (err) {
+            return res.status(500).end();
+        }
+
+        if (user == undefined || user == null) {
+            return res.status(404).send("user does not exist.").end()
+        }
+
+        const user_drives = user.drives
+
+        Rides.find({_id: {$in: user_drives}}, (err, drives) => {
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json(drives).end();
+        })
+    })
+  
+});
+
+router.get("/:user_id/rides", function(req, res, next) {
+
+    Users.findOne({id: req.params.user_id}, (err, user) => {
+
+        if (err) {
+            return res.status(500).end();
+        }
+
+        if (user == undefined || user == null) {
+            return res.status(404).send("user does not exist.").end()
+        }
+
+        const user_rides = user.rides
+
+        Rides.find({_id: {$in: user_rides}}, (err, rides) => {
+            if (err) {
+                return res.status(500).end();
+            }
+
+            return res.status(200).json(rides).end();
+        })
+    })
+  
 });
 
 router.post("/",  

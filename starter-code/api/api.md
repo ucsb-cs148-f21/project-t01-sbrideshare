@@ -1,4 +1,19 @@
+# Table of Contents
+## /rides
+* [POST /rides](#POST-/rides)
+* [GET /rides](#GET-/rides)
+* [PATCH /rides/:ride_id](PATCH-/rides/:ride_id)
+* [POST /rides/:ride_id/riders](POST-/rides/:ride_id/riders)
+* [DELETE /rides/:ride_id/riders/:rider_id](DELETE-/rides/:ride_id/riders/:rider_id)
 
+
+## /users
+* [POST /users](POST-/users)
+* [GET /users/:user_id](GET-/users/:user_id)
+* [GET /users/:user_id/drives](GET-/users/:user_id/drives)
+* [GET /users/:user_id/rides](GET-/users/:user_id/rides)
+
+--------
 # POST /rides
 
 Submits a ride with the specified data. Also adds a reference to this ride of the user `driver_id` rides array.
@@ -51,7 +66,8 @@ Retrieves an array of all rides. Note: Future implementation will allow search q
         "start_location": $String, 
         "end_location": $String, 
         "price": $Double, 
-        "seats_available": $Integer
+        "seats_available": $Integer,
+        "riders": $Array,
         "driver_id": $UUID 
     }
     ...
@@ -166,9 +182,9 @@ Returns a HTTP 200 Success if submitted.
     * The server could not save the request to MongoDB
 
 --------
-# GET /users
+# GET /users/:user_id
 
-Retrieves an array of all users.
+Gets information with `user_id`
 
 ## Request
 ```
@@ -179,19 +195,93 @@ Retrieves an array of all users.
 
 ## Response
 ```
+{   
+    "full_name": $String, 
+    "given_name": $String,
+    "family_name": $String,
+    "email": $String,
+    "id": $UUID,
+    "drives": $Array,
+    "rides": $Array,
+    "history": $Array 
+}
+```
+
+## Errors
+
+* 404 Bad Request
+    * `user_id` does not exist
+* 500 Internal Server Error
+    * The server could not save the request to MongoDB
+
+--------
+# GET /users/:user_id/drives
+
+Gets the array of the user's drives.
+
+## Request
+
+```
+{
+    // empty object or no object
+}
+```
+
+## Response
+
+```
 [
-    {   
-        "full_name": $String, 
-        "given_name": $String,
-        "family_name": $String,
-        "email": $String,
-        "id": $UUID,
-        "drives": $Array,
-        "rides": $Array,
-        "history": $Array 
+    {
+        "name": $String,
+        "leave_datetime": $String, // In ISO8601 format.
+        "start_location": $String, 
+        "end_location": $String, 
+        "price": $Double, 
+        "seats_available": $Integer,
+        "riders": $Array,
+        "driver_id": $UUID 
     }
     ...
 ]
 ```
+## Errors
+
+* 404 Bad Request
+    * `user_id` does not exist
+* 500 Internal Server Error
 
 --------
+# GET /users/:user_id/rides
+
+Gets the array of the user's rides.
+
+## Request
+
+```
+{
+    // empty object or no object
+}
+```
+
+## Response
+
+```
+[
+    {
+        "name": $String,
+        "leave_datetime": $String, // In ISO8601 format.
+        "start_location": $String, 
+        "end_location": $String, 
+        "price": $Double, 
+        "seats_available": $Integer,
+        "riders": $Array,
+        "driver_id": $UUID 
+    }
+    ...
+]
+```
+## Errors
+
+* 404 Bad Request
+    * `user_id` does not exist
+* 500 Internal Server Error

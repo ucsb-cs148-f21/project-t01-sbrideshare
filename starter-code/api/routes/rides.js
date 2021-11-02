@@ -106,7 +106,7 @@ router.post("/",
             }
 
             if (doc == undefined || doc == null) {
-                return res.status(404).send("driver_id does not exist as a user.")
+                return res.status(404).send("driver_id does not exist as a user.").end()
             }
 
             ride.save().then(saved_doc => {
