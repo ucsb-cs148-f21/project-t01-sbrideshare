@@ -631,15 +631,6 @@ describe("DELETE /rides/:ride_id/riders", function() {
     })
   })
 
-  it("400 on missing rider_id", function(done){
-    request(app)
-    .delete('/rides/1234/riders')
-    .set('Accept', 'application/json')
-    .expect(400)
-    .then(done())
-    .catch(err => done(err))
-  });
-
   it("test invalid and valid delete", function(done){
 
     const data = {
@@ -670,8 +661,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
       const body = res.body[0];
       id = body._id;
       return request(app)
-          .delete(`/rides/${id}/riders`)
-          .send({rider_id: rider_id})
+          .delete(`/rides/${id}/riders/${rider_id}`)
           .set('Accept', 'application/json')
           .expect(409)
     })
@@ -684,8 +674,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
     })
     .then(res => {
       return request(app)
-          .delete(`/rides/${id}/riders`)
-          .send({rider_id: rider_id})
+          .delete(`/rides/${id}/riders/${rider_id}`)
           .set('Accept', 'application/json')
           .expect(200)
     })

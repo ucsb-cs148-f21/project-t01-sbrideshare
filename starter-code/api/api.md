@@ -111,7 +111,7 @@ Returns HTTP 200 Success if successfully added to array.
     * There are no more available seats for the ride
 
 --------
-# DELETE /rides/:ride_id/riders
+# DELETE /rides/:ride_id/riders/:rider_id
 
 Removes the rider with `rider_id` from the `riders` array of the ride of the specifed `:ride_id`.
 
@@ -119,7 +119,7 @@ Removes the rider with `rider_id` from the `riders` array of the ride of the spe
 
 ```
 {
-    "rider_id": $UUID, //Required. 
+    // Empty request
 }
 ```
 

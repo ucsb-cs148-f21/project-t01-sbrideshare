@@ -177,16 +177,8 @@ router.post("/:ride_id/riders",
         }
 );
 
-router.delete("/:ride_id/riders",
-    body("rider_id")
-        .exists().withMessage('rider_id is required.').bail()
-        .notEmpty().withMessage('rider_id is required.').bail(),
+router.delete("/:ride_id/riders/:rider_id",
     function(req, res, next) {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()});
-        }
 
         const body = req.body;
         var ride_id = "";
@@ -206,7 +198,11 @@ router.delete("/:ride_id/riders",
                 return res.status(404).send("Unable to find ride with specified ride_id.").end();
             }
 
-            const index = ride.riders.indexOf(body.rider_id)
+            if (req.params.rider_id === undefined || req.params.rider_id === null) {
+                return res.status(400).send("rider_id cannot be undefined or null")
+            }
+
+            const index = ride.riders.indexOf(req.params.rider_id)
 
             if (index == -1) {
                 return res.status(409).send("rider_id is not a rider on this ride.").end();
