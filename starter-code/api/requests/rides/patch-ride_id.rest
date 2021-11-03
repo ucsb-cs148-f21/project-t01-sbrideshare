@@ -1,0 +1,6 @@
+PATCH http://localhost:9000/rides/6174648ff25701605b0bade2
+content-type: application/json
+
+{
+    "price": 100
+}
