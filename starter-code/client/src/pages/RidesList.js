@@ -7,7 +7,7 @@ import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
 import List from "./ride-files/List";
 import getBackendURL from "../utils/get-backend-url";
-
+import Search from "../components/Search";
 
 
 export default function RidesList() {
@@ -27,7 +27,10 @@ export default function RidesList() {
   
   return (
     <Layout user={user}>
+      
       <Container>
+        <Search />
+        <br />
         <h1>Rides</h1>
         To join a ride, select the green sign-up button.
         <hr/>

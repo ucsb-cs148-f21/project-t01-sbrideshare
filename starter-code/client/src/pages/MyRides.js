@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from "react";
 import axios from 'axios';
 import styled from "styled-components";
-
+import Search from "../components/Search"
 import getUser from "../utils/get-user";
 import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
@@ -42,6 +42,8 @@ export default function MyRides() {
   return (
     <Layout user={user}>
       <Container>
+        <Search />
+        <br />
         <h1>My Rides</h1>
         A list of rides that you are currently signed up for.
         <hr/>
