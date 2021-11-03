@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import RidesList from "./pages/RidesList";
 import Profile from "./pages/Profile";
 import Ride from "./pages/Ride";
+import MyRides from "./pages/MyRides"
 import Private from "./pages/Private";
 import PageNotFound from "./pages/PageNotFound";
 
@@ -55,6 +56,7 @@ export default function App() {
           <PrivateRoute exact path="/rides" component={RidesList} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/ride" component={Ride} />
+          <PrivateRoute exact path="/myrides" component={MyRides} />
           <Route path="/" component={PageNotFound} />
         </Switch>
       </BrowserRouter>
