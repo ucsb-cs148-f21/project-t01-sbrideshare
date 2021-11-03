@@ -167,7 +167,7 @@ describe("POST /users", function() {
       })
     });
 
-    const user_id = 21358971895
+    const user_id = "21358971895"
     const data = {
       full_name: "Joe Goldberg",  
       given_name: "Joe", 
@@ -194,7 +194,7 @@ describe("POST /users", function() {
           assert(body.given_name === data.given_name);
           assert(body.family_name === data.family_name);
           assert(body.email === data.email);
-          assert(body.id === data.id);
+          assert(body.id == data.id);
           assert(body.drives.length === 0);
           assert(body.rides.length === 0);
           assert(body.history.length === 0);
