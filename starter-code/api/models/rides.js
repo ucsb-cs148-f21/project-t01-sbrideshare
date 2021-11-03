@@ -7,8 +7,8 @@ const rideSchema = new mongoose.Schema({
     end_location: String, 
     price: Number, 
     seats_available: Number, 
-    driver_id: Number,
-    riders: Array
+    driver_id: String,
+    riders: [String]
 })
 
 module.exports = mongoose.model('Rides', rideSchema)

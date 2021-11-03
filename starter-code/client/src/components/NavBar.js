@@ -18,6 +18,7 @@ export default function NavBar(props) {
             <Nav.Link href="/">Home</Nav.Link>
             {ucsbAccount(user) && <Nav.Link href="/rides">Find A Ride</Nav.Link>}
             {ucsbAccount(user) && <Nav.Link href="/ride">Create A Ride</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link href="/myrides">My Rides</Nav.Link>}
           </Nav>
           <Nav>
             {!user ? (

@@ -1,13 +1,15 @@
 const mongoose = require('mongoose')
+const ObjectId = require('mongoose').Types.ObjectId
 
 const userSchema = new mongoose.Schema({
     full_name: String,  
     given_name: String, 
     family_name: String, 
     email: String, 
-    drives: Array, 
-    rides: Array,
-    history: Array
+    id: String,
+    drives: [ObjectId], 
+    rides: [ObjectId],
+    history: [ObjectId]
 })
 
 module.exports = mongoose.model('Users', userSchema)

@@ -1,0 +1,14 @@
+GET http://localhost:9000/rides
+content-type: application/json
+
+{
+    "price": {
+        "$gt": 10,
+        "asdfa": 50
+    },
+    "leave_datetime": {
+        "$gte": "2021-10-13T00:07:46.443Z",
+        "$lte": "2021-10-16T00:07:46.443Z"
+    }
+
+}

@@ -27,7 +27,8 @@ export default function Home() {
       full_name: user.fullName,
       given_name: user.givenName,
       family_name: user.familyName,
-      email: user.email
+      email: user.email,
+      id: user.id
     };
     axios.post(baseURL, formattedUser)
     .then(() => console.log('User Created'))

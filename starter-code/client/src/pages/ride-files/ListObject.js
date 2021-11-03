@@ -3,33 +3,24 @@ import axios from 'axios';
 import getBackendURL from "../../utils/get-backend-url";
 import getUser from "../../utils/get-user";
 
-
-
-//button values for if the user is in the ride
-function isInRideValues(){
-    var buttonText, buttonState, buttonColor;
-    buttonText = "You signed up!";
-    buttonState = false;
-    buttonColor = 'blue';
-    return [buttonText,buttonState,buttonColor];
-}
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
-    var buttonText, buttonState, buttonColor;
+    var buttonText, buttonState, inRide, buttonColor;
     buttonText = "Sign up for this ride!";
     buttonState = true;
-    buttonColor = 'green';
-    return [buttonText,buttonState,buttonColor];
+    inRide = false;
+    buttonColor = 'blue';
+    return [buttonText,buttonState,inRide,buttonColor];
 }
 //button values for if the ride is already full
 function rideFullValues(){
-    var buttonText, buttonState, buttonColor;
+    var buttonText, buttonState, inRide, buttonColor;
     buttonText = "Ride is full."
     buttonState = false;
+    inRide = false;
     buttonColor = 'gray';
-    return [buttonText,buttonState,buttonColor];
+    return [buttonText,buttonState,inRide,buttonColor];
 }
-
 //button values for if there is an error
 function getErrorValues(){
     var buttonText, buttonState, buttonColor;
@@ -38,15 +29,34 @@ function getErrorValues(){
     buttonColor = 'red';
     return [buttonText,buttonState,buttonColor];
 }
+function getCanRemove(){
+    var buttonText, buttonState, inRide, buttonColor;
+    buttonText = "Leave this ride";
+    buttonState = true;
+    inRide = true;
+    buttonColor = 'red';
+    return [buttonText,buttonState,inRide,buttonColor];
+}
+function userIsDriver(){
+    var buttonText, buttonState, inRide, buttonColor;
+    buttonText = "You're the driver.";
+    buttonState = false;
+    inRide = true;
+    buttonColor = 'maroon';
+    return [buttonText,buttonState,inRide,buttonColor];
+}
 
 //default button values for when the user first opens the page
 //do not use this for updating button values for anything other than
     //the page being opened/refreshed
 function getInitialButtonValues(rideInfo,user){
     var userInRide = rideInfo.riders.indexOf(user.id) > -1;
+    if(rideInfo.driver_id === user.id){
+        return userIsDriver();
+    }
     //if the user is already in the ride
-    if(userInRide){
-        return isInRideValues();
+    else if(userInRide){
+        return getCanRemove();
     }
     //if there are seats left
     else if(rideInfo.seats_available>0){
@@ -64,49 +74,76 @@ export default function ListObject(props) {
 
     var rideInfo = props.rideInfo;
 
-    var postRiderURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
+    var rideURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
 
-    const [seats,decrement] = useState({
+    const [seats,update] = useState({
         numSeats: rideInfo.seats_available
     });
 
-    var [buttonText,buttonState,buttonColor] = getInitialButtonValues(rideInfo,user);
+    var [buttonText,buttonState,inRide,buttonColor] = getInitialButtonValues(rideInfo,user);
     
     const [button,buttonChange] = useState({
         text: buttonText,
-        //state true means ride not joined
-        //state false means ride joined
         state: buttonState,
+        inRide: inRide,
         color: buttonColor
     });
 
     const buttonClick = (event) =>{
         //if the user is allowed to click the signup button
         if(button.state === true){
-            //send the signup request
-            axios.post(postRiderURL, {
-                "rider_id": user.id
-            })
-            //then change the button colors
-            .then(function (response) {
-                [buttonText,buttonState,buttonColor] = isInRideValues();
-                buttonChange({...button, text: buttonText,
-                state: buttonState,
-                color: buttonColor});
-                decrement({...seats, 
-                numSeats: seats.numSeats-1});
-            })
-            //if there is an error, log it and change button colors
-            .catch(function(error) {
-                console.log(error);
-                [buttonText,buttonState,buttonColor] = getErrorValues();
-                buttonChange({...button, text: buttonText,
-                state: buttonState,
-                color: buttonColor});
-            });
+            if(button.inRide === false){
+                //send the signup request
+                axios.post(rideURL, {
+                    "rider_id": user.id
+                })
+                //then change the button colors
+                .then(function (response) {
+                    //change button to be signed up
+                    [buttonText,buttonState,inRide,buttonColor] = getCanRemove();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    inRide: inRide,
+                    color: buttonColor});
+
+                    update({...seats, 
+                    numSeats: seats.numSeats-1});
+                })
+                //if there is an error, log it and change button colors
+                .catch(function(error) {
+                    console.log(error.response);
+                    [buttonText,buttonState,inRide,buttonColor] = getErrorValues();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    color: buttonColor});
+                });
+            }
+            else {
+                axios.delete(rideURL+"/"+user.id+"/", {
+
+                })
+                //then change the button colors
+                .then(function (response) {
+                    [buttonText,buttonState,inRide,buttonColor] = signupAvailableValues();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    inRide: inRide,
+                    color: buttonColor});
+
+                    update({...seats, 
+                    numSeats: seats.numSeats+1});
+                })
+                //if there is an error, log it and change button colors
+                .catch(function(error) {
+                    console.log(error.response);
+                    [buttonText,buttonState,buttonColor] = getErrorValues();
+                    buttonChange({...button, text: buttonText,
+                    state: buttonState,
+                    color: buttonColor});
+                });
+            }
         }
     }
-
     return (
         <div>
             <h4>{rideInfo.start_location} to {rideInfo.end_location}</h4>
