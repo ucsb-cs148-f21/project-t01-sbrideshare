@@ -8,7 +8,6 @@ import RidesList from "./pages/RidesList";
 import Profile from "./pages/Profile";
 import Ride from "./pages/Ride";
 import MyRides from "./pages/MyRides"
-import Private from "./pages/Private";
 import PageNotFound from "./pages/PageNotFound";
 
 
@@ -37,7 +36,7 @@ export default function App() {
     });
     window.gapi.load("signin2", () => {
       window.gapi.signin2.render("login-button", {
-        theme: "dark",
+        theme: "light",
       });
     });
   }
