@@ -1,5 +1,5 @@
 #login-container {
-    background: url(https://centralcoastdatascience.org/sites/default/files/styles/big_banner_desktop/public/2020-02/ucsb-banner.jpg?h=1f842c8e&itok=2ixkf1w7);
+    background: url("../images/ucsb-banner.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     max-width: 100%;
