@@ -37,7 +37,6 @@ export default function Login() {
       <div id="login-button" />
     </Container>
   );
-
   const handleChange = (event, value) => {
     if(value == 1) {
       setComponentDisplayed(firstPage);

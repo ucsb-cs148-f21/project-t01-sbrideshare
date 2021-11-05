@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Container from "react-bootstrap/Container";
-import axios from 'axios';
+import axios from "axios";
 
 import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
@@ -21,19 +21,22 @@ const Car = styled.img`
 
 export default function Home() {
   const user = getUser();
-  var baseURL = getBackendURL()+"/users";
+  var baseURL = getBackendURL() + "/users";
   useEffect(() => {
     const formattedUser = {
       full_name: user.fullName,
       given_name: user.givenName,
       family_name: user.familyName,
       email: user.email,
-      id: user.id
+      id: user.id,
     };
-    axios.post(baseURL, formattedUser)
-    .then(() => console.log('User Created'))
-    .catch(function(error) {console.log(error)})
-  },[]);
+    axios
+      .post(baseURL, formattedUser)
+      .then(() => console.log("User Created"))
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Layout user={user}>
@@ -42,21 +45,22 @@ export default function Home() {
         <h5>A web application designed for UCSB students on the go.</h5>
         <hr />
         <TextWrapper>
-          Users can either browse current rides and join them as passengers,
-          or post one of their own rides as drivers that they are willing to take passengers for.
+          Users can either browse current rides and join them as passengers, or
+          post one of their own rides as drivers that they are willing to take
+          passengers for.
         </TextWrapper>
         <br />
         <TextWrapper>
-          To search for available rides, go to the <a href="/Rides">Find A Ride</a> page.
+          To search for available rides, go to the{" "}
+          <a href="/Rides">Find A Ride</a> page.
         </TextWrapper>
         <br />
         <TextWrapper>
-          To post your own ride, go to the <a href="/Ride">Create A Ride</a> page.
+          To post your own ride, go to the <a href="/Ride">Create A Ride</a>{" "}
+          page.
         </TextWrapper>
         <br />
-        <TextWrapper>
-          Happy carpooling!
-        </TextWrapper>
+        <TextWrapper>Happy carpooling!</TextWrapper>
       </Container>
     </Layout>
   );
