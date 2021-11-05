@@ -13,15 +13,13 @@ const TextWrapper = styled.div`
 
 export default function Login() {
   const user = getUser();
-    return (
-
+  return (
     <Container id="login-container">
-        <h1>SB RideShare</h1>
-        <p>To continue, please sign in with a valid "ucsb.edu" email.</p>
-        <TextWrapper>
-        </TextWrapper>
-        <br />
-        <div id="login-button" />
+      <h1>SB RideShare</h1>
+      <p>To continue, please sign in with a valid "ucsb.edu" email.</p>
+      <TextWrapper></TextWrapper>
+      <br />
+      <div id="login-button" />
     </Container>
-);
+  );
 }
