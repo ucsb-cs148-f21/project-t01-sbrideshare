@@ -1,5 +1,7 @@
 #login-container {
-    background-color: lightblue;
+    background: url("../images/ucsb-banner.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
     max-width: 100%;
     height: 100vh;
     max-height: 100%;
@@ -9,7 +11,32 @@
 }
 
 #login-button {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
+}
+
+#pagination {
+    position: absolute;
+    left: 47vw;
+    justify-content: center;
+    bottom: 5vh;
+}
+
+#title {
+    margin-top: 15vh;
+    font-size: 120px;
+    color: #2196f3;
+}
+
+#get-started-button {
+    position: absolute;
+    left: 43vw;
+    top: 70vh;
+    justify-content: center;
+}
+
+#secondPage {
+    font-size: large;
+    margin-top: 20vh;
 }
