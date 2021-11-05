@@ -1,4 +1,6 @@
 var express = require("express");
+var axios = require('axios');
+
 var router = express.Router();
 
 const Rides = require('../models/rides')
@@ -7,6 +9,27 @@ const TestRides = require('../models/rides')
 router.get("/", function(req, res, next) {
     res.send("API is working properly");
 });
+
+router.get("/testGoogle", function(req, res, next) {
+    const API_KEY = "AIzaSyBPzTUmX5aUP4_86I4MtLv1n8ME2XCNuQs"
+
+    console.log("in here");
+    var config = {
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=formatted_address%2Cname%2Cgeometry&key=${API_KEY}`,
+        headers: { }
+    };
+      
+    axios(config)
+    .then(function (response) {
+    console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
+
+})
+
 
 router.post("/testCreateRide", function(req, res, next) {
     const body = req.body;
