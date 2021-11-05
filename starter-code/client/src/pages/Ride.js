@@ -14,7 +14,7 @@ export default function Ride() {
   const user_id = google_user.id;
 
   const [values, setValues] = useState({
-    name: "",
+    name: google_user.fullName,
     leave_datetime: new Date(),
     start_location: "",
     end_location: "",
@@ -106,10 +106,12 @@ export default function Ride() {
           errors["seats_available"] = "This is a required field.";
         } else if (seats_available < 1) {
           isValid = false;
-          errors["seats_available"] = "Number of riders should be less than 1.";
-        } else if (seats_available > 4) {
+          errors["seats_available"] =
+            "Number of riders should not be less than 1.";
+        } else if (seats_available > 10) {
           isValid = false;
-          errors["seats_available"] = "Number of riders should be less than 5.";
+          errors["seats_available"] =
+            "Number of riders should be less than 11.";
         } else {
           isValid = true;
           errors["seats_available"] = "";
@@ -170,7 +172,7 @@ export default function Ride() {
             setSubmitted(false);
           }, 2000);
           setValues({
-            name: "",
+            name: google_user.fullName,
             leave_datetime: new Date(),
             start_location: "",
             end_location: "",
