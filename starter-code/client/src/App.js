@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import CheckingSignedIn from "./pages/CheckingSignedIn";
-import Login from "./pages/Login"
+import Login from "./pages/Login";
 import Home from "./pages/Home";
 import RidesList from "./pages/RidesList";
 import Profile from "./pages/Profile";
 import Ride from "./pages/Ride";
+import MyRides from "./pages/MyRides";
 import Private from "./pages/Private";
 import PageNotFound from "./pages/PageNotFound";
-
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(null);
@@ -36,7 +36,7 @@ export default function App() {
     });
     window.gapi.load("signin2", () => {
       window.gapi.signin2.render("login-button", {
-        theme: "dark",
+        theme: "light",
       });
     });
   }
@@ -46,15 +46,16 @@ export default function App() {
     return <Route {...rest} component={isSignedIn ? component : Login} />;
   }
 
-  if (isSignedIn !== null){
+  if (isSignedIn !== null) {
     return (
       <BrowserRouter>
         <Switch>
-          {!isSignedIn && (<Route exact path="/" component={Login} />)}
+          {!isSignedIn && <Route exact path="/" component={Login} />}
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/rides" component={RidesList} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/ride" component={Ride} />
+          <PrivateRoute exact path="/myrides" component={MyRides} />
           <Route path="/" component={PageNotFound} />
         </Switch>
       </BrowserRouter>
