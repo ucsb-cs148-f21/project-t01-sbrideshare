@@ -31,5 +31,6 @@
 | Wed 10/27 | Heather Dinh      | Led sprint planning                                                        |
 | Fri 10/29 | Louie Aldana      | Led scrum meeting                                                          |
 | Mon 11/01 | Chris Stasiowski  | Led scrum meetings                                                         |
-| Mon 11/03 | Lucien Luc        | Led scrum meetings                                                         |
-| Mon 11/05 | Lucien Luc        |Led scrum meetings                                                          |
+| Wed 11/03 | Lucien Luc        | Led scrum meetings                                                         |
+| Fri 11/05 | Lucien Luc        | Led scrum meetings                                                         |
+| Mon 11/08 | Chris Stasiowski  | Led scrum meeting                                                          |
