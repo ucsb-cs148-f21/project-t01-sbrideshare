@@ -1,0 +1,244 @@
+{
+  "predictions": [
+    {
+      "description": "12 Embarcadero del Norte, Isla Vista, CA, USA",
+      "matched_substrings": [
+        {
+          "length": 11,
+          "offset": 3
+        }
+      ],
+      "place_id": "Ei0xMiBFbWJhcmNhZGVybyBkZWwgTm9ydGUsIElzbGEgVmlzdGEsIENBLCBVU0EiLiosChQKEgndUjyHaD_pgBGj4tJEuUwEyxIUChIJM78eTnxA6YARSvMiQcHZwc4",
+      "reference": "Ei0xMiBFbWJhcmNhZGVybyBkZWwgTm9ydGUsIElzbGEgVmlzdGEsIENBLCBVU0EiLiosChQKEgndUjyHaD_pgBGj4tJEuUwEyxIUChIJM78eTnxA6YARSvMiQcHZwc4",
+      "structured_formatting": {
+        "main_text": "12 Embarcadero del Norte",
+        "main_text_matched_substrings": [
+          {
+            "length": 11,
+            "offset": 3
+          }
+        ],
+        "secondary_text": "Isla Vista, CA, USA"
+      },
+      "terms": [
+        {
+          "offset": 0,
+          "value": "12"
+        },
+        {
+          "offset": 3,
+          "value": "Embarcadero del Norte"
+        },
+        {
+          "offset": 26,
+          "value": "Isla Vista"
+        },
+        {
+          "offset": 38,
+          "value": "CA"
+        },
+        {
+          "offset": 42,
+          "value": "USA"
+        }
+      ],
+      "types": [
+        "route",
+        "geocode"
+      ]
+    },
+    {
+      "description": "12 Embarcadero del Mar, Isla Vista, CA, USA",
+      "matched_substrings": [
+        {
+          "length": 11,
+          "offset": 3
+        }
+      ],
+      "place_id": "EisxMiBFbWJhcmNhZGVybyBkZWwgTWFyLCBJc2xhIFZpc3RhLCBDQSwgVVNBIi4qLAoUChIJd3YN4Gc_6YARIe1mZWFV_M4SFAoSCTO_Hk58QOmAEUrzIkHB2cHO",
+      "reference": "EisxMiBFbWJhcmNhZGVybyBkZWwgTWFyLCBJc2xhIFZpc3RhLCBDQSwgVVNBIi4qLAoUChIJd3YN4Gc_6YARIe1mZWFV_M4SFAoSCTO_Hk58QOmAEUrzIkHB2cHO",
+      "structured_formatting": {
+        "main_text": "12 Embarcadero del Mar",
+        "main_text_matched_substrings": [
+          {
+            "length": 11,
+            "offset": 3
+          }
+        ],
+        "secondary_text": "Isla Vista, CA, USA"
+      },
+      "terms": [
+        {
+          "offset": 0,
+          "value": "12"
+        },
+        {
+          "offset": 3,
+          "value": "Embarcadero del Mar"
+        },
+        {
+          "offset": 24,
+          "value": "Isla Vista"
+        },
+        {
+          "offset": 36,
+          "value": "CA"
+        },
+        {
+          "offset": 40,
+          "value": "USA"
+        }
+      ],
+      "types": [
+        "route",
+        "geocode"
+      ]
+    },
+    {
+      "description": "12 Embarcadero West, Oakland, CA, USA",
+      "matched_substrings": [
+        {
+          "length": 2,
+          "offset": 0
+        },
+        {
+          "length": 11,
+          "offset": 3
+        }
+      ],
+      "place_id": "ChIJSaT6OM2Aj4ARuXa7WS1ABFM",
+      "reference": "ChIJSaT6OM2Aj4ARuXa7WS1ABFM",
+      "structured_formatting": {
+        "main_text": "12 Embarcadero West",
+        "main_text_matched_substrings": [
+          {
+            "length": 2,
+            "offset": 0
+          },
+          {
+            "length": 11,
+            "offset": 3
+          }
+        ],
+        "secondary_text": "Oakland, CA, USA"
+      },
+      "terms": [
+        {
+          "offset": 0,
+          "value": "12"
+        },
+        {
+          "offset": 3,
+          "value": "Embarcadero West"
+        },
+        {
+          "offset": 21,
+          "value": "Oakland"
+        },
+        {
+          "offset": 30,
+          "value": "CA"
+        },
+        {
+          "offset": 34,
+          "value": "USA"
+        }
+      ],
+      "types": [
+        "street_address",
+        "geocode"
+      ]
+    },
+    {
+      "description": "12 El Embarcadero Road, Isla Vista, CA, USA",
+      "matched_substrings": [
+        {
+          "length": 19,
+          "offset": 3
+        }
+      ],
+      "place_id": "EisxMiBFbCBFbWJhcmNhZGVybyBSb2FkLCBJc2xhIFZpc3RhLCBDQSwgVVNBIi4qLAoUChIJqf53mmk_6YARZM7ci9yJNFISFAoSCTO_Hk58QOmAEUrzIkHB2cHO",
+      "reference": "EisxMiBFbCBFbWJhcmNhZGVybyBSb2FkLCBJc2xhIFZpc3RhLCBDQSwgVVNBIi4qLAoUChIJqf53mmk_6YARZM7ci9yJNFISFAoSCTO_Hk58QOmAEUrzIkHB2cHO",
+      "structured_formatting": {
+        "main_text": "12 El Embarcadero Road",
+        "main_text_matched_substrings": [
+          {
+            "length": 19,
+            "offset": 3
+          }
+        ],
+        "secondary_text": "Isla Vista, CA, USA"
+      },
+      "terms": [
+        {
+          "offset": 0,
+          "value": "12"
+        },
+        {
+          "offset": 3,
+          "value": "El Embarcadero Road"
+        },
+        {
+          "offset": 24,
+          "value": "Isla Vista"
+        },
+        {
+          "offset": 36,
+          "value": "CA"
+        },
+        {
+          "offset": 40,
+          "value": "USA"
+        }
+      ],
+      "types": [
+        "route",
+        "geocode"
+      ]
+    },
+    {
+      "description": "12 Embarcadero Road, Palo Alto, CA, USA",
+      "matched_substrings": [
+        {
+          "length": 14,
+          "offset": 0
+        }
+      ],
+      "place_id": "EicxMiBFbWJhcmNhZGVybyBSb2FkLCBQYWxvIEFsdG8sIENBLCBVU0EiUBJOCjQKMgnBbuNRJLuPgBGcJrLr-z2y6xoeCxDuwe6hARoUChIJbfq2kBe7j4ARBzf9LVIpZokMEAwqFAoSCdc4oc0Hu4-AEX45UvJkI4C-",
+      "reference": "EicxMiBFbWJhcmNhZGVybyBSb2FkLCBQYWxvIEFsdG8sIENBLCBVU0EiUBJOCjQKMgnBbuNRJLuPgBGcJrLr-z2y6xoeCxDuwe6hARoUChIJbfq2kBe7j4ARBzf9LVIpZokMEAwqFAoSCdc4oc0Hu4-AEX45UvJkI4C-",
+      "structured_formatting": {
+        "main_text": "12 Embarcadero Road",
+        "main_text_matched_substrings": [
+          {
+            "length": 14,
+            "offset": 0
+          }
+        ],
+        "secondary_text": "Palo Alto, CA, USA"
+      },
+      "terms": [
+        {
+          "offset": 0,
+          "value": "12 Embarcadero Road"
+        },
+        {
+          "offset": 21,
+          "value": "Palo Alto"
+        },
+        {
+          "offset": 32,
+          "value": "CA"
+        },
+        {
+          "offset": 36,
+          "value": "USA"
+        }
+      ],
+      "types": [
+        "street_address",
+        "geocode"
+      ]
+    }
+  ],
+  "status": "OK"
+}
