@@ -11,7 +11,7 @@ router.get("/", function(req, res, next) {
 });
 
 router.get("/testGoogle", function(req, res, next) {
-    const API_KEY = "AIzaSyBPzTUmX5aUP4_86I4MtLv1n8ME2XCNuQs"
+    const API_KEY = process.env.GOOGLE_API_KEY
 
     console.log("in here");
     var config = {
