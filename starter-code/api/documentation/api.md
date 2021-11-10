@@ -13,6 +13,8 @@
 * [GET /users/:user_id/drives](#-get-/users/:user_id/drives)
 * [GET /users/:user_id/rides](#-get-/users/:user_id/rides)
 
+## /locations
+* [GET /locations](#-get-/locations)
 --------
 # POST /rides
 
@@ -24,8 +26,8 @@ Submits a ride with the specified data. Also adds a reference to this ride of th
 {
     "name": $String, //Required. 
     "leave_datetime": $String, //Required. Must be in ISO8601 format.
-    "start_location": $String, //Required.
-    "end_location": $String, //Required.
+    "start_location": $String, //Required. Must be a valid placeid from Google Places API.
+    "end_location": $String, //Required.  Must be a valid placeid from Google Places API.
     "price": $Double, //Required. Cannot be negative.
     "seats_available": $Integer, //Required. Must be greater than 1.
     "driver_id": $UUID //Required. 
@@ -44,6 +46,8 @@ Returns a HTTP 200 Success if submitted.
     * The user with the specified `driver_id` cannot be found
 * 500 Internal Server Error
     * The server could not save the request to MongoDB
+    * The start_location is not a valid placeid
+    * The end_location is not a valid placeid
 
 --------
 # GET /rides
@@ -63,8 +67,18 @@ Retrieves an array of all rides. Note: Future implementation will allow search q
     {   
         "name": $String,
         "leave_datetime": $String, // In ISO8601 format.
-        "start_location": $String, 
-        "end_location": $String, 
+        "start_location": 
+        {
+            formatted_address: $String,
+            lat: $Double,
+            lng: $Double
+        }, 
+        "end_location":
+        {
+            formatted_address: $String,
+            lat: $Double,
+            lng: $Double
+        },
         "price": $Double, 
         "seats_available": $Integer,
         "riders": $Array,
@@ -234,8 +248,18 @@ Gets the array of the user's drives.
     {
         "name": $String,
         "leave_datetime": $String, // In ISO8601 format.
-        "start_location": $String, 
-        "end_location": $String, 
+        "start_location": 
+        {
+            formatted_address: $String,
+            lat: $Double,
+            lng: $Double
+        }, 
+        "end_location":
+        {
+            formatted_address: $String,
+            lat: $Double,
+            lng: $Double
+        },
         "price": $Double, 
         "seats_available": $Integer,
         "riders": $Array,
@@ -270,8 +294,18 @@ Gets the array of the user's rides.
     {
         "name": $String,
         "leave_datetime": $String, // In ISO8601 format.
-        "start_location": $String, 
-        "end_location": $String, 
+        "start_location": 
+        {
+            formatted_address: $String,
+            lat: $Double,
+            lng: $Double
+        }, 
+        "end_location":
+        {
+            formatted_address: $String,
+            lat: $Double,
+            lng: $Double
+        },
         "price": $Double, 
         "seats_available": $Integer,
         "riders": $Array,
@@ -284,4 +318,36 @@ Gets the array of the user's rides.
 
 * 404 Bad Request
     * `user_id` does not exist
+* 500 Internal Server Error
+
+--------
+# GET /locations
+
+Returns Google place information from an input query.
+
+## Request
+
+```
+{
+    "input": $String 
+}
+```
+
+## Response
+
+Note: Only important components included. See full sample response in `./get-locations.response`
+```
+{
+    "predictions": //Only returns up to 5 
+    [
+        "description": $String // This is the formatted address
+        "place_id": $String, // This is the place_id to pass in to start_location and end_location in POST /rides
+    ]
+    ...
+}
+```
+## Errors
+
+* 404 Bad Request
+    * `input` is required
 * 500 Internal Server Error

@@ -3,9 +3,12 @@ var router = express.Router();
 var ObjectId = require('mongoose').Types.ObjectId
 
 const { body, validationResult } = require('express-validator');
+const {Client} = require("@googlemaps/google-maps-services-js");
 
 const Rides = require('../models/rides')
 const Users = require('../models/users')
+
+const google_client = new Client({});
 
 router.get("/", function(req, res, next) {
     const body = req.body;
@@ -24,7 +27,7 @@ router.patch("/:ride_id",
     // Maybe add check so that you can't remove seats when riders are alrady signed up for them?
     body("seats_available")
         .isInt({min: 1}).withMessage('seats_available must be an integer at least 1.'),
-    function(req, res, next) {
+    async function(req, res, next) {
         const body = req.body;
 
         var ride_id = "";
@@ -35,10 +38,57 @@ router.patch("/:ride_id",
             return res.status(404).send("Unable to find ride with specified ride_id.").end()
         }
 
+        var start_location_geo = {}
+        var end_location_geo = {}
+        
+        // Get geocode of start and end locations
+        if (body.start_location != undefined) {
+            await google_client.geocode({
+                params: {
+                    key: process.env.GOOGLE_API_KEY,
+                    place_id: body.start_location
+                }
+            }).then(r => {
+                start_location_geo = r.data.results[0]
+            })
+            .catch(e => {
+                console.log(e.response.data.error_message);
+                return res.status(500).end()
+            })
+        }
+
+        if(body.end_location != undefined) {
+            await google_client.geocode({
+                params: {
+                    key: process.env.GOOGLE_API_KEY,
+                    place_id: body.end_location
+                }
+            }).then(r => {
+                end_location_geo = r.data.results[0]
+            })
+            .catch(e => {
+                console.log(e.response.data.error_message);
+                return res.status(500).end()
+            })
+        }
+
+        const formatted_start_location = 
+        { 
+            formatted_address: start_location_geo.formatted_address,
+            lat: start_location_geo.geometry.location.lat,
+            lng: start_location_geo.geometry.location.lng
+        }
+        const formatted_end_location = 
+        {
+            formatted_address: end_location_geo.formatted_address,
+            lat: end_location_geo.geometry.location.lat,
+            lng: end_location_geo.geometry.location.lng,
+        }
+
         const update_doc = {
             leave_datetime: body.leave_datetime,
-            start_location: body.start_location,
-            end_location: body.end_location,
+            start_location: formatted_start_location,
+            end_location: formatted_end_location,
             price: body.price,
             seats_available: body.seats_available
         }
@@ -78,7 +128,7 @@ router.post("/",
     body("driver_id")
         .exists().withMessage('driver_id is required.').bail()
         .notEmpty().withMessage('driver_id is required.').bail(),
-    function(req, res, next) {
+    async function(req, res, next) {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -86,12 +136,52 @@ router.post("/",
         }
 
         const body = req.body;
-        
+
+        var start_location_geo = {}
+        var end_location_geo = {}
+
+        // Get geocode of start and end locations
+        await google_client.geocode({
+            params: {
+                key: process.env.GOOGLE_API_KEY,
+                place_id: body.start_location
+            }
+        }).then(r => {
+            start_location_geo = r.data.results[0]
+        })
+        .catch(e => {
+            console.log(e.response.data.error_message);
+            return res.status(500).end()
+        })
+
+        await google_client.geocode({
+            params: {
+                key: process.env.GOOGLE_API_KEY,
+                place_id: body.end_location
+            }
+        }).then(r => {
+            end_location_geo = r.data.results[0]
+        })
+        .catch(e => {
+            console.log(e.response.data.error_message);
+            return res.status(500).end()
+        })
+
         const ride = new Rides({
             name: body.name,
             leave_datetime: body.leave_datetime,
-            start_location: body.start_location,
-            end_location: body.end_location,
+            start_location: 
+            {
+                formatted_address: start_location_geo.formatted_address,
+                lat: start_location_geo.geometry.location.lat,
+                lng: start_location_geo.geometry.location.lng,
+            },
+            end_location: 
+            {
+                formatted_address: end_location_geo.formatted_address,
+                lat: end_location_geo.geometry.location.lat,
+                lng: end_location_geo.geometry.location.lng,
+            },
             price: body.price,
             seats_available: body.seats_available,
             driver_id: body.driver_id,
