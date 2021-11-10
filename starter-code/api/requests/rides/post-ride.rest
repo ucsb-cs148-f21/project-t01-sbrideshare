@@ -4,9 +4,9 @@ content-type: application/json
 {
     "name": "John",
     "leave_datetime": "2021-10-15T00:00:00.000",
-    "start_location": "Santa Barbara",
-    "end_location": "Los Angeles",
+    "start_location": "EiMxMjMgVHJpZ28gUm9hZCwgSXNsYSBWaXN0YSwgQ0EsIFVTQSIuKiwKFAoSCR93hRtDP-mAEV9td0-B5FqoEhQKEgkzvx5OfEDpgBFK8yJBwdnBzg",
+    "end_location": "EiMxMjMgVHJpZ28gUm9hZCwgSXNsYSBWaXN0YSwgQ0EsIFVTQSIuKiwKFAoSCR93hRtDP-mAEV9td0-B5FqoEhQKEgkzvx5OfEDpgBFK8yJBwdnBzg",
     "price": 20,
     "seats_available": 5,
-    "driver_id": 1234
+    "driver_id": "100210583544029309281"
 }

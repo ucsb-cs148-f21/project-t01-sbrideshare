@@ -4,6 +4,9 @@ const assert = require('assert');
 
 const app = require("../app");
 
+const valid_placeid = "EiMxMjMgVHJpZ28gUm9hZCwgSXNsYSBWaXN0YSwgQ0EsIFVTQSIuKiwKFAoSCR93hRtDP-mAEV9td0-B5FqoEhQKEgkzvx5OfEDpgBFK8yJBwdnBzg";
+
+
 // wait until app connects to Mongo
 /*
 before(function (done) {
@@ -245,8 +248,8 @@ describe("GET /:user_id/drives", function() {
     {
       name: "Will",
       leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Santa Barbara",
-      end_location: "Los Angeles",
+      start_location: valid_placeid,
+      end_location: valid_placeid,
       price: 1000.23,
       seats_available: 2,
       driver_id: id1
@@ -254,8 +257,8 @@ describe("GET /:user_id/drives", function() {
     {
       name: "Joe",
       leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Isla Vista",
-      end_location: "San Diego",
+      start_location: valid_placeid,
+      end_location: valid_placeid,
       price: 10.23,
       seats_available: 1,
       driver_id: id2
@@ -310,8 +313,8 @@ describe("GET /:user_id/drives", function() {
       assert.equal(body.length, 1)
       assert.equal(drive.name, "Will")
       assert.equal(Date.parse(drive.leave_datetime), Date.parse("2021-10-12T00:07:46.443+00:00"))
-      assert.equal(drive.start_location, "Santa Barbara")
-      assert.equal(drive.end_location, "Los Angeles")
+      assert.notStrictEqual(drive.start_location.formatted_address, undefined)
+      assert.notStrictEqual(drive.end_location.formatted_address, undefined)
       assert.equal(drive.price, 1000.23)
       assert.equal(drive.seats_available, 2)
     })
@@ -349,8 +352,8 @@ describe("GET /:user_id/rides", function() {
     {
       name: "Will",
       leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Santa Barbara",
-      end_location: "Los Angeles",
+      start_location: valid_placeid,
+      end_location: valid_placeid,
       price: 1000.23,
       seats_available: 2,
       driver_id: id1
@@ -358,8 +361,8 @@ describe("GET /:user_id/rides", function() {
     {
       name: "Joe",
       leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Isla Vista",
-      end_location: "San Diego",
+      start_location: valid_placeid,
+      end_location: valid_placeid,
       price: 10.23,
       seats_available: 1,
       driver_id: id2
@@ -432,8 +435,8 @@ describe("GET /:user_id/rides", function() {
       assert.equal(body.length, 1)
       assert.equal(ride.name, "Will")
       assert.equal(Date.parse(ride.leave_datetime), Date.parse("2021-10-12T00:07:46.443+00:00"))
-      assert.equal(ride.start_location, "Santa Barbara")
-      assert.equal(ride.end_location, "Los Angeles")
+      assert.notStrictEqual(ride.start_location.formatted_address, undefined)
+      assert.notStrictEqual(ride.end_location.formatted_address, undefined)
       assert.equal(ride.price, 1000.23)
       assert.equal(ride.seats_available, 1)
     })

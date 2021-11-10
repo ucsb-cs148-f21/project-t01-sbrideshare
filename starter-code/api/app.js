@@ -12,6 +12,7 @@ var usersRouter = require("./routes/users");
 var testAPIRouter = require("./routes/testAPI");
 
 var ridesRouter = require("./routes/rides");
+var locationsRouter = require("./routes/locations");
 
 var app = express();
 
@@ -54,6 +55,7 @@ app.use("/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
 
 app.use("/rides", ridesRouter);
+app.use("/locations", locationsRouter);
 
 const connection = connect();
 
