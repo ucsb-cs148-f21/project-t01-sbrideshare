@@ -2,6 +2,12 @@ import React, {useState} from 'react'
 import axios from 'axios';
 import getBackendURL from "../../utils/get-backend-url";
 import getUser from "../../utils/get-user";
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Button from '@mui/material/Button';
+import CardActions from '@mui/material/CardActions';
 
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
@@ -9,7 +15,7 @@ function signupAvailableValues(){
     buttonText = "Sign up for this ride!";
     buttonState = true;
     inRide = false;
-    buttonColor = 'blue';
+    buttonColor = 'join';
     return [buttonText,buttonState,inRide,buttonColor];
 }
 //button values for if the ride is already full
@@ -18,7 +24,7 @@ function rideFullValues(){
     buttonText = "Ride is full."
     buttonState = false;
     inRide = false;
-    buttonColor = 'gray';
+    buttonColor = 'full';
     return [buttonText,buttonState,inRide,buttonColor];
 }
 //button values for if there is an error
@@ -26,7 +32,7 @@ function getErrorValues(){
     var buttonText, buttonState, buttonColor;
     buttonText = "Error.";
     buttonState = false;
-    buttonColor = 'red';
+    buttonColor = 'error';
     return [buttonText,buttonState,buttonColor];
 }
 function getCanRemove(){
@@ -34,7 +40,7 @@ function getCanRemove(){
     buttonText = "Leave this ride";
     buttonState = true;
     inRide = true;
-    buttonColor = 'red';
+    buttonColor = 'leave';
     return [buttonText,buttonState,inRide,buttonColor];
 }
 function userIsDriver(){
@@ -42,7 +48,7 @@ function userIsDriver(){
     buttonText = "You're the driver.";
     buttonState = false;
     inRide = true;
-    buttonColor = 'maroon';
+    buttonColor = 'driver';
     return [buttonText,buttonState,inRide,buttonColor];
 }
 
@@ -89,9 +95,12 @@ export default function ListObject(props) {
         color: buttonColor
     });
 
+    const [loading, setLoading] = useState(false);
+
     const buttonClick = (event) =>{
         //if the user is allowed to click the signup button
         if(button.state === true){
+            setLoading(true);
             if(button.inRide === false){
                 //send the signup request
                 axios.post(rideURL, {
@@ -105,6 +114,8 @@ export default function ListObject(props) {
                     state: buttonState,
                     inRide: inRide,
                     color: buttonColor});
+                    
+                    setLoading(false);
 
                     update({...seats, 
                     numSeats: seats.numSeats-1});
@@ -129,6 +140,8 @@ export default function ListObject(props) {
                     state: buttonState,
                     inRide: inRide,
                     color: buttonColor});
+                    
+                    setLoading(false);
 
                     update({...seats, 
                     numSeats: seats.numSeats+1});
@@ -144,14 +157,40 @@ export default function ListObject(props) {
             }
         }
     }
-    return (
-        <div>
+    /*
             <h4>{rideInfo.start_location} to {rideInfo.end_location}</h4>
             <p>Driver: {rideInfo.name}</p>
             <p>Leaving: {rideInfo.leave_datetime}</p>
             <p>Seats Available: {seats.numSeats}</p>
             <button  style={{backgroundColor: button.color}} onClick={() => buttonClick()}>{button.text}</button>
-            <hr/>
+            <hr/>       
+    */
+    return (
+        <div>
+            <Card  elevation = {2}>
+                <CardHeader
+                    title = {rideInfo.start_location + " -> " + rideInfo.end_location}
+                    subheader = {rideInfo.leave_datetime}
+                    action={
+                        <Button 
+                            variant="contained"
+                            color = {button.color}
+                            onClick={() => buttonClick()}
+                            loading = {loading}
+                            >
+                                {button.text}
+                        </Button>
+                      }
+                />
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary">
+                        Driver: {rideInfo.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Seats Available: {seats.numSeats}
+                    </Typography>
+                </CardContent>
+            </Card>
         </div>
     );
 }
