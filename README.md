@@ -22,3 +22,7 @@ Users can search for rides as a rider or post a new ride as a driver. Riders sea
 - Drivers: Drivers have the ability to post rides which include where they are going, what time they are leaving, and other details about their ride. 
 
 Riders would be able to search for all available rides on the app. Drivers would have the ability to delete their own postings and create new rides. One user can switch between being a driver or rider. These users would be tied to @ucsb Google accounts where each account would have two profiles - one for being a rider and one for being a driver.
+
+## Deployment
+
+Deployment steps are outlined in [this](https://github.com/ucsb-cs148-f21/project-t01-sbrideshare/blob/master/docs/DEPLOY.md) file. 
