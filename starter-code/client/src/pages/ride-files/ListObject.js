@@ -169,7 +169,8 @@ export default function ListObject(props) {
         <div>
             <Card  elevation = {2}>
                 <CardHeader
-                    title = {rideInfo.start_location + " -> " + rideInfo.end_location}
+                    title = {rideInfo.start_location.formatted_address + 
+                        " -> " + rideInfo.end_location.formatted_address}
                     subheader = {rideInfo.leave_datetime}
                     action={
                         <Button 
