@@ -7,9 +7,12 @@ import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
 import List from "./ride-files/List";
 import getBackendURL from "../utils/get-backend-url";
+import {ThemeProvider} from '@mui/material/styles';
+import getTheme from "./ride-files/ListTheme";
 
 export default function MyRides() {
   const user = getUser();
+  const theme = getTheme();
 
   const [list, makeList] = React.useState(
     "Attempting to connect to the server...",
@@ -32,6 +35,7 @@ export default function MyRides() {
           }
           if (!rider) {
             response.data.splice(i, 1);
+            i--;
           }
         }
         makeList(<List rideInfo={response.data} />);
@@ -43,14 +47,15 @@ export default function MyRides() {
 
   return (
     <Layout user={user}>
-      <Container>
-        <Search />
-        <br />
-        <h1>My Rides</h1>
-        A list of rides that you are currently signed up for.
-        <hr />
-        {list}
-      </Container>
+      <ThemeProvider theme={theme}> 
+        <Container>
+          <br />
+          <h1>My Rides</h1>
+          A list of rides that you are currently signed up for.
+          <hr />
+          {list}
+        </Container>
+      </ ThemeProvider>
     </Layout>
   );
 }

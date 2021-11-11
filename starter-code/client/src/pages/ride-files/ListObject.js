@@ -9,6 +9,14 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
 
+import Avatar from '@mui/material/Avatar';
+
+function stringAvatar(name) {
+  return {
+    children: `${name.split(' ')[0][0]}`,
+  };
+}
+
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
     var buttonText, buttonState, inRide, buttonColor;
@@ -182,6 +190,9 @@ export default function ListObject(props) {
                                 {button.text}
                         </Button>
                       }
+                    avatar = {<Avatar 
+                        sx={{ width: 60, height: 60 }} 
+                        src="https://lh3.googleusercontent.com/a/AATXAJz5V1gw4kVI4zY077VlQjO4N7nsB5bpG4VsRC2y=s96-c"/>}
                 />
                 <CardContent>
                     <Typography variant="body2" color="textSecondary">
@@ -189,6 +200,9 @@ export default function ListObject(props) {
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                         Seats Available: {seats.numSeats}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Price: ${rideInfo.price}
                     </Typography>
                 </CardContent>
             </Card>
