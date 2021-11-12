@@ -34,3 +34,5 @@
 | Wed 11/03 | Lucien Luc        | Led scrum meetings                                                         |
 | Fri 11/05 | Lucien Luc        | Led scrum meetings                                                         |
 | Mon 11/08 | Chris Stasiowski  | Led scrum meeting                                                          |
+| Wed 11/10 | Heather Dinh      | Led scrum meeting                                                          |
+| Fri 11/12 | Louie Aldana      | Led scrum meeting                                                          |

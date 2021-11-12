@@ -1,0 +1,17 @@
+#home {
+    background-image: linear-gradient(to right, lightblue, green);
+}
+
+#home-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20vh;
+}
+
+#home-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}

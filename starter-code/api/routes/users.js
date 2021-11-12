@@ -78,6 +78,9 @@ router.post("/",
     body("family_name")
         .exists().withMessage('family_name is required.').bail()
         .notEmpty().withMessage('family_name is required.').bail(), 
+    body("image_url")
+        .exists().withMessage('image_url is required.').bail()
+        .notEmpty().withMessage('image_url is required.').bail(), 
     body("email")
         .exists().withMessage('email is required.').bail()
         .notEmpty().withMessage('email is required.').bail(), 
@@ -107,6 +110,7 @@ router.post("/",
                 full_name: body.full_name,
                 given_name: body.given_name,
                 family_name: body.family_name,
+                image_url: body.image_url,
                 email: body.email,
                 id: body.id,
                 drives: [],
