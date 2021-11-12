@@ -15,12 +15,6 @@ const TextWrapper = styled.div`
   max-width: 100%;
 `;
 
-const Car = styled.img`
-  width: 500px;
-  max-width: 100%;
-  height: AudioTrack;
-`;
-
 export default function Home() {
   const user = getUser();
   var baseURL = getBackendURL() + "/users";
@@ -29,7 +23,7 @@ export default function Home() {
       full_name: user.fullName,
       given_name: user.givenName,
       family_name: user.familyName,
-      imageUrl: user.image_url,
+      image_url: user.imageUrl,
       email: user.email,
       id: user.id,
     };
