@@ -41,6 +41,7 @@ describe("POST /rides validation", function() {
         "full_name": "Joe Goldberg",
         "given_name": "Joe", 
         "family_name": "Goldberg", 
+        "image_url": "https://google.com",
         "email": "joegoldberg@ucsb.edu",
         "id": "123"
       })
@@ -196,6 +197,7 @@ describe("POST /rides", function() {
         "full_name": "Joe Goldberg",
         "given_name": "Joe", 
         "family_name": "Goldberg", 
+        "image_url": "https://google.com",
         "email": "joegoldberg@ucsb.edu",
         "id": "123"
       })
@@ -288,6 +290,7 @@ describe("POST /rides/:ride_id/riders", function() {
       "full_name": "Will Wilkins",
       "given_name": "Will", 
       "family_name": "Wilkins", 
+      "image_url": "https://google.com",
       "email": "willwilkins@ucsb.edu",
       "id": driver_id,
     },
@@ -295,6 +298,7 @@ describe("POST /rides/:ride_id/riders", function() {
     "full_name": "Joe Goldberg",
     "given_name": "Joe", 
     "family_name": "Goldberg", 
+    "image_url": "https://google.com",
     "email": "joegoldberg@ucsb.edu",
     "id": rider_id,
     }
@@ -632,6 +636,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
       "full_name": "Will Wilkins",
       "given_name": "Will", 
       "family_name": "Wilkins", 
+      "image_url": "https://google.com",
       "email": "willwilkins@ucsb.edu",
       "id": driver_id,
     },
@@ -639,6 +644,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
     "full_name": "Joe Goldberg",
     "given_name": "Joe", 
     "family_name": "Goldberg", 
+    "image_url": "https://google.com",
     "email": "joegoldberg@ucsb.edu",
     "id": rider_id,
     }

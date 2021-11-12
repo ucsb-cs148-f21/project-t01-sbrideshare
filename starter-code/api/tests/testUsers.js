@@ -83,6 +83,7 @@ describe("POST /users validation", function() {
           .send({
               "full_name": "Joe Goldberg",
               "family_name": "Goldberg", 
+              "image_url": "https://google.com",
               "email": "joegoldber@ucsb.edu",
               "id": "21358971895"
           })
@@ -99,6 +100,7 @@ describe("POST /users validation", function() {
         .send({
             "full_name": "Joe Goldberg",
             "given_name": "Joe", 
+            "image_url": "https://google.com",
             "email": "joegoldber@ucsb.edu",
             "id": "21358971895"
         })
@@ -108,6 +110,23 @@ describe("POST /users validation", function() {
         done();
         })
     });
+
+    it("400 on missing image url", function(done) {
+      request(app)
+              .post("/users")
+              .send({
+                "full_name": "Joe Goldberg",
+                "given_name": "Joe", 
+                "family_name": "Goldberg", 
+                "email": "joegoldber@ucsb.edu",
+                "id": "21358971895"
+              })
+            .set('Accept', 'application/json')
+            .expect(400)
+            .then(res => {
+              done();
+            })
+      });
   
     it("400 on missing email", function(done) {
       request(app)
@@ -116,6 +135,7 @@ describe("POST /users validation", function() {
           "full_name": "Joe Goldberg",
           "given_name": "Joe", 
           "family_name": "Goldberg", 
+          "image_url": "https://google.com",
           "id": "21358971895"
         })
         .set('Accept', 'application/json')
@@ -131,6 +151,7 @@ describe("POST /users validation", function() {
               "full_name": "Joe Goldberg",
               "given_name": "Joe", 
               "family_name": "Goldberg", 
+              "image_url": "https://google.com",
               "email": "joegoldber@ucsb.edu"
             })
           .set('Accept', 'application/json')
@@ -147,6 +168,7 @@ describe("POST /users validation", function() {
           "full_name": "Joe Goldberg",
           "given_name": "Joe", 
           "family_name": "Goldberg", 
+          "image_url": "https://google.com",
           "email": "joegoldberg@ucsb.edu",
           "id": "21358971895"
         })
@@ -172,6 +194,7 @@ describe("POST /users", function() {
       full_name: "Joe Goldberg",  
       given_name: "Joe", 
       family_name: "Goldberg", 
+      image_url: "https://google.com",
       email: "joegoldberg@ucsb.edu", 
       id: user_id
     };
@@ -193,6 +216,7 @@ describe("POST /users", function() {
           assert(body.full_name === data.full_name);
           assert(body.given_name === data.given_name);
           assert(body.family_name === data.family_name);
+          assert(body.image_url === data.image_url);
           assert(body.email === data.email);
           assert(body.id == data.id);
           assert(body.drives.length === 0);
@@ -229,6 +253,7 @@ describe("GET /:user_id/drives", function() {
       "full_name": "Will Wilkins",
       "given_name": "Will", 
       "family_name": "Wilkins", 
+      "image_url": "https://google.com",
       "email": "willwilkins@ucsb.edu",
       "id": id1,
     },
@@ -236,6 +261,7 @@ describe("GET /:user_id/drives", function() {
     "full_name": "Joe Goldberg",
     "given_name": "Joe", 
     "family_name": "Goldberg", 
+    "image_url": "https://google.com",
     "email": "joegoldberg@ucsb.edu",
     "id": id2,
     }
@@ -333,6 +359,7 @@ describe("GET /:user_id/rides", function() {
       "full_name": "Will Wilkins",
       "given_name": "Will", 
       "family_name": "Wilkins", 
+      "image_url": "https://google.com",
       "email": "willwilkins@ucsb.edu",
       "id": id1,
     },
@@ -340,6 +367,7 @@ describe("GET /:user_id/rides", function() {
     "full_name": "Joe Goldberg",
     "given_name": "Joe", 
     "family_name": "Goldberg", 
+    "image_url": "https://google.com",
     "email": "joegoldberg@ucsb.edu",
     "id": id2,
     }
