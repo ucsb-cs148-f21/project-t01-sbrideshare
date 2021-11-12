@@ -8,6 +8,8 @@
     "test": "NODE_ENV=test node ./node_modules/.bin/mocha ./tests --recursive --exit --timeout 5000"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.1",
+    "axios": "^0.24.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
