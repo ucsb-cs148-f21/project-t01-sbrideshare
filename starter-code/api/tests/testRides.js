@@ -4,6 +4,8 @@ const assert = require('assert');
 
 const app = require("../app");
 
+const valid_placeid = "EiMxMjMgVHJpZ28gUm9hZCwgSXNsYSBWaXN0YSwgQ0EsIFVTQSIuKiwKFAoSCR93hRtDP-mAEV9td0-B5FqoEhQKEgkzvx5OfEDpgBFK8yJBwdnBzg";
+const valid_placeid2 = "Ei0xMiBFbWJhcmNhZGVybyBkZWwgTm9ydGUsIElzbGEgVmlzdGEsIENBLCBVU0EiLiosChQKEgndUjyHaD_pgBGj4tJEuUwEyxIUChIJM78eTnxA6YARSvMiQcHZwc4"
 // wait until app connects to Mongo
 before(function (done) {
   app.on("mongoConnected", function(){
@@ -61,8 +63,8 @@ describe("POST /rides validation", function() {
       .post("/rides")
       .send({
         "leave_datetime": "2021-10-12T00:07:46.443+00:00",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
         "driver_id": 123
@@ -79,8 +81,8 @@ describe("POST /rides validation", function() {
       .post("/rides")
       .send({
         "name": "John",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
         "driver_id": 123
@@ -98,8 +100,8 @@ describe("POST /rides validation", function() {
       .send({
         "name": "John",
         "leave_datetime": "2021-10-12T00:07:46.443+00:0",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
         "driver_id": 123
@@ -117,8 +119,8 @@ describe("POST /rides validation", function() {
       .send({
         "name": "John",
         "leave_datetime": "2021-10-12T00:07:46.443+00:00",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": -1,
         "seats_available": 1,
         "driver_id": 123
@@ -136,8 +138,8 @@ describe("POST /rides validation", function() {
       .send({
         "name": "John",
         "leave_datetime": "2021-10-12T00:07:46.443+00:00",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": 500,
         "seats_available": -1,
         "driver_id": 123
@@ -155,8 +157,8 @@ describe("POST /rides validation", function() {
       .send({
         "name": "John",
         "leave_datetime": "2021-10-12T00:07:46.443+00:00",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": 500,
         "seats_available": 0,
         "driver_id": 123
@@ -174,8 +176,8 @@ describe("POST /rides validation", function() {
       .send({
         "name": "John",
         "leave_datetime": "2021-10-12T00:07:46.443+00:00",
-        "start_location": "Santa Barbara",
-        "end_location": "Los Angeles",
+        "start_location": valid_placeid,
+        "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
         "driver_id": 123
@@ -216,8 +218,8 @@ describe("POST /rides", function() {
   const data = {
     name: "Will",
     leave_datetime: "2021-10-12T00:07:46.443+00:00",
-    start_location: "Santa Barbara",
-    end_location: "Los Angeles",
+    start_location: valid_placeid,
+    end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
     driver_id: driver_id
@@ -244,8 +246,12 @@ describe("POST /rides", function() {
 
         assert(body.name === data.name);
         assert(Date.parse(body.leave_datetime) === Date.parse(data.leave_datetime));
-        assert(body.start_location === data.start_location);
-        assert(body.end_location === data.end_location);
+        assert.notStrictEqual(body.start_location.formatted_address, undefined);
+        assert.notStrictEqual(body.start_location.lat, undefined);
+        assert.notStrictEqual(body.start_location.lng, undefined);
+        assert.notStrictEqual(body.end_location.formatted_address, undefined);
+        assert.notStrictEqual(body.end_location.lat, undefined);
+        assert.notStrictEqual(body.end_location.lng, undefined);
         assert(body.price === data.price);
         assert(body.seats_available === data.seats_available);
         assert(body.riders.length === 0);
@@ -278,8 +284,8 @@ describe("POST /rides/:ride_id/riders", function() {
   const data = {
     name: "Will",
     leave_datetime: "2021-10-12T00:07:46.443+00:00",
-    start_location: "Santa Barbara",
-    end_location: "Los Angeles",
+    start_location: valid_placeid,
+    end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
     driver_id: driver_id
@@ -430,8 +436,8 @@ describe("POST /rides/:ride_id/riders", function() {
     const data = {
       name: "Will",
       leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Santa Barbara",
-      end_location: "Los Angeles",
+      start_location: valid_placeid,
+      end_location: valid_placeid,
       price: 1000.23,
       seats_available: 1,
       driver_id: 123
@@ -479,16 +485,11 @@ describe("PATCH /rides/:ride_id validation", function() {
   const data = {
     name: "Will",
     leave_datetime: "2021-10-12T00:07:46.443+00:00",
-    start_location: "Santa Barbara",
-    end_location: "Los Angeles",
+    start_location: valid_placeid,
+    end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
     driver_id: 123
-  }
-
-  const update_data = {
-    price: 10,
-    start_location: "Texas"
   }
 
   // put something in rides table first
@@ -569,8 +570,8 @@ describe("PATCH /rides/:ride_id", function() {
     const data = {
       name: "Will",
       leave_datetime: "2021-10-12T00:07:46.443+00:00",
-      start_location: "Santa Barbara",
-      end_location: "Los Angeles",
+      start_location: valid_placeid,
+      end_location: valid_placeid,
       price: 1000.23,
       seats_available: 2,
       driver_id: 123
@@ -578,11 +579,12 @@ describe("PATCH /rides/:ride_id", function() {
 
     const update_data = {
       leave_datetime: "2021-10-13T00:07:46.443+00:00",
-      start_location: "Goleta",
+      start_location: valid_placeid2,
       seats_available: 5,
     }
 
     var id = "";
+    var old_address = "";
 
     request(app)
       .post("/rides")
@@ -597,7 +599,10 @@ describe("PATCH /rides/:ride_id", function() {
     })
     .then(res => {
       const body = res.body[0];
+
       id = body._id;
+      old_address = body.start_location.formatted_address;
+
       return request(app)
         .patch(`/rides/${id}`)
         .send(update_data)
@@ -614,8 +619,8 @@ describe("PATCH /rides/:ride_id", function() {
       const body = res.body[0]
       assert(body.name === data.name)
       assert(body.leave_datetime === update_data.leave_datetime)
-      assert(body.start_location === update_data.start_location)
-      assert(body.end_location === data.end_location)
+      assert.notStrictEqual(body.start_location.formatted_address, old_address)
+      assert.equal(body.end_location.formatted_address, old_address)
       assert(body.price  === data.price)
       assert(body.seats_available === update_data.seats_available)
       assert(body.driver_id === data.driver_id)
@@ -653,8 +658,8 @@ describe("DELETE /rides/:ride_id/riders", function() {
   const data = {
     name: "Will",
     leave_datetime: "2021-10-12T00:07:46.443+00:00",
-    start_location: "Santa Barbara",
-    end_location: "Los Angeles",
+    start_location: valid_placeid,
+    end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
     driver_id: driver_id
