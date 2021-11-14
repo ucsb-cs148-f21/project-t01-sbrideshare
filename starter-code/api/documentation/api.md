@@ -28,6 +28,7 @@ Submits a ride with the specified data. Also adds a reference to this ride of th
     "leave_datetime": $String, //Required. Must be in ISO8601 format.
     "start_location": $String, //Required. Must be a valid placeid from Google Places API.
     "end_location": $String, //Required.  Must be a valid placeid from Google Places API.
+    "rider_radius": $Integer, //Required. Max distance driver is willing to pick up and dropoff riders from driver's intended destination.
     "price": $Double, //Required. Cannot be negative.
     "seats_available": $Integer, //Required. Must be greater than 1.
     "driver_id": $UUID //Required. 
@@ -52,7 +53,7 @@ Returns a HTTP 200 Success if submitted.
 --------
 # GET /rides
 
-Retrieves an array of all rides. Note: Future implementation will allow search queries
+Queries for rides. Returns rides which satisfy the provided request params.
 
 ## Request
 ```
@@ -60,6 +61,23 @@ Retrieves an array of all rides. Note: Future implementation will allow search q
     //empty object or no object
 }
 ```
+
+## Params
+
+Append optional parameters by adding `?{param}={value}` to the request URL. Append multiple parameters by putting an ampersand (&) between each parameter.
+
+Example: `/rides?min_leave_datetime=2021-10-14T00:07:46.443Z&min_price=10`
+
+| parameter          | value                 |
+| ------------------ | --------------------- |
+| min_price          | Number                |
+| max_price          | Number                |
+| min_leave_datetime | ISO8601               |
+| max_leave_datetime | ISO8601               |
+| start_location     | valid Google place_id |
+| end_location       | valid Google place_id |
+
+If the parameters start_location/end_location are provided, the API only returns drives which are within the ride's `rider_radius` of the corresponding ride's start_location/end_location. 
 
 ## Response
 ```
@@ -80,6 +98,7 @@ Retrieves an array of all rides. Note: Future implementation will allow search q
             lng: $Double
         },
         "price": $Double, 
+        "rider_radius": $Integer,
         "seats_available": $Integer,
         "riders": $Array,
         "driver_id": $UUID 
@@ -260,6 +279,7 @@ Gets the array of the user's drives.
             lat: $Double,
             lng: $Double
         },
+        "rider_radius": $Integer,
         "price": $Double, 
         "seats_available": $Integer,
         "riders": $Array,
@@ -306,6 +326,7 @@ Gets the array of the user's rides.
             lat: $Double,
             lng: $Double
         },
+        "rider_radius": $Integer,
         "price": $Double, 
         "seats_available": $Integer,
         "riders": $Array,

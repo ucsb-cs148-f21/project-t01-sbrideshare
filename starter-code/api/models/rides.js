@@ -13,6 +13,7 @@ const rideSchema = new mongoose.Schema({
         lat: Number,
         lng: Number
     },
+    rider_radius: Number,
     price: Number, 
     seats_available: Number, 
     driver_id: String,
