@@ -5,6 +5,7 @@ content-type: application/json
     "full_name": "Joe Goldberg",  
     "given_name": "Joe", 
     "family_name": "Goldberg", 
+    "image_url": "https://google.com",
     "email": "joegoldberg@ucsb.edu", 
     "drives": [], 
     "rides": [],

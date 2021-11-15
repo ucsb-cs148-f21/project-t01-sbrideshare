@@ -7,16 +7,12 @@ import Layout from "../components/Layout";
 import getUser from "../utils/get-user";
 import getBackendURL from "../utils/get-backend-url";
 import CarImg from "../images/home_pic.png";
+import "../styles/home.css";
+
 
 const TextWrapper = styled.div`
   width: 700px;
   max-width: 100%;
-`;
-
-const Car = styled.img`
-  width: 500px;
-  max-width: 100%;
-  height: AudioTrack;
 `;
 
 export default function Home() {
@@ -27,6 +23,7 @@ export default function Home() {
       full_name: user.fullName,
       given_name: user.givenName,
       family_name: user.familyName,
+      image_url: user.imageUrl,
       email: user.email,
       id: user.id,
     };
@@ -39,28 +36,22 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout user={user}>
-      <Container>
-        <h1>Welcome to SB RideShare!</h1>
-        <h5>A web application designed for UCSB students on the go.</h5>
-        <hr />
-        <TextWrapper>
-          Users can either browse current rides and join them as passengers, or
-          post one of their own rides as drivers that they are willing to take
-          passengers for.
-        </TextWrapper>
-        <br />
-        <TextWrapper>
-          To search for available rides, go to the{" "}
-          <a href="/Rides">Find A Ride</a> page.
-        </TextWrapper>
-        <br />
-        <TextWrapper>
-          To post your own ride, go to the <a href="/Ride">Create A Ride</a>{" "}
-          page.
-        </TextWrapper>
-        <br />
-        <TextWrapper>Happy carpooling!</TextWrapper>
+    <Layout id="layout" user={user}>
+      <Container id="home">
+        <div id="home-title">
+            <h1>Welcome to SB RideShare!</h1>
+        </div>
+
+        <div id="home-text">
+            <TextWrapper>
+            <h5>A web application designed for UCSB students on the go.</h5>
+              Users can either browse current rides and join them as passengers, or
+              post one of their own rides as drivers that they are willing to take
+              passengers for.
+              <br />
+              Happy carpooling!
+            </TextWrapper>
+        </div>
       </Container>
     </Layout>
   );

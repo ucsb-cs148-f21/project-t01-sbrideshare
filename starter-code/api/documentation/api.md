@@ -198,6 +198,7 @@ Submits a user with the specified data.
     "full_name": $String, //Required. 
     "given_name": $String, //Required.
     "family_name": $String, //Required.
+    "image_url": $String, // Required.
     "id": $UUID, //Required.
     "email": $String, //Required.
 }
@@ -232,6 +233,7 @@ Gets information with `user_id`
     "full_name": $String, 
     "given_name": $String,
     "family_name": $String,
+    "image_url": $String,
     "email": $String,
     "id": $UUID,
     "drives": $Array,
