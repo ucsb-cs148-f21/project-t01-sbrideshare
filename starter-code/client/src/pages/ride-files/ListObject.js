@@ -143,10 +143,23 @@ function dateToString(date){
     }
     monthnum = monthnum.toString();
     var year = (date.getFullYear()).toString();
-    var hour = (date.getHours()).toString();
+    var tempHour = date.getHours();
+    var timeSuffix;
+    if(tempHour<12){
+        timeSuffix = "AM";
+    }
+    else if(tempHour == 0)
+        tempHour=12;
+    else{
+        timeSuffix = "PM";
+        if(tempHour!=12)
+            tempHour -= 12;
+    }
+    
+    var hour = tempHour.toString();
     var min = (date.getMinutes()).toString();
 
-    return weekday+", " + month + " " + monthday + " (" + monthnum + "/" + monthday + "/" + year + ") at " + hour + ":" + min;
+    return weekday+", " + month + " " + monthday + " (" + monthnum + "/" + monthday + "/" + year + ") at " + hour + ":" + min +" "+timeSuffix;
 
 }
 
