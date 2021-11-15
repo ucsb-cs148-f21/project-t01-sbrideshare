@@ -254,7 +254,9 @@ export default function ListObject(props) {
                 <CardHeader
                     title = {rideInfo.start_location.formatted_address + 
                         " -> " + rideInfo.end_location.formatted_address}
+                    titleTypographyProps = {{variant: "h5"}}
                     subheader = {dateToString(new Date(rideInfo.leave_datetime))}
+                    subheaderTypographyProps = {{variant: "body2"}}
                     action={
                         <Button 
                             variant="contained"
