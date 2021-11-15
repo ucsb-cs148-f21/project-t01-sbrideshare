@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from 'axios';
 import getBackendURL from "../../utils/get-backend-url";
 import getUser from "../../utils/get-user";
@@ -7,7 +7,8 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@mui/material/Button';
-import CardActions from '@mui/material/CardActions';
+
+import Avatar from '@mui/material/Avatar';
 
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
@@ -75,12 +76,115 @@ function getInitialButtonValues(rideInfo,user){
     }
 }
 
+function dateToString(date){
+    var weekday;
+    switch(date.getDay()){
+        case 0:
+            weekday = "Sunday";
+            break;
+        case 1:
+            weekday = "Monday";
+            break;
+        case 2:
+            weekday = "Tuesday";
+            break;
+        case 3:
+            weekday = "Wednesday";
+            break;
+        case 4:
+            weekday = "Thursday";
+            break;
+        case 5:
+            weekday = "Friday";
+            break;
+        case 6:
+            weekday = "Saturday";
+    }
+    var monthday = (date.getDate()).toString();
+    var monthnum = date.getMonth()+1;
+    
+    var month;
+    switch(monthnum){
+        case 1:
+            month = "January";
+            break;
+        case 2:
+            month = "February";
+            break;
+        case 3:
+            month = "March";
+            break;
+        case 4:
+            month = "April";
+            break;
+        case 5:
+            month = "May";
+            break;
+        case 6:
+            month = "June";
+            break;
+        case 7:
+            month = "July";
+            break;
+        case 8:
+            month = "August";
+            break;
+        case 9:
+            month = "September";
+            break;
+        case 10:
+            month = "October";
+            break;
+        case 11:
+            month = "November";
+            break;
+        case 12:
+            month = "December";
+    }
+    monthnum = monthnum.toString();
+    var year = (date.getFullYear()).toString();
+    var tempHour = date.getHours();
+    var timeSuffix;
+    if(tempHour<12){
+        timeSuffix = "AM";
+    }
+    else if(tempHour == 0)
+        tempHour=12;
+    else{
+        timeSuffix = "PM";
+        if(tempHour!=12)
+            tempHour -= 12;
+    }
+    
+    var hour = tempHour.toString();
+    var min = (date.getMinutes()).toString();
+
+    return weekday+", " + month + " " + monthday + " (" + monthnum + "/" + monthday + "/" + year + ") at " + hour + ":" + min +" "+timeSuffix;
+
+}
+
 export default function ListObject(props) {
     const user = getUser();
 
     var rideInfo = props.rideInfo;
 
     var rideURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
+
+    const driverURL = getBackendURL()+'/users/'+rideInfo.driver_id;
+    const [driverImg,updateImg] = useState({
+        link:""
+    });
+    useEffect(() => {
+        axios.get(driverURL)
+        .then(function (response) {
+            updateImg({
+                link: response.data.image_url
+            })
+        })
+        .catch(function (error) {
+        console.log(error);
+        });
+    }, []);
 
     const [seats,update] = useState({
         numSeats: rideInfo.seats_available
@@ -92,15 +196,17 @@ export default function ListObject(props) {
         text: buttonText,
         state: buttonState,
         inRide: inRide,
+        disabled: false,
         color: buttonColor
     });
-
-    const [loading, setLoading] = useState(false);
 
     const buttonClick = (event) =>{
         //if the user is allowed to click the signup button
         if(button.state === true){
-            setLoading(true);
+            buttonChange({
+                text: "...",
+                disabled: true
+            })
             if(button.inRide === false){
                 //send the signup request
                 axios.post(rideURL, {
@@ -113,9 +219,8 @@ export default function ListObject(props) {
                     buttonChange({...button, text: buttonText,
                     state: buttonState,
                     inRide: inRide,
+                    disabled: false,
                     color: buttonColor});
-                    
-                    setLoading(false);
 
                     update({...seats, 
                     numSeats: seats.numSeats-1});
@@ -139,9 +244,8 @@ export default function ListObject(props) {
                     buttonChange({...button, text: buttonText,
                     state: buttonState,
                     inRide: inRide,
+                    disabled: false,
                     color: buttonColor});
-                    
-                    setLoading(false);
 
                     update({...seats, 
                     numSeats: seats.numSeats+1});
@@ -157,31 +261,28 @@ export default function ListObject(props) {
             }
         }
     }
-    /*
-            <h4>{rideInfo.start_location} to {rideInfo.end_location}</h4>
-            <p>Driver: {rideInfo.name}</p>
-            <p>Leaving: {rideInfo.leave_datetime}</p>
-            <p>Seats Available: {seats.numSeats}</p>
-            <button  style={{backgroundColor: button.color}} onClick={() => buttonClick()}>{button.text}</button>
-            <hr/>       
-    */
     return (
         <div>
             <Card  elevation = {2}>
                 <CardHeader
                     title = {rideInfo.start_location.formatted_address + 
                         " -> " + rideInfo.end_location.formatted_address}
-                    subheader = {rideInfo.leave_datetime}
+                    titleTypographyProps = {{variant: "h5"}}
+                    subheader = {dateToString(new Date(rideInfo.leave_datetime))}
+                    subheaderTypographyProps = {{variant: "body2"}}
                     action={
                         <Button 
                             variant="contained"
                             color = {button.color}
                             onClick={() => buttonClick()}
-                            loading = {loading}
+                            disabled = {button.disabled}
                             >
                                 {button.text}
                         </Button>
                       }
+                    avatar = {<Avatar 
+                        sx={{ width: 60, height: 60 }} 
+                        src={driverImg.link}/>}
                 />
                 <CardContent>
                     <Typography variant="body2" color="textSecondary">
@@ -189,6 +290,9 @@ export default function ListObject(props) {
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                         Seats Available: {seats.numSeats}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Price: ${rideInfo.price}
                     </Typography>
                 </CardContent>
             </Card>
