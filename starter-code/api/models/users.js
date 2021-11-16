@@ -9,8 +9,7 @@ const userSchema = new mongoose.Schema({
     email: String, 
     id: String,
     drives: [ObjectId], 
-    rides: [ObjectId],
-    history: [ObjectId]
+    rides: [ObjectId]
 })
 
 module.exports = mongoose.model('Users', userSchema)

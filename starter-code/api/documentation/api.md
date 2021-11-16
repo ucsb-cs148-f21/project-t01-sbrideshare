@@ -28,7 +28,7 @@ Submits a ride with the specified data. Also adds a reference to this ride of th
     "leave_datetime": $String, //Required. Must be in ISO8601 format.
     "start_location": $String, //Required. Must be a valid placeid from Google Places API.
     "end_location": $String, //Required.  Must be a valid placeid from Google Places API.
-    "rider_radius": $Integer, //Required. Max distance driver is willing to pick up and dropoff riders from driver's intended destination.
+    "rider_radius": $Integer, //Required. Max distance driver is willing to pick up and dropoff riders from driver's intended destination. Set to 0 if driver will not pick people up.
     "price": $Double, //Required. Cannot be negative.
     "seats_available": $Integer, //Required. Must be greater than 1.
     "driver_id": $UUID //Required. 
@@ -100,7 +100,11 @@ If the parameters start_location/end_location are provided, the API only returns
         "price": $Double, 
         "rider_radius": $Integer,
         "seats_available": $Integer,
-        "riders": $Array,
+        "riders": {
+            "rider_id": $UUID,
+            "pickup_address": $String
+            "note_to_driver": $String
+        },
         "driver_id": $UUID 
     }
     ...
@@ -116,8 +120,8 @@ Updates an existing ride with new values. Values not specified are kept the same
 ```
 {
     "leave_datetime": $String, // In ISO8601 format.
-    "start_location": $String, 
-    "end_location": $String, 
+    "start_location": $String, // Must be valid place_id
+    "end_location": $String, // Must be valid place_id
     "price": $Double, 
     "seats_available": $Integer
 }
@@ -142,6 +146,8 @@ Adds a rider with `rider_id` to the `riders` array of the ride to the specifed `
 ```
 {
     "rider_id": $UUID, //Required. 
+    "pickup_address": $String // Required if `:ride_id` has `rider_radius` not equal to 0. A valid place_id.
+    "note_to_driver": $String //Optional.
 }
 ```
 
@@ -158,6 +164,8 @@ Returns HTTP 200 Success if successfully added to array.
 * 409 Conflict
     * The `rider_id` is already in the `rider` array
     * There are no more available seats for the ride
+    * Rider has not specified a pickup address where the ride requires it
+    * Rider has input a pickup address when the driver will not pickup
 
 --------
 # DELETE /rides/:ride_id/riders/:rider_id
@@ -284,7 +292,11 @@ Gets the array of the user's drives.
         "rider_radius": $Integer,
         "price": $Double, 
         "seats_available": $Integer,
-        "riders": $Array,
+         "riders": {
+            "rider_id": $UUID,
+            "pickup_address": $String
+            "note_to_driver": $String
+        },
         "driver_id": $UUID 
     }
     ...
@@ -331,7 +343,11 @@ Gets the array of the user's rides.
         "rider_radius": $Integer,
         "price": $Double, 
         "seats_available": $Integer,
-        "riders": $Array,
+         "riders": {
+            "rider_id": $UUID,
+            "pickup_address": $String
+            "note_to_driver": $String
+        },
         "driver_id": $UUID 
     }
     ...
