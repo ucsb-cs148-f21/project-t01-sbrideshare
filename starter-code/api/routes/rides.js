@@ -92,7 +92,7 @@ router.get("/", async function(req, res, next) {
             })
             .catch(e => {
                 console.log(e.response.data.error_message);
-                return res.status(500).end()
+                return res.status(500).send("start_location place_id is not valid.").end()
             })
         }
 
@@ -117,7 +117,7 @@ router.get("/", async function(req, res, next) {
             })
             .catch(e => {
                 console.log(e.response.data.error_message);
-                return res.status(500).end()
+                return res.status(500).send("end_location place_id is not valid").end()
             })
         }
 
@@ -160,7 +160,7 @@ router.patch("/:ride_id",
             })
             .catch(e => {
                 console.log(e.response.data.error_message);
-                return res.status(500).end()
+                return res.status(500).send("start_location place_id is not valid.").end()
             })
         }
 
@@ -175,7 +175,7 @@ router.patch("/:ride_id",
             })
             .catch(e => {
                 console.log(e.response.data.error_message);
-                return res.status(500).end()
+                return res.status(500).send("end_location place_id is not valid.").end()
             })
         }
 
@@ -260,7 +260,7 @@ router.post("/",
         })
         .catch(e => {
             console.log(e.response.data.error_message);
-            return res.status(500).end()
+            return res.status(500).send("start_location place_id is not valid.").end()
         })
 
         await google_client.geocode({
@@ -273,7 +273,7 @@ router.post("/",
         })
         .catch(e => {
             console.log(e.response.data.error_message);
-            return res.status(500).end()
+            return res.status(500).send("end_location place_id is not valid.").end()
         })
 
         const ride = new Rides({
@@ -343,7 +343,7 @@ router.post("/:ride_id/riders",
                 return res.status(404).send("Unable to find ride with specified ride_id.").end()
             }
 
-            Rides.findById(ride_id, (err, ride) => {
+            Rides.findById(ride_id, async(err, ride) => {
                 if (err) {
                     return res.status(500).end();
                 }
@@ -354,15 +354,60 @@ router.post("/:ride_id/riders",
 
                 const max_seats = ride.seats_available
 
-                if (ride.riders.includes(body.rider_id)) {
+                const found = ride.riders.some(element => {
+                    return element.rider_id == body.rider_id
+                })
+
+                if (found) {
                     return res.status(409).send("rider_id is already a rider on this ride.").end();
                 }
                 else if (max_seats === 0) {
                     return res.status(409).send("There are no more seats available for this ride.").end()
                 }
                 else {
+
+                    var location_geo = {}
+
+                    if (body.pickup_address != undefined) {
+
+                        // Forbid adding pickup_location if driver doesn't want to pickup
+                        if (ride.rider_radius == 0) {
+                            return res.status(409).send("Driver has specified that riders cannot set a pickup_location.").end();
+                        }
+
+                        await google_client.geocode({
+                            params: {
+                                key: process.env.GOOGLE_API_KEY,
+                                place_id: body.pickup_address
+                            }
+                        }).then(r => {
+                            location_geo = r.data.results[0]
+
+                            // Ensure pickup_location is within rider radius
+                            const distance = gc_distance(location_geo.geometry.location.lat, location_geo.geometry.location.lng, ride.start_location.lat, ride.start_location.lng)
+                            if (distance > ride.rider_radius) {
+                                return res.status(409).send("pickup_location is outside of the drive's specified rider_radius.").end();
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e.response.data.error_message);
+                            return res.status(500).send("pickup_address place_id is not valid.").end()
+                        })
+                    }
+                    else {
+                        if (ride.rider_radius != 0) {
+                            return res.status(409).send("Driver has specified that they will pickup riders. Please specify a pickup location.").end();
+                        }
+                    }
+
                     ride.seats_available -= 1
-                    ride.riders.push(body.rider_id)
+                    const riderData = {
+                        rider_id: body.rider_id,
+                        pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
+                        note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
+                    }
+
+                    ride.riders.push(riderData)
                 }
 
                 Users.findOne({id: body.rider_id}, (err, user) => {
@@ -419,9 +464,12 @@ router.delete("/:ride_id/riders/:rider_id",
                 return res.status(400).send("rider_id cannot be undefined or null")
             }
 
-            const index = ride.riders.indexOf(req.params.rider_id)
+            // const index = ride.riders.indexOf(req.params.rider_id)
+            const index = ride.riders.find(element => {
+                return element.rider_id == req.params.rider_id;
+            })
 
-            if (index == -1) {
+            if (index == undefined) {
                 return res.status(409).send("rider_id is not a rider on this ride.").end();
             }
 

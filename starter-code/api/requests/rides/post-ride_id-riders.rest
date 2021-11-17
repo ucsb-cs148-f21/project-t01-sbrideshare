@@ -1,6 +1,6 @@
-POST http://localhost:9000/rides/616e3178e92538435897ee3d/riders
+POST http://localhost:9000/rides/618b6087eec6865e5d8cdf3c/riders
 content-type: application/json
 
 {
-    "rider_id": 999
+    "rider_id": "101907546083592133348"
 }

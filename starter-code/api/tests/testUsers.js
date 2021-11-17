@@ -224,8 +224,6 @@ describe("POST /users", function() {
           assert(body.id == data.id);
           assert(body.drives.length === 0);
           assert(body.rides.length === 0);
-          assert(body.history.length === 0);
-
         })
         .then(res => {
           done();
@@ -278,6 +276,7 @@ describe("GET /:user_id/drives", function() {
       end_location: valid_placeid,
       price: 1000.23,
       seats_available: 2,
+      rider_radius: 2000,
       driver_id: id1
     },
     {
@@ -287,6 +286,7 @@ describe("GET /:user_id/drives", function() {
       end_location: valid_placeid,
       price: 10.23,
       seats_available: 1,
+      rider_radius: 2000,
       driver_id: id2
     }
   ]
@@ -384,6 +384,7 @@ describe("GET /:user_id/rides", function() {
       end_location: valid_placeid,
       price: 1000.23,
       seats_available: 2,
+      rider_radius: 2000,
       driver_id: id1
     },
     {
@@ -393,6 +394,7 @@ describe("GET /:user_id/rides", function() {
       end_location: valid_placeid,
       price: 10.23,
       seats_available: 1,
+      rider_radius: 2000,
       driver_id: id2
     }
   ]
@@ -446,7 +448,7 @@ describe("GET /:user_id/rides", function() {
 
       return request(app)
       .post(`/rides/${ride_id}/riders`)
-      .send({rider_id: id2})
+      .send({rider_id: id2, pickup_address: valid_placeid})
       .set('Accept', 'application/json')
       .expect(200)
     })
