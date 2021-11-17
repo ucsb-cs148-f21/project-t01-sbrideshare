@@ -7,8 +7,9 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@mui/material/Button';
-
 import Avatar from '@mui/material/Avatar';
+import JoinPopup from './JoinPopup';
+import LeavePopup from './LeavePopup';
 
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
@@ -57,7 +58,11 @@ function userIsDriver(){
 //do not use this for updating button values for anything other than
     //the page being opened/refreshed
 function getInitialButtonValues(rideInfo,user){
-    var userInRide = rideInfo.riders.indexOf(user.id) > -1;
+    var riderIdArray=[];
+    for(var i=0;i<rideInfo.riders.length;i++){
+        riderIdArray[i] = rideInfo.riders[i].rider_id;
+    } 
+    var userInRide = riderIdArray.indexOf(user.id) > -1;
     if(rideInfo.driver_id === user.id){
         return userIsDriver();
     }
@@ -163,9 +168,9 @@ function dateToString(date){
 
 }
 
+
 export default function ListObject(props) {
     const user = getUser();
-
     var rideInfo = props.rideInfo;
 
     var rideURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
@@ -200,73 +205,116 @@ export default function ListObject(props) {
         color: buttonColor
     });
 
+    const signup = (address,notes) =>{
+        axios.get(getBackendURL()+'/locations/',{
+            "input": address
+        })
+        .then(function(response){
+            console.log(response);
+        }).catch(function(error) {
+            console.log(error.response);
+        });
+        buttonChange({
+            text: "...",
+            disabled: true
+        })
+        //send the signup request
+        axios.post(rideURL, {
+            "rider_id": user.id,
+            "pickup_address": address,
+            "note_to_driver": notes
+        })
+        //then change the button colors
+        .then(function (response) {
+            //change button to be signed up
+            [buttonText,buttonState,inRide,buttonColor] = getCanRemove();
+            buttonChange({...button, text: buttonText,
+            state: buttonState,
+            inRide: inRide,
+            disabled: false,
+            color: buttonColor});
+
+            update({...seats, 
+            numSeats: seats.numSeats-1});
+        })
+        //if there is an error, log it and change button colors
+        .catch(function(error) {
+            console.log(error.response);
+            [buttonText,buttonState,inRide,buttonColor] = getErrorValues();
+            buttonChange({...button, text: buttonText,
+            state: buttonState,
+            color: buttonColor});
+        });
+        setSignupOpen(false);
+    }
+
+    const leave = (event) =>{
+        buttonChange({
+            text: "...",
+            disabled: true
+        })
+        axios.delete(rideURL+"/"+user.id+"/", {
+
+        })
+        //then change the button colors
+        .then(function (response) {
+            [buttonText,buttonState,inRide,buttonColor] = signupAvailableValues();
+            buttonChange({...button, text: buttonText,
+            state: buttonState,
+            inRide: inRide,
+            disabled: false,
+            color: buttonColor});
+
+            update({...seats, 
+            numSeats: seats.numSeats+1});
+        })
+        //if there is an error, log it and change button colors
+        .catch(function(error) {
+            console.log(error.response);
+            [buttonText,buttonState,buttonColor] = getErrorValues();
+            buttonChange({...button, text: buttonText,
+            state: buttonState,
+            color: buttonColor});
+        });
+        setLeaveOpen(false);
+    }
     const buttonClick = (event) =>{
         //if the user is allowed to click the signup button
         if(button.state === true){
-            buttonChange({
-                text: "...",
-                disabled: true
-            })
             if(button.inRide === false){
-                //send the signup request
-                axios.post(rideURL, {
-                    "rider_id": user.id
-                })
-                //then change the button colors
-                .then(function (response) {
-                    //change button to be signed up
-                    [buttonText,buttonState,inRide,buttonColor] = getCanRemove();
-                    buttonChange({...button, text: buttonText,
-                    state: buttonState,
-                    inRide: inRide,
-                    disabled: false,
-                    color: buttonColor});
-
-                    update({...seats, 
-                    numSeats: seats.numSeats-1});
-                })
-                //if there is an error, log it and change button colors
-                .catch(function(error) {
-                    console.log(error.response);
-                    [buttonText,buttonState,inRide,buttonColor] = getErrorValues();
-                    buttonChange({...button, text: buttonText,
-                    state: buttonState,
-                    color: buttonColor});
-                });
+                handleClickJoin();
             }
             else {
-                axios.delete(rideURL+"/"+user.id+"/", {
-
-                })
-                //then change the button colors
-                .then(function (response) {
-                    [buttonText,buttonState,inRide,buttonColor] = signupAvailableValues();
-                    buttonChange({...button, text: buttonText,
-                    state: buttonState,
-                    inRide: inRide,
-                    disabled: false,
-                    color: buttonColor});
-
-                    update({...seats, 
-                    numSeats: seats.numSeats+1});
-                })
-                //if there is an error, log it and change button colors
-                .catch(function(error) {
-                    console.log(error.response);
-                    [buttonText,buttonState,buttonColor] = getErrorValues();
-                    buttonChange({...button, text: buttonText,
-                    state: buttonState,
-                    color: buttonColor});
-                });
+                handleClickLeave();
             }
         }
     }
+
+    
+    const [signupOpen, setSignupOpen] = React.useState(false);
+    const [leaveOpen, setLeaveOpen] = React.useState(false);
+  
+    const handleClickJoin = () => {
+        setSignupOpen(true);
+    };
+    const handleClickLeave = () => {
+        setLeaveOpen(true);
+    };
+    const handleCancel = () => {
+        setSignupOpen(false);
+        setLeaveOpen(false);
+    };
+    const startAddress = rideInfo.start_location.formatted_address.split(/[,]+/);
+    const endAddress = rideInfo.start_location.formatted_address.split(/[,]+/);
+
+
+
     return (
         <div>
             <Card  elevation = {2}>
                 <CardHeader
-                    title = {rideInfo.start_location.formatted_address + 
-                        " -> " + rideInfo.end_location.formatted_address}
+                    title = {startAddress[0]+", "+startAddress[1] + 
+                        " -> " + endAddress[0]+", "+endAddress[1]}
                     titleTypographyProps = {{variant: "h5"}}
                     subheader = {dateToString(new Date(rideInfo.leave_datetime))}
                     subheaderTypographyProps = {{variant: "body2"}}
@@ -296,6 +344,8 @@ export default function ListObject(props) {
                     </Typography>
                 </CardContent>
             </Card>
+            <JoinPopup open = {signupOpen} setOpen = {setSignupOpen} handleSignup = {signup} handleCancel = {handleCancel}/>
+            <LeavePopup open = {leaveOpen} setOpen = {setLeaveOpen} handleLeave = {leave} handleCancel = {handleCancel}/>
         </div>
     );
 }
