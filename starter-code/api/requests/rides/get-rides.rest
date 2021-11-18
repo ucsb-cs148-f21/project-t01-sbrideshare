@@ -1,14 +1,5 @@
+# GET http://localhost:9000/rides?min_leave_datetime=2021-10-14T00:07:46.443Z&max_leave_datetime=2021-10-16T00:07:46.443Z&start_location=ChIJJ02PqFk_6YARDGa-um2RIGo
+# content-type: application/json
+
 GET http://localhost:9000/rides
 content-type: application/json
-
-{
-    "price": {
-        "$gt": 10,
-        "asdfa": 50
-    },
-    "leave_datetime": {
-        "$gte": "2021-10-13T00:07:46.443Z",
-        "$lte": "2021-10-16T00:07:46.443Z"
-    }
-
-}

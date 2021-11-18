@@ -10,10 +10,117 @@ const Users = require('../models/users')
 
 const google_client = new Client({});
 
-router.get("/", function(req, res, next) {
-    const body = req.body;
+// Returns Great Circle Distance between two lat/lon points with haversine formula
+function gc_distance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // meters
+    const p1 = lat1 * Math.PI/180; // p, l in radians
+    const p2 = lat2 * Math.PI/180;
+    const sp = (lat2-lat1) * Math.PI/180;
+    const sl = (lon2-lon1) * Math.PI/180;
 
-    Rides.find({}, (err, rides) => {
+    const a = Math.sin(sp/2) * Math.sin(sp/2) +
+            Math.cos(p1) * Math.cos(p2) *
+            Math.sin(sl/2) * Math.sin(sl/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    const d = R * c; // in meters
+    return d;
+}
+
+router.get("/", async function(req, res, next) {
+    const query = req.query;
+
+    var ride_query = {
+        price: {},
+        leave_datetime: {}
+    }
+
+    // Populate query fields
+    for (const [key, value] of Object.entries(query)) {
+        switch(key) {
+            case "min_price":
+                ride_query["price"]["$gte"] = value;
+                break;
+            case "max_price":
+                ride_query["price"]["$lte"] = value;
+                break;
+            case "min_leave_datetime":
+                ride_query["leave_datetime"]["$gte"] = value;
+                break;
+            case "max_leave_datetime":
+                ride_query["leave_datetime"]["$lte"] = value;
+                break;
+        }
+    }
+
+    // Delete unused queries
+    for (const [key, value] of Object.entries(ride_query)) {
+        if (Object.keys(ride_query[key]).length == 0) {
+            delete ride_query[key];
+        }
+    }
+
+    Rides.find(ride_query, async (err, rides) => {
+
+        if (err) {
+            console.log(err);
+            return res.status(500).end();
+        }
+
+        var start_location_geo = {}
+        var end_location_geo = {}
+        
+        // Get geocode of start and end locations
+        if (query.start_location != undefined) {
+            await google_client.geocode({
+                params: {
+                    key: process.env.GOOGLE_API_KEY,
+                    place_id: query.start_location
+                }
+            }).then(r => {
+                start_location_geo = r.data.results[0]
+
+                // Remove rides that are out of range of driver's dropoff distance
+                rides.reduceRight(function(acc, ride, index) {
+                    const pickup_distance = gc_distance(ride.start_location.lat, ride.start_location.lng,
+                        start_location_geo.geometry.location.lat, start_location_geo.geometry.location.lng)
+
+                    if (pickup_distance > ride.rider_radius) {
+                      rides.splice(index, 1);
+                    }
+                  }, []);
+            })
+            .catch(e => {
+                console.log(e.response.data.error_message);
+                return res.status(500).send("start_location place_id is not valid.").end()
+            })
+        }
+
+        if(query.end_location != undefined) {
+            await google_client.geocode({
+                params: {
+                    key: process.env.GOOGLE_API_KEY,
+                    place_id: query.end_location
+                }
+            }).then(r => {
+                end_location_geo = r.data.results[0]
+
+                // Remove rides that are out of range of driver's dropoff distance
+                rides.reduceRight(function(acc, ride, index) {
+                    const dropoff_distance = gc_distance(ride.end_location.lat, ride.end_location.lng,
+                        end_location_geo.geometry.location.lat, end_location_geo.geometry.location.lng)
+
+                    if (dropoff_distance > ride.rider_radius) {
+                      rides.splice(index, 1);
+                    }
+                  }, []);
+            })
+            .catch(e => {
+                console.log(e.response.data.error_message);
+                return res.status(500).send("end_location place_id is not valid").end()
+            })
+        }
+
         return res.status(200).json(rides).end();
     })
 
@@ -53,7 +160,7 @@ router.patch("/:ride_id",
             })
             .catch(e => {
                 console.log(e.response.data.error_message);
-                return res.status(500).end()
+                return res.status(500).send("start_location place_id is not valid.").end()
             })
         }
 
@@ -68,7 +175,7 @@ router.patch("/:ride_id",
             })
             .catch(e => {
                 console.log(e.response.data.error_message);
-                return res.status(500).end()
+                return res.status(500).send("end_location place_id is not valid.").end()
             })
         }
 
@@ -110,13 +217,15 @@ router.post("/",
         .exists().withMessage('leave_datetime is required.').bail()
         .notEmpty().withMessage('leave_datetime is required.').bail()
         .isISO8601().withMessage('leave_datetime must be in ISO8601'), 
-    // May want to add a check if valid address later
     body("start_location")
         .exists().withMessage('start_location is required.').bail()
         .notEmpty().withMessage('start_location is required.').bail(), 
     body("end_location")
         .exists().withMessage('end_location is required.').bail()
         .notEmpty().withMessage('end_location is required.').bail(), 
+    body("rider_radius")
+        .exists().withMessage('rider_radius is required.').bail()
+        .notEmpty().withMessage('rider_radius is required.').bail(), 
     body("price")
         .exists().withMessage('price is required.').bail()
         .notEmpty().withMessage('price is required.').bail()
@@ -151,7 +260,7 @@ router.post("/",
         })
         .catch(e => {
             console.log(e.response.data.error_message);
-            return res.status(500).end()
+            return res.status(500).send("start_location place_id is not valid.").end()
         })
 
         await google_client.geocode({
@@ -164,7 +273,7 @@ router.post("/",
         })
         .catch(e => {
             console.log(e.response.data.error_message);
-            return res.status(500).end()
+            return res.status(500).send("end_location place_id is not valid.").end()
         })
 
         const ride = new Rides({
@@ -182,6 +291,7 @@ router.post("/",
                 lat: end_location_geo.geometry.location.lat,
                 lng: end_location_geo.geometry.location.lng,
             },
+            rider_radius: body.rider_radius,
             price: body.price,
             seats_available: body.seats_available,
             driver_id: body.driver_id,
@@ -233,7 +343,7 @@ router.post("/:ride_id/riders",
                 return res.status(404).send("Unable to find ride with specified ride_id.").end()
             }
 
-            Rides.findById(ride_id, (err, ride) => {
+            Rides.findById(ride_id, async(err, ride) => {
                 if (err) {
                     return res.status(500).end();
                 }
@@ -244,15 +354,60 @@ router.post("/:ride_id/riders",
 
                 const max_seats = ride.seats_available
 
-                if (ride.riders.includes(body.rider_id)) {
+                const found = ride.riders.some(element => {
+                    return element.rider_id == body.rider_id
+                })
+
+                if (found) {
                     return res.status(409).send("rider_id is already a rider on this ride.").end();
                 }
                 else if (max_seats === 0) {
                     return res.status(409).send("There are no more seats available for this ride.").end()
                 }
                 else {
+
+                    var location_geo = {}
+
+                    if (body.pickup_address != undefined) {
+
+                        // Forbid adding pickup_location if driver doesn't want to pickup
+                        if (ride.rider_radius == 0) {
+                            return res.status(409).send("Driver has specified that riders cannot set a pickup_location.").end();
+                        }
+
+                        await google_client.geocode({
+                            params: {
+                                key: process.env.GOOGLE_API_KEY,
+                                place_id: body.pickup_address
+                            }
+                        }).then(r => {
+                            location_geo = r.data.results[0]
+
+                            // Ensure pickup_location is within rider radius
+                            const distance = gc_distance(location_geo.geometry.location.lat, location_geo.geometry.location.lng, ride.start_location.lat, ride.start_location.lng)
+                            if (distance > ride.rider_radius) {
+                                return res.status(409).send("pickup_location is outside of the drive's specified rider_radius.").end();
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e.response.data.error_message);
+                            return res.status(500).send("pickup_address place_id is not valid.").end()
+                        })
+                    }
+                    else {
+                        if (ride.rider_radius != 0) {
+                            return res.status(409).send("Driver has specified that they will pickup riders. Please specify a pickup location.").end();
+                        }
+                    }
+
                     ride.seats_available -= 1
-                    ride.riders.push(body.rider_id)
+                    const riderData = {
+                        rider_id: body.rider_id,
+                        pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
+                        note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
+                    }
+
+                    ride.riders.push(riderData)
                 }
 
                 Users.findOne({id: body.rider_id}, (err, user) => {
@@ -309,9 +464,12 @@ router.delete("/:ride_id/riders/:rider_id",
                 return res.status(400).send("rider_id cannot be undefined or null")
             }
 
-            const index = ride.riders.indexOf(req.params.rider_id)
+            // const index = ride.riders.indexOf(req.params.rider_id)
+            const index = ride.riders.find(element => {
+                return element.rider_id == req.params.rider_id;
+            })
 
-            if (index == -1) {
+            if (index == undefined) {
                 return res.status(409).send("rider_id is not a rider on this ride.").end();
             }
 

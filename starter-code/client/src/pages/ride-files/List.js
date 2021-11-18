@@ -1,31 +1,8 @@
 import React from 'react'
 import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import { purple, lightBlue, grey, red, lightGreen } from '@mui/material/colors';
+import Grid from '@material-ui/core/Grid';
 
 import ListObject from "./ListObject";
-
-const theme = createTheme({
-    palette: {
-        join: {
-            main: lightBlue[200]
-        },
-        driver: {
-            main: lightGreen[400]
-        },
-        full: {
-            main: grey[400]
-        },
-        leave: {
-            main: purple[200]
-        },
-        error: {
-            main: red[300]
-        },
-    },
-});
 
 export default function List(props) {
     var rideInfo = props.rideInfo;
@@ -44,14 +21,12 @@ export default function List(props) {
     return (
         <Container>
             <Grid container spacing={3}>
-                <ThemeProvider theme={theme}>
                     {list.map(item => (
                         <Grid item xs={12} key={item._id}>
                             
                                 {item}
                         </Grid>
                         ))}
-                </ThemeProvider>
             </Grid>
         </Container>
     );

@@ -67,6 +67,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -85,6 +86,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -104,6 +106,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -123,6 +126,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": -1,
         "seats_available": 1,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -142,6 +146,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": 500,
         "seats_available": -1,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -161,6 +166,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": 500,
         "seats_available": 0,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -180,6 +186,7 @@ describe("POST /rides validation", function() {
         "end_location": valid_placeid,
         "price": 1000,
         "seats_available": 1,
+        "rider_radius": 2000,
         "driver_id": 123
       })
       .set('Accept', 'application/json')
@@ -222,6 +229,7 @@ describe("POST /rides", function() {
     end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
+    rider_radius: 2000,
     driver_id: driver_id
   }
 
@@ -252,6 +260,7 @@ describe("POST /rides", function() {
         assert.notStrictEqual(body.end_location.formatted_address, undefined);
         assert.notStrictEqual(body.end_location.lat, undefined);
         assert.notStrictEqual(body.end_location.lng, undefined);
+        assert.equal(body.rider_radius, data.rider_radius);
         assert(body.price === data.price);
         assert(body.seats_available === data.seats_available);
         assert(body.riders.length === 0);
@@ -288,6 +297,7 @@ describe("POST /rides/:ride_id/riders", function() {
     end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
+    rider_radius: 2000,
     driver_id: driver_id
   }
 
@@ -374,7 +384,7 @@ describe("POST /rides/:ride_id/riders", function() {
       ride_id = body._id;
       return request(app)
         .post(`/rides/${ride_id}/riders`)
-        .send({rider_id: rider_id})
+        .send({rider_id: rider_id, pickup_address: valid_placeid})
         .set('Accept', 'application/json')
         .expect(200)
       })
@@ -415,14 +425,14 @@ describe("POST /rides/:ride_id/riders", function() {
       id = body._id;
       return request(app)
         .post(`/rides/${id}/riders`)
-        .send({rider_id: 877})
+        .send({rider_id: 877, pickup_address: valid_placeid})
         .set('Accept', 'application/json')
         .expect(200)
     })
     .then(res => {
       return request(app)
           .post(`/rides/${id}/riders`)
-          .send({rider_id: 877})
+          .send({rider_id: 877, pickup_address: valid_placeid})
           .set('Accept', 'application/json')
           .expect(409)
     })
@@ -440,6 +450,7 @@ describe("POST /rides/:ride_id/riders", function() {
       end_location: valid_placeid,
       price: 1000.23,
       seats_available: 1,
+      rider_radius: 2000,
       driver_id: 123
     }
     var id = "";
@@ -460,14 +471,14 @@ describe("POST /rides/:ride_id/riders", function() {
       id = body._id;
       return request(app)
         .post(`/rides/${id}/riders`)
-        .send({rider_id: 877})
+        .send({rider_id: 877, pickup_address: valid_placeid})
         .set('Accept', 'application/json')
         .expect(200)
     })
     .then(res => {
       return request(app)
           .post(`/rides/${id}/riders`)
-          .send({rider_id: 878})
+          .send({rider_id: 878, pickup_address: valid_placeid})
           .set('Accept', 'application/json')
           .expect(409)
     })
@@ -489,6 +500,7 @@ describe("PATCH /rides/:ride_id validation", function() {
     end_location: valid_placeid,
     price: 1000.23,
     seats_available: 2,
+    rider_radius: 2000,
     driver_id: 123
   }
 
@@ -574,6 +586,7 @@ describe("PATCH /rides/:ride_id", function() {
       end_location: valid_placeid,
       price: 1000.23,
       seats_available: 2,
+      rider_radius: 2000,
       driver_id: 123
     }
 
@@ -661,6 +674,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
     start_location: valid_placeid,
     end_location: valid_placeid,
     price: 1000.23,
+    rider_radius: 2000,
     seats_available: 2,
     driver_id: driver_id
   }
@@ -727,7 +741,7 @@ describe("DELETE /rides/:ride_id/riders", function() {
     .then(res => {
       return request(app)
         .post(`/rides/${id}/riders`)
-        .send({rider_id: rider_id})
+        .send({rider_id: rider_id, pickup_address: valid_placeid})
         .set('Accept', 'application/json')
         .expect(200)
     })

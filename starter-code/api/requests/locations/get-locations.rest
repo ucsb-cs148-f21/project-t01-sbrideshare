@@ -2,5 +2,5 @@ GET http://localhost:9000/locations
 content-type: application/json
 
 {
-    "input": "12 Embarcadero"
+    "input": "6850 el colegio goleta"
 }

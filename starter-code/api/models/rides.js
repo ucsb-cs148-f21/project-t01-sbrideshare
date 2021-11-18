@@ -13,10 +13,15 @@ const rideSchema = new mongoose.Schema({
         lat: Number,
         lng: Number
     },
+    rider_radius: Number,
     price: Number, 
     seats_available: Number, 
     driver_id: String,
-    riders: [String]
+    riders: [{
+        rider_id: String,
+        pickup_address: String, 
+        note_to_driver: String
+    }]
 })
 
 module.exports = mongoose.model('Rides', rideSchema)
