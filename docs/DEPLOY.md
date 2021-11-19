@@ -14,12 +14,12 @@
 * In `/starter-code/api` run `npm i`
 * In `/starter-code/api` create a file named `.env` with the following variables
 ```
-MONGO_DB_URI=<YOUR MONGODB URI HERE>
-MONGO_DB_URI_DEV=<YOUR MONGODB URI HERE>
-MONGO_DB_URI_TEST=<YOUR MONGODB URI HERE>
+MONGODB_URI=<YOUR MONGODB URI HERE>
+MONGODB_URI_DEV=<YOUR MONGODB URI HERE>
+MONGODB_URI_TEST=<YOUR MONGODB URI HERE>
 GOOGLE_API_KEY=<YOUR GOOGLE API KEY HERE>
 ```
-and replace `<YOUR MONGODB URI HERE>` with your MongoDB URI. The backend will connect to the URI specified in `MONGO_DB_URI` when running `npm run start`, `MONGO_DB_URI_DEV` when running `npm run dev`, and `MONGO_DB_URI_TEST` when running `npm run test`. For more info on setting up MongoDB, refer below to the "Setting up MongoDB" section.
+and replace `<YOUR MONGODB URI HERE>` with your MongoDB URI. The backend will connect to the URI specified in `MONGODB_URI` when running `npm run start`, `MONGODB_URI_DEV` when running `npm run dev`, and `MONGODB_URI_TEST` when running `npm run test`. For more info on setting up MongoDB, refer below to the "Setting up MongoDB" section.
 Also, replace `<YOUR GOOGLE API KEY HERE>` with the Google API key you generate later on. Refer below to the "Generating Keys" section for a guide on how to generate this.
 
 * If running from a dev environment, run `npm run dev` to start the backend server on `http://localhost:9000`
