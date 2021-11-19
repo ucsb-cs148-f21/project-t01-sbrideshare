@@ -21,7 +21,7 @@ export default function Login() {
 
   const firstPage = () => (
     <Container>
-      <p id="title">SBRideShare</p>
+      <p id="title">SB RideShare</p>
       <br />
     </Container>
   );
@@ -30,7 +30,7 @@ export default function Login() {
 
   const secondPage = () => (
     <Container id="secondPage">
-      <p>SBRideShare is an application designed to simplify the process of </p>
+      <p>SB RideShare is an application designed to simplify the process of </p>
       <p>creating and joining rideshares from the UCSB area.</p>
       <p>To continue, please sign in with a valid "ucsb.edu" email.</p>
       <br />
