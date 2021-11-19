@@ -1,11 +1,11 @@
 #home {
-    background-image: linear-gradient(to right, lightblue, green);
+    margin: auto;
 }
 
 #home-title {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     height: 20vh;
 }
 
@@ -14,4 +14,42 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.card-row {
+    display: flex;
+    
+}
+  
+.column {
+    flex: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#left-card {    
+    justify-content: center;
+    width: 60vw;
+    height: 65vh;
+}
+
+#right-card {    
+    justify-content: center;
+    vertical-align: middle;
+    width: 60vw;
+    height: 65vh;
+}
+
+#first-card {
+    /*background-image: url("../images/ucsb-banner.jpg");*/
+}
+
+#mapache-pic {
+    width: 70%;
+}
+
+#coconut-palm-pic {
+    width: 70%;
 }
