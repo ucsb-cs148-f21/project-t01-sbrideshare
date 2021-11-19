@@ -368,9 +368,15 @@ Returns Google place information from an input query.
 
 ```
 {
-    "input": $String 
+   // Empty object or no object.
 }
 ```
+
+# Params
+| parameter | value  |
+| --------- | ------ |
+| input     | String |
+
 
 ## Response
 
