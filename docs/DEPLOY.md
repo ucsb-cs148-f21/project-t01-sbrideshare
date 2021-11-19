@@ -2,7 +2,7 @@
 
 ### Prerequisites
 * npm
-Make sure you have node and npm installed. You can check that by running "node -v" and "npm -v" on your computer. If no versions of node or npm appear on your computer, you can download them here: https://nodejs.org/en/.
+    * Make sure you have node and npm installed. You can check that by running "node -v" and "npm -v" on your computer. If no versions of node or npm appear on your computer, you can download them here: https://nodejs.org/en/.
 
 ### Dependencies
 * MongoDB
