@@ -206,12 +206,16 @@ export default function ListObject(props) {
     });
 
     const signup = (address,notes) =>{
-        axios.get(getBackendURL()+'/locations/',{
-            "input": address
+        console.log(getBackendURL()+"/locations");
+        
+        axios.get(getBackendURL()+"/locations", { 
+            params: { input: address } 
         })
         .then(function(response){
+            console.log("pass");
             console.log(response);
         }).catch(function(error) {
+            console.log("fail");
             console.log(error.response);
         });
         buttonChange({
