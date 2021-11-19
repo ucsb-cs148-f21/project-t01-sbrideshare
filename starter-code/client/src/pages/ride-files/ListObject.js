@@ -205,69 +205,47 @@ export default function ListObject(props) {
         color: buttonColor
     });
 
-    const signup = (address,notes) =>{
-        console.log(getBackendURL()+"/locations");
-        
-        axios.get(getBackendURL()+"/locations", { 
-            params: { input: address } 
-        })
-        .then(function(response){
-            console.log("pass");
-            console.log(response);
-        }).catch(function(error) {
-            console.log("fail");
-            console.log(error.response);
-        });
+    const loading_effect = () => {
         buttonChange({
             text: "...",
             disabled: true
         })
-        //send the signup request
-        axios.post(rideURL, {
-            "rider_id": user.id,
-            "pickup_address": address,
-            "note_to_driver": notes
-        })
-        //then change the button colors
-        .then(function (response) {
-            //change button to be signed up
-            [buttonText,buttonState,inRide,buttonColor] = getCanRemove();
-            buttonChange({...button, text: buttonText,
-            state: buttonState,
-            inRide: inRide,
-            disabled: false,
-            color: buttonColor});
-
-            update({...seats, 
-            numSeats: seats.numSeats-1});
-        })
-        //if there is an error, log it and change button colors
-        .catch(function(error) {
-            console.log(error.response);
-            [buttonText,buttonState,inRide,buttonColor] = getErrorValues();
-            buttonChange({...button, text: buttonText,
-            state: buttonState,
-            color: buttonColor});
-        });
-        setSignupOpen(false);
+    }
+    const signed_up_effect = () => {
+        [buttonText,buttonState,inRide,buttonColor] = getCanRemove();
+        buttonChange({...button, text: buttonText,
+        state: buttonState,
+        inRide: inRide,
+        disabled: false,
+        color: buttonColor});
+    }
+    const decrement_seats = () => {
+        update({...seats, 
+        numSeats: seats.numSeats-1});
+    }
+    const error_effect = () => {
+        [buttonText,buttonState,inRide,buttonColor] = getErrorValues();
+        buttonChange({...button, text: buttonText,
+        state: buttonState,
+        color: buttonColor})
+    }
+    const signup_available_effect = () => {
+        [buttonText,buttonState,inRide,buttonColor] = signupAvailableValues();
+        buttonChange({...button, text: buttonText,
+        state: buttonState,
+        inRide: inRide,
+        disabled: false,
+        color: buttonColor});
     }
 
     const leave = (event) =>{
-        buttonChange({
-            text: "...",
-            disabled: true
-        })
+        loading_effect();
         axios.delete(rideURL+"/"+user.id+"/", {
 
         })
         //then change the button colors
         .then(function (response) {
-            [buttonText,buttonState,inRide,buttonColor] = signupAvailableValues();
-            buttonChange({...button, text: buttonText,
-            state: buttonState,
-            inRide: inRide,
-            disabled: false,
-            color: buttonColor});
+            signup_available_effect();
 
             update({...seats, 
             numSeats: seats.numSeats+1});
@@ -304,7 +282,7 @@ export default function ListObject(props) {
     const handleClickLeave = () => {
         setLeaveOpen(true);
     };
-    const handleCancel = () => {
+    const handleClose = () => {
         setSignupOpen(false);
         setLeaveOpen(false);
     };
@@ -348,8 +326,12 @@ export default function ListObject(props) {
                     </Typography>
                 </CardContent>
             </Card>
-            <JoinPopup open = {signupOpen} setOpen = {setSignupOpen} handleSignup = {signup} handleCancel = {handleCancel}/>
-            <LeavePopup open = {leaveOpen} setOpen = {setLeaveOpen} handleLeave = {leave} handleCancel = {handleCancel}/>
+            <JoinPopup open = {signupOpen} handleClose = {handleClose} 
+            rideInfo = {rideInfo} user = {user}
+            loading_effect = {loading_effect} signed_up_effect = {signed_up_effect} 
+            decrement_seats = {decrement_seats} signup_available_effect = {signup_available_effect}
+            />
+            <LeavePopup open = {leaveOpen} handleLeave = {leave} handleClose = {handleClose}/>
         </div>
     );
 }

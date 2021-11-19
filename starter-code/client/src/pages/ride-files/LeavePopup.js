@@ -7,12 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function LeavePopup({open,setOpen,handleLeave,handleCancel,rideInfo}) {
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-  
+export default function LeavePopup({open,handleLeave,handleClose}) {
     return (
       <div>
         <Dialog open={open} onClose={handleClose}>
@@ -23,8 +18,8 @@ export default function LeavePopup({open,setOpen,handleLeave,handleCancel,rideIn
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => {handleCancel(); handleClose()}}>Don't Leave</Button>
-            <Button onClick={() => {handleLeave(); handleClose()}}>Leave</Button>
+            <Button onClick={() => {handleClose();}}>Don't Leave</Button>
+            <Button onClick={() => {handleLeave();}}>Leave</Button>
           </DialogActions>
         </Dialog>
       </div>
