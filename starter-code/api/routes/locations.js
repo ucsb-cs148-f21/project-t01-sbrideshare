@@ -8,22 +8,18 @@ const {Client} = require("@googlemaps/google-maps-services-js");
 const google_client = new Client({});
 
 router.get("/", 
-    body("input")
-        .exists().withMessage('input is required.').bail()
-        .notEmpty().withMessage('input is required.').bail(),
     function(req, res, next) {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({errors: errors.array()});
-        }
+        const query = req.query;
 
-        const body = req.body;
+        if(query.input === undefined) {
+            return res.status(400).send("input is a required parameter.").end();
+        }
 
         google_client.placeAutocomplete({
             params: {
                 key: process.env.GOOGLE_API_KEY,
-                input: body.input,
+                input: query.input,
                 location: [34.4133, -119.8610], //Isla vista
                 radius: 10000, //circular bias of 10000 meters
                 types: "address"

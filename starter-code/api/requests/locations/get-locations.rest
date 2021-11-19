@@ -1,6 +1,6 @@
-GET http://localhost:9000/locations
+GET http://localhost:9000/locations?input=6850%20el%20colegio%20goleta
 content-type: application/json
 
 {
-    "input": "6850 el colegio goleta"
+
 }
