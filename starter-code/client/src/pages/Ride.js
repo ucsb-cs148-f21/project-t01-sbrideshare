@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./index2.css";
 import Container from "react-bootstrap/Container";
 
@@ -8,10 +8,14 @@ import ucsbAccount from "../utils/ucsb-account";
 import axios from "axios";
 import getBackendURL from "../utils/get-backend-url";
 import DateTimePicker from "react-datetime-picker";
+import usePlacesAutocomplete from "use-places-autocomplete";
+import useOnclickOutside from "react-cool-onclickoutside";
 
 export default function Ride() {
   const google_user = getUser();
   const user_id = google_user.id;
+
+  const [location, setLocation] = useState("");
 
   const [values, setValues] = useState({
     name: google_user.fullName,
@@ -21,43 +25,162 @@ export default function Ride() {
     price: "",
     seats_available: "",
     driver_id: user_id,
+    rider_radius: "0",
   });
+  const [shouldPickup, setShouldPickup] = useState(false);
+  const [startPlaceId, setStartPlaceId] = useState("");
+  const [endPlaceId, setEndPlaceId] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [valid, setValid] = useState(false);
   const [errorMsgs, setErrorMsgs] = useState({});
   const [hasErrors, setHasErrors] = useState(false);
   const user = getUser();
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    requestOptions: {
+      /* Define search scope here */
+    },
+    debounce: 300,
+  });
+  const ref = useOnclickOutside(() => {
+    // When user clicks outside of the component, we can dismiss
+    // the searched suggestions by calling this method
+    clearSuggestions();
+  });
 
-  const handleNameInputChange = (event) => {
-    setValues({ ...values, name: event.target.value });
+  const handleStartSelect = ({ description, place_id }) => () => {
+    // When user selects a place, we can replace the keyword without request data from API
+    // by setting the second parameter to "false"
+    setValue(description, false);
+
+    clearSuggestions();
+
+    setValues({
+      ...values,
+      start_location: description,
+    });
+    setStartPlaceId(place_id);
   };
+
+  const handleEndSelect = ({ description, place_id }) => () => {
+    // When user selects a place, we can replace the keyword without request data from API
+    // by setting the second parameter to "false"
+    setValue(description, false);
+
+    clearSuggestions();
+    setValues({
+      ...values,
+      end_location: description,
+    });
+    setEndPlaceId(place_id);
+  };
+
+  const renderStartSuggestions = (location) =>
+    data.map((suggestion) => {
+      const {
+        place_id,
+        structured_formatting: { main_text, secondary_text },
+      } = suggestion;
+
+      return (
+        <li
+          key={place_id}
+          onClick={
+            location === "start_location"
+              ? handleStartSelect(suggestion, place_id)
+              : handleEndSelect(suggestion, place_id)
+          }
+        >
+          <strong>{main_text}</strong> <small>{secondary_text}</small>
+        </li>
+      );
+    });
+
+  const renderEndSuggestions = (location) =>
+    data.map((suggestion) => {
+      const {
+        place_id,
+        structured_formatting: { main_text, secondary_text },
+      } = suggestion;
+
+      return (
+        <li
+          key={place_id}
+          onClick={
+            location === "start_location"
+              ? handleStartSelect(suggestion)
+              : handleEndSelect(suggestion)
+          }
+        >
+          <strong>{main_text}</strong> <small>{secondary_text}</small>
+        </li>
+      );
+    });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case "start_location":
+        setValue(value);
+        setLocation("start");
+        setValues((prev) => {
+          return {
+            ...prev,
+            [name]: value,
+          };
+        });
+        break;
+      case "end_location":
+        setValue(value);
+        setLocation("end");
+        setValues((prev) => {
+          return {
+            ...prev,
+            [name]: value,
+          };
+        });
+        break;
+      default:
+        if (name !== "leave_datetime") {
+          setValues((prev) => {
+            return {
+              ...prev,
+              [name]: value,
+            };
+          });
+        }
+        break;
+    }
+  };
+
+  const handlePickupChange = (event) => {
+    if (event.target.checked) {
+      setShouldPickup(true);
+    } else {
+      setShouldPickup(false);
+      //if (!submitted) {
+      setValues((prev) => {
+        return {
+          ...prev,
+          rider_radius: "0",
+        };
+      });
+      //}
+    }
+  };
+
   const handleLeave_DatetimeInputChange = (date) => {
     setValues({ ...values, leave_datetime: date });
-  };
-  const handleStart_LocationInputChange = (event) => {
-    setValues({ ...values, start_location: event.target.value });
-  };
-  const handleEnd_LocationInputChange = (event) => {
-    setValues({ ...values, end_location: event.target.value });
-  };
-  const handlePriceInputChange = (event) => {
-    setValues({ ...values, price: event.target.value });
-  };
-  const handleSeats_AvailableInputChange = (event) => {
-    setValues({ ...values, seats_available: event.target.value });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let isValid = false;
-    const {
-      name,
-      leave_datetime,
-      seats_available,
-      start_location,
-      end_location,
-      price,
-    } = values;
     const keys = Object.keys(values);
     const errors = {
       name: "",
@@ -66,6 +189,7 @@ export default function Ride() {
       end_location: "",
       price: "",
       seats_available: "",
+      rider_radius: "",
       driver_id: "",
     };
 
@@ -116,11 +240,27 @@ export default function Ride() {
           isValid = true;
           errors["seats_available"] = "";
         }
+
+      case keys.includes("rider_radius"):
+        if (shouldPickup) {
+          const rider_radius = parseInt(values.rider_radius, 10);
+          if (values.rider_radius === "") {
+            isValid = false;
+            errors["rider_radius"] = "This is a required field.";
+          } else if (rider_radius === 0 || rider_radius < 1) {
+            isValid = false;
+            errors["rider_radius"] = "Rider radius should be greater than 0.";
+          }
+        } else {
+          isValid = true;
+          errors["rider_radius"] = "";
+        }
+
       case keys.includes("start_location"):
         if (values.start_location === "") {
           isValid = false;
           errors["start_location"] = "This is a required field.";
-        } else if (values.start_location.length < 4) {
+        } else if (values.start_location?.length < 4) {
           isValid = false;
           errors["start_location"] = "Please enter at-least 4 characters.";
         } else {
@@ -131,7 +271,7 @@ export default function Ride() {
         if (values.end_location === "") {
           isValid = false;
           errors["end_location"] = "This is a required field.";
-        } else if (values.end_location.length < 4) {
+        } else if (values.end_location?.length < 4) {
           isValid = false;
           errors["end_location"] = "Please enter at-least 4 characters.";
         } else {
@@ -155,17 +295,22 @@ export default function Ride() {
     setErrorMsgs(errors);
 
     const objectKeys = Object.keys(errors);
-    const isError = objectKeys.some((error) => {
-      return errors[error] != "";
+    console.log({ objectKeys });
+    const isError = objectKeys.some((key) => {
+      return errors[key] != "";
     });
     setHasErrors(isError);
     if (isError === false) {
       setValid(true);
       setSubmitted(true);
+
       axios
-        .post(getBackendURL() + "/rides", values)
+        .post(getBackendURL() + "/rides", {
+          ...values,
+          start_location: startPlaceId,
+          end_location: endPlaceId,
+        })
         .then((response) => {
-          //console.log(response.data)
           setHasErrors(false);
           setSubmitted(true);
           setTimeout(() => {
@@ -178,8 +323,10 @@ export default function Ride() {
             end_location: "",
             price: "",
             seats_available: "",
+            rider_radius: "0",
             driver_id: user_id,
           });
+          setShouldPickup(false);
         })
         .catch((error) => {
           console.log("error", error.errors);
@@ -199,6 +346,9 @@ export default function Ride() {
       </Layout>
     );
   }
+
+  console.log({ values });
+
   return (
     <Layout user={user}>
       <Container>
@@ -218,62 +368,104 @@ export default function Ride() {
             </div>
           ) : null}
           <input
-            onChange={handleNameInputChange}
+            onChange={handleInputChange}
             value={values.name}
             className="form-field"
             placeholder="Name"
             name="name"
+            autoComplete="off"
           />
-          {errorMsgs.name && <p>{errorMsgs.name}</p>}
+          {errorMsgs.name && <p className="error-msg">{errorMsgs.name}</p>}
           <label>Leave/Datetime</label>
           <DateTimePicker
             onChange={handleLeave_DatetimeInputChange}
             value={values.leave_datetime}
             className="form-field"
             placeholder="Leave/Datetime"
-            name="leaveTime"
+            name="leave_datetime"
+            autoComplete="off"
           />
-          {errorMsgs.leave_datetime && <p>{errorMsgs.leave_datetime}</p>}
-          {/*<input
-          onChange={handleLeave_DatetimeInputChange}
-          value={values.leave_datetime}
-          className="form-field"
-          placeholder="Leave/Datetime"
-          name="leaveTime" />
-        {errorMsgs.leave_datetime && <p>{errorMsgs.leave_datetime}</p>} */}
+          {errorMsgs.leave_datetime && (
+            <p className="error-msg">{errorMsgs.leave_datetime}</p>
+          )}
+          <div ref={ref}>
+            <input
+              value={values.start_location}
+              name="start_location"
+              onChange={handleInputChange}
+              placeholder="Start Location"
+              className="form-field"
+              autoComplete="off"
+            />
+            {/* We can use the "status" to decide whether we should display the dropdown or not */}
+            {status === "OK" && location === "start" && (
+              <ul>{renderStartSuggestions("start_location")}</ul>
+            )}
+          </div>
+          {errorMsgs.start_location && (
+            <p className="error-msg">{errorMsgs.start_location}</p>
+          )}
+          <div ref={ref}>
+            <input
+              value={values.end_location}
+              name="end_location"
+              onChange={handleInputChange}
+              placeholder="End Location"
+              className="form-field"
+              autoComplete="off"
+            />
+            {/* We can use the "status" to decide whether we should display the dropdown or not */}
+            {status === "OK" && location === "end" && (
+              <ul>{renderEndSuggestions("end_location")}</ul>
+            )}
+          </div>
+          {errorMsgs.end_location && (
+            <p className="error-msg">{errorMsgs.end_location}</p>
+          )}
           <input
-            onChange={handleStart_LocationInputChange}
-            value={values.start_location}
-            className="form-field"
-            placeholder="Start Location"
-            name="start_location"
-          />
-          {errorMsgs.start_location && <p>{errorMsgs.start_location}</p>}
-          <input
-            onChange={handleEnd_LocationInputChange}
-            value={values.end_location}
-            className="form-field"
-            placeholder="End Location"
-            name="end_location"
-          />
-          {errorMsgs.end_location && <p>{errorMsgs.end_location}</p>}
-          <input
-            onChange={handlePriceInputChange}
+            onChange={handleInputChange}
             value={values.price}
             className="form-field"
             placeholder="Price"
-            name="cost"
+            name="price"
+            autoComplete="off"
           />
-          {errorMsgs.price && <p>{errorMsgs.price}</p>}
+          {errorMsgs.price && <p className="error-msg">{errorMsgs.price}</p>}
           <input
             type="number"
-            onChange={handleSeats_AvailableInputChange}
+            onChange={handleInputChange}
             value={values.seats_available}
             className="form-field"
             placeholder="Seats Available"
             name="seats_available"
+            autoComplete="off"
           />
-          {errorMsgs.seats_available && <p>{errorMsgs.seats_available}</p>}
+          {errorMsgs.seats_available && (
+            <p className="error-msg">{errorMsgs.seats_available}</p>
+          )}
+          <div>
+            <input
+              type="checkbox"
+              name="pickup"
+              checked={shouldPickup}
+              onChange={handlePickupChange}
+              className="form-field"
+            />{" "}
+            Driver pick up?
+          </div>
+          <input
+            type="number"
+            onChange={handleInputChange}
+            value={values.rider_radius}
+            className="form-field"
+            placeholder="Rider Radius"
+            name="rider_radius"
+            autoComplete="off"
+            disabled={!shouldPickup}
+          />
+          {errorMsgs.rider_radius && (
+            <p className="error-msg">{errorMsgs.rider_radius}</p>
+          )}
           <button className="form-field" type="submit">
             Submit
           </button>

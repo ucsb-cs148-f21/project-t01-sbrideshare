@@ -12,6 +12,7 @@ import PageNotFound from "./pages/PageNotFound";
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(null);
+
   const script = document.createElement("script");
   script.src = "https://apis.google.com/js/platform.js";
   script.onload = () => initGoogleSignIn();
@@ -60,6 +61,10 @@ export default function App() {
       </BrowserRouter>
     );
   }
-
+  const script2 = document.createElement("script");
+  script2.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`;
+  script2.onload = () => initGoogleSignIn();
+  script2.async = true;
+  document.body.appendChild(script2);
   return <CheckingSignedIn />;
 }
