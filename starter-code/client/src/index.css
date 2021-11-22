@@ -16,5 +16,15 @@ code {
 }
 
 .react-datetime-picker__calendar .react-calendar {
-  background: #ccc;;
+  background: #ccc;
+}
+
+.error-msg {
+  color: #ff0000;
+}
+
+[name="start_location"],
+[name="end_location"],
+[name="leave_datetime"] {
+  width: 100%;
 }
