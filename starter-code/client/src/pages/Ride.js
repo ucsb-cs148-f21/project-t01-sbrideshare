@@ -295,7 +295,6 @@ export default function Ride() {
     setErrorMsgs(errors);
 
     const objectKeys = Object.keys(errors);
-    console.log({ objectKeys });
     const isError = objectKeys.some((key) => {
       return errors[key] != "";
     });

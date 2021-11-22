@@ -57,7 +57,7 @@ function userIsDriver() {
 //do not use this for updating button values for anything other than
 //the page being opened/refreshed
 function getInitialButtonValues(rideInfo, user) {
-  var userInRide = rideInfo.riders?.indexOf(user.id) > -1;
+  var userInRide = rideInfo.riders.indexOf(user.id) > -1;
   if (rideInfo.driver_id === user.id) {
     return userIsDriver();
   }
