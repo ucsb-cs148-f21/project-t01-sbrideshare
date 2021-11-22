@@ -2,7 +2,7 @@
 
 ### Prerequisites
 * npm
-Make sure you have node and npm installed. You can check that by running "node -v" and "npm -v" on your computer. If no versions of node or npm appear on your computer, you can download them here: https://nodejs.org/en/.
+    * Make sure you have node and npm installed. You can check that by running "node -v" and "npm -v" on your computer. If no versions of node or npm appear on your computer, you can download them here: https://nodejs.org/en/.
 
 ### Dependencies
 * MongoDB
@@ -14,15 +14,22 @@ Make sure you have node and npm installed. You can check that by running "node -
 * In `/starter-code/api` run `npm i`
 * In `/starter-code/api` create a file named `.env` with the following variables
 ```
-MONGO_DB_URI=<YOUR MONGODB URI HERE>
-MONGO_DB_URI_DEV=<YOUR MONGODB URI HERE>
-MONGO_DB_URI_TEST=<YOUR MONGODB URI HERE>
+MONGODB_URI=<YOUR MONGODB URI HERE>
+MONGODB_URI_DEV=<YOUR MONGODB URI HERE>
+MONGODB_URI_TEST=<YOUR MONGODB URI HERE>
 GOOGLE_API_KEY=<YOUR GOOGLE API KEY HERE>
 ```
-and replace `<YOUR MONGODB URI HERE>` with your MongoDB URI. The backend will connect to the URI specified in `MONGO_DB_URI` when running `npm run start`, `MONGO_DB_URI_DEV` when running `npm run dev`, and `MONGO_DB_URI_TEST` when running `npm run test`.
+and replace `<YOUR MONGODB URI HERE>` with your MongoDB URI. The backend will connect to the URI specified in `MONGODB_URI` when running `npm run start`, `MONGODB_URI_DEV` when running `npm run dev`, and `MONGODB_URI_TEST` when running `npm run test`. For more info on setting up MongoDB, refer below to the "Setting up MongoDB" section.
 Also, replace `<YOUR GOOGLE API KEY HERE>` with the Google API key you generate later on. Refer below to the "Generating Keys" section for a guide on how to generate this.
 
 * If running from a dev environment, run `npm run dev` to start the backend server on `http://localhost:9000`
+
+#### Setting up MongoDB
+In the MongoDB dashboard, hit the green "+ Create" button on the top right to create a new cluster. Leave everything on default settings. Next, go to the "Database Access" section under "Security" on the left side. Hit "+ Add New Database User" and fill out the username and password fields using the password authentication method for the user. Keep the password somewhere you can copy paste for a future step. Leave all other settings on default.
+
+Go to the "Network Access" dashboard and hit "+ Add New Ip Address". For now, allow MongoDB Atlas to accept all incoming connections by adding the IP `0.0.0.0/0`. 
+
+Go to the "Databases" dashboard and hit "Connect" on your newly created cluster. Select "Connect Your Application". The MongoDB URI should be displayed here and should look something like `mongodb+srv://<username>:<password>@cluster0.gikbx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`. Replace `<username>` and `<password>` with your created credentials. You can also change the database name from `myFirstDatabase` to anything you like.
 
 #### Generating Keys
 The next step is to setup the "client_id" for your app in the ".env". Go to this link: https://console.cloud.google.com/apis/credentials and create a project. In the OAuth consent screen, you should set the user type to "external." Now go ahead to the "credentials" screen and add a new "OAuth Client ID."
@@ -49,4 +56,3 @@ Also, you will need to add two buildpacks to both deployments: "https://github.c
 Make sure that you committed and pushed your changes onto your github repo. Link the github repo and deploy the projects.
 
 Remember to add the name of your website into "Authorized JavaScript origins" and "Authorized redirect URIs" of your OAuth consent screen!
-

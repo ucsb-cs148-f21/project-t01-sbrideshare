@@ -4,12 +4,13 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import ucsbAccount from "../utils/ucsb-account";
+import "../styles/navbar.css";
 
 export default function NavBar(props) {
   const user = props.user;
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar variant="dark" expand="lg" id="navbar">
       <Container>
         <Navbar.Brand href="/">SB RideShare</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
