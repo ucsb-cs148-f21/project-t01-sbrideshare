@@ -52,7 +52,7 @@ export default function Home() {
           <Carousel.Item>
           <div id="first-card">
           <Card id="left-card">
-              <CardActionArea component={RouterLink} to="/rides" root="text-decoration: none">
+              <CardActionArea component={RouterLink} to="/rides">
                 <CardMedia
                   component=""
                   underline="none"
@@ -62,7 +62,7 @@ export default function Home() {
                 />
                 <CardContent>
                   <br />
-                  <Typography className="typography" gutterBottom variant="h2" component="div">
+                  <Typography gutterBottom variant="h2" component="div">
                     Find A Ride
                   </Typography>
 
