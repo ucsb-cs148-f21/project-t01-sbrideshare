@@ -42,7 +42,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout id="layout" user={user}>
+    <Layout id="layout" user={user} navBarActive={"Home"}>
       <Container id="home">
         <div id="home-title">
             <h1>Welcome to SB RideShare!</h1>
@@ -52,7 +52,7 @@ export default function Home() {
           <Carousel.Item>
           <div id="first-card">
           <Card id="left-card">
-              <CardActionArea component={RouterLink} to="/rides">
+              <CardActionArea component={RouterLink} to="/rides" root="text-decoration: none">
                 <CardMedia
                   component=""
                   underline="none"
@@ -62,7 +62,7 @@ export default function Home() {
                 />
                 <CardContent>
                   <br />
-                  <Typography gutterBottom variant="h2" component="div">
+                  <Typography className="typography" gutterBottom variant="h2" component="div">
                     Find A Ride
                   </Typography>
 

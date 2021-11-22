@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState} from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
@@ -8,6 +8,21 @@ import "../styles/navbar.css";
 
 export default function NavBar(props) {
   const user = props.user;
+  const navBarActive = props.navBarActive;
+  let findActive = false;
+  let createActive = false;
+  let myRidesActive = false;;
+  let homeActive = false;
+
+  if(navBarActive == "Find A Ride") {
+    findActive = true;
+  }else if(navBarActive == "Create A Ride") {
+    createActive = true;
+  }else if(navBarActive == "My Rides") {
+    myRidesActive = true;
+  }else if(navBarActive == "Home") {
+    homeActive = true;
+  }
 
   return (
     <Navbar variant="dark" expand="lg" id="navbar">
@@ -16,10 +31,10 @@ export default function NavBar(props) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            {ucsbAccount(user) && <Nav.Link href="/rides">Find A Ride</Nav.Link>}
-            {ucsbAccount(user) && <Nav.Link href="/ride">Create A Ride</Nav.Link>}
-            {ucsbAccount(user) && <Nav.Link href="/myrides">My Rides</Nav.Link>}
+            <Nav.Link active={homeActive} href="/">Home</Nav.Link>
+            {ucsbAccount(user) && <Nav.Link active={findActive} href="/rides">Find A Ride</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link active={createActive} href="/ride">Create A Ride</Nav.Link>}
+            {ucsbAccount(user) && <Nav.Link active={myRidesActive} href="/myrides">My Rides</Nav.Link>}
           </Nav>
           <Nav>
             {!user ? (
