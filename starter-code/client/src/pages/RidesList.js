@@ -31,7 +31,7 @@ export default function RidesList() {
   }, []);
 
   return (
-    <Layout user={user}>
+    <Layout user={user} navBarActive={"Find A Ride"}>
       <ThemeProvider theme={theme}> 
         <Container>
           <br />
