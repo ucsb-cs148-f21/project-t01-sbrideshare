@@ -42,7 +42,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout id="layout" user={user}>
+    <Layout id="layout" user={user} navBarActive={"Home"}>
       <Container id="home">
         <div id="home-title">
             <h1>Welcome to SB RideShare!</h1>

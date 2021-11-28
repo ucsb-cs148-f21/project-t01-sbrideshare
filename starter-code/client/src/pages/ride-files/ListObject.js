@@ -162,7 +162,13 @@ function dateToString(date){
     }
     
     var hour = tempHour.toString();
-    var min = (date.getMinutes()).toString();
+    var min = date.getMinutes();
+
+    if(min<10){
+        min = "0"+min.toString();
+    }else{
+        min = min.toString();
+    }
 
     return weekday+", " + month + " " + monthday + " (" + monthnum + "/" + monthday + "/" + year + ") at " + hour + ":" + min +" "+timeSuffix;
 
@@ -287,7 +293,7 @@ export default function ListObject(props) {
         setLeaveOpen(false);
     };
     const startAddress = rideInfo.start_location.formatted_address.split(/[,]+/);
-    const endAddress = rideInfo.start_location.formatted_address.split(/[,]+/);
+    const endAddress = rideInfo.end_location.formatted_address.split(/[,]+/);
 
 
 
