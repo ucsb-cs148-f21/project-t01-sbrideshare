@@ -38,7 +38,7 @@ export default function RidesList() {
           <h1>Rides</h1>
           To join a ride, select the green sign-up button.
           <hr />
-          <Search />
+          <Search callback={makeList}/>
           <p />
           {list}
         </Container>
