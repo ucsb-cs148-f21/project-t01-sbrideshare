@@ -16,6 +16,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import FormLabel from '@mui/material/FormLabel';
 import HelpIcon from '@mui/icons-material/Help';
+import Collapse from '@mui/material/Collapse';
 
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
@@ -65,9 +66,15 @@ export default function SearchAppBar(props) {
         setValues({ ...values, max_price: event.target.value });
     };
 
+    const handleExpandClick = () => {
+      setExpanded(!expanded);
+    };
+
     const [location, setLocation] = useState("");
     const [startPlaceId, setStartPlaceId] = useState("");
     const [endPlaceId, setEndPlaceId] = useState("");
+
+    const [expanded, setExpanded] = React.useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -193,6 +200,7 @@ export default function SearchAppBar(props) {
       };
 
     return (
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Grid component="form"
         item
         container 
@@ -297,5 +305,6 @@ export default function SearchAppBar(props) {
               </Container>
             </Grid>
         </Grid>
+        </Collapse>
     );
 }
