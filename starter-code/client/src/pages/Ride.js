@@ -346,8 +346,6 @@ export default function Ride() {
     );
   }
 
-  console.log({ values });
-
   return (
     <Layout user={user} navBarActive={"Create A Ride"}>
       <Container>

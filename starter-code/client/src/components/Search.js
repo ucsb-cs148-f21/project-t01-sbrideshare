@@ -11,18 +11,14 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import Container from '@mui/material/Container';
-
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
-
 import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
+import HelpIcon from '@mui/icons-material/Help';
 
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
-
-import HelpIcon from '@mui/icons-material/Help';
 
 export default function SearchAppBar(props) {
     const sliderRangeDefaultValue = 1500;
@@ -35,27 +31,26 @@ export default function SearchAppBar(props) {
         clearSuggestions,
       } = usePlacesAutocomplete({
         requestOptions: {
-          /* Define search scope here */
         },
         debounce: 300,
       });
 
     const [values, setValues] = useState({
         max_price: "",
-        min_datetime: new Date(),
-        max_datetime: new Date(),
+        min_leave_datetime: new Date(),
+        max_leave_datetime: new Date(),
         start_location: "",
         start_location_radius: sliderRangeDefaultValue,
         end_location: "",
         end_location_radius: sliderRangeDefaultValue
     });
 
-    const handleMinDateTimeInputChange = (event) => {
-        setValues({ ...values, min_datetime: event.target.value });
+    const handleMinDateTimeInputChange = (value) => {
+        setValues({ ...values, min_leave_datetime: value });
     };
 
-    const handleMaxDateTimeInputChange = (event) => {
-        setValues({ ...values, max_datetime: event.target.value });
+    const handleMaxDateTimeInputChange = (value) => {
+        setValues({ ...values, max_leave_datetime: value });
     };
 
     const handleStartLocationRangeInputChange = (event) => {
@@ -74,15 +69,13 @@ export default function SearchAppBar(props) {
     const [startPlaceId, setStartPlaceId] = useState("");
     const [endPlaceId, setEndPlaceId] = useState("");
 
-    const [search, setSearch] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(search != ""){
-            console.log(search); 
-        } 
 
         const params = {
             params: {
+                min_leave_datetime: values.min_leave_datetime,
+                max_leave_datetime: values.max_leave_datetime,
                 max_price: values.max_price == "" ? undefined :  values.max_price,
                 start_location: startPlaceId == "" ? undefined : startPlaceId,
                 start_location_radius: values.start_location_radius,
@@ -91,18 +84,15 @@ export default function SearchAppBar(props) {
             }
         }
 
-        console.log(params);
-
         axios.get(getBackendURL() + "/rides", params).then(response => {
-            console.log(response)
             props.callback(<List rideInfo={response.data}/>)
         })
       }
 
     const ref = useOnclickOutside(() => {
-    // When user clicks outside of the component, we can dismiss
-    // the searched suggestions by calling this method
-    clearSuggestions();
+      // When user clicks outside of the component, we can dismiss
+      // the searched suggestions by calling this method
+      clearSuggestions();
     });
 
     const handleStartSelect = ({ description, place_id }) => () => {
@@ -198,14 +188,6 @@ export default function SearchAppBar(props) {
             });
             break;
           default:
-            // if (name !== "leave_datetime") {
-            //   setValues((prev) => {
-            //     return {
-            //       ...prev,
-            //       [name]: value,
-            //     };
-            //   });
-            // }
             break;
         }
       };
@@ -225,98 +207,94 @@ export default function SearchAppBar(props) {
         onSubmit = {handleSubmit}
         >
             <Grid xs={12} item>
-            <Container fixed>
-            <FormLabel component="legend">Rides leaving between</FormLabel>
-                <Stack direction="row" spacing={2} >
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DateTimePicker
-                        value={values.minDateTime}
-                        onChange={handleMinDateTimeInputChange}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </LocalizationProvider>
-                <FormLabel xs = {1} component="legend" style={{width: "5px"}}>to</FormLabel>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DateTimePicker
-                        value={values.maxDateTime}
+              <Container fixed>
+                <FormLabel component="legend">Rides leaving between</FormLabel>
+                  <Stack direction="row" spacing={2} >
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DateTimePicker
+                          value={values.min_leave_datetime}
+                          onChange={handleMinDateTimeInputChange}
+                          renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                    <FormLabel xs = {1} component="legend" style={{width: "5px"}}>to</FormLabel>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DateTimePicker
+                        value={values.max_leave_datetime}
                         onChange={handleMaxDateTimeInputChange}
                         renderInput={(params) => <TextField {...params} />}
-                    />
-                </LocalizationProvider>
-            </Stack>
-            </Container>
+                      />
+                    </LocalizationProvider>
+                  </Stack>
+              </Container>
             </Grid>
             <Grid xs={6} item>
                 <Container fixed>
-                <div ref={ref}>
-                <input
-                value={values.start_location}
-                name="start_location"
-                onChange={handleInputChange}
-                placeholder="Start Location"
-                className="form-field"
-                autoComplete="off"
-                />
-                {/* We can use the "status" to decide whether we should display the dropdown or not */}
-                {status === "OK" && location === "start" && (
-                <ul>{renderStartSuggestions("start_location")}</ul>
-                )}
-                
-            </div>
-            <Stack direction="row" >
-            <FormLabel component="legend">Start Location Search Radius</FormLabel> 
-            <Tooltip title="Distance in meters to search around your start location.">
-                <HelpIcon/>
-            </Tooltip>
-            </Stack>
-            <Slider onChange={handleStartLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
-            {/* </Grid>    
-            <Grid xs={6} item> */}
-                <div ref={ref}>
+                  <div ref={ref}>
                     <input
-                        value={values.end_location}
-                        name="end_location"
-                        onChange={handleInputChange}
-                        placeholder="End Location"
-                        className="form-field"
-                        autoComplete="off"
+                    value={values.start_location}
+                    name="start_location"
+                    onChange={handleInputChange}
+                    placeholder="Start Location"
+                    className="form-field"
+                    autoComplete="off"
+                    />
+                    {/* We can use the "status" to decide whether we should display the dropdown or not */}
+                    {status === "OK" && location === "start" && (
+                    <ul>{renderStartSuggestions("start_location")}</ul>
+                    )}
+                  </div>
+                  <Stack direction="row" >
+                    <FormLabel component="legend">Start Location Search Radius</FormLabel> 
+                    <Tooltip title="Distance in meters to search around your start location.">
+                      <HelpIcon/>
+                    </Tooltip>
+                  </Stack>
+                  <Slider onChange={handleStartLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
+                  <div ref={ref}>
+                    <input
+                      value={values.end_location}
+                      name="end_location"
+                      onChange={handleInputChange}
+                      placeholder="End Location"
+                      className="form-field"
+                      autoComplete="off"
                     />
                     {/* We can use the "status" to decide whether we should display the dropdown or not */}
                     {status === "OK" && location === "end" && (
                     <ul>{renderEndSuggestions("end_location")}</ul>
                     )}
-                </div>
-                <Stack direction="row" >
-                <FormLabel component="legend">End Location Search Radius</FormLabel> 
-                <Tooltip title="Distance in meters to search around your end location.">
-                    <HelpIcon/>
-                </Tooltip>
-                </Stack>
-                <Slider onChange={handleEndLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
+                  </div>
+                  <Stack direction="row" >
+                    <FormLabel component="legend">End Location Search Radius</FormLabel> 
+                    <Tooltip title="Distance in meters to search around your end location.">
+                      <HelpIcon/>
+                    </Tooltip>
+                  </Stack>
+                  <Slider onChange={handleEndLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
                 </Container>
             </Grid>
             
             <Grid xs={12} item>
-            <Container fixed>
+              <Container fixed>
                 <TextField
-                    id="max_price" 
-                    label="Max Price"
-                    type="number"
-                    variant="outlined"
-                    onChange={handleMaxPriceInputChange}
-
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
+                  id="max_price" 
+                  label="Max Price"
+                  type="number"
+                  variant="outlined"
+                  onChange={handleMaxPriceInputChange}
+                  InputProps={{
+                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
                 />
-                </Container>
+              </Container>
             </Grid>
             <Grid item>
-            <Container fixed>
+              <Container fixed>
                 <Button type = "submit" variant="contained">
                     Search
                 </Button>
-                </Container>
+              </Container>
             </Grid>
         </Grid>
     );

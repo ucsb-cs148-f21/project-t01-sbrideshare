@@ -20,8 +20,14 @@ export default function RidesList() {
 
   var baseURL = getBackendURL() + "/rides";
   useEffect(() => {
+    const params = {
+      params: {
+        min_leave_datetime: new Date()
+      }
+    }
+
     axios
-      .get(baseURL)
+      .get(baseURL, params)
       .then(function (response) {
         makeList(<List rideInfo={response.data} />);
       })
