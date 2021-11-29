@@ -17,9 +17,13 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import FormLabel from '@mui/material/FormLabel';
 import HelpIcon from '@mui/icons-material/Help';
 import Collapse from '@mui/material/Collapse';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
+
 
 export default function SearchAppBar(props) {
     const sliderRangeDefaultValue = 1500;
@@ -35,6 +39,17 @@ export default function SearchAppBar(props) {
         },
         debounce: 300,
       });
+
+      const ExpandMore = styled((props) => {
+        const { expand, ...other } = props;
+        return <IconButton {...other} />;
+      })(({ theme, expand }) => ({
+        transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+          duration: theme.transitions.duration.shortest,
+        }),
+      }));
 
     const [values, setValues] = useState({
         max_price: "",
@@ -67,6 +82,7 @@ export default function SearchAppBar(props) {
     };
 
     const handleExpandClick = () => {
+      console.log("here")
       setExpanded(!expanded);
     };
 
@@ -200,7 +216,7 @@ export default function SearchAppBar(props) {
       };
 
     return (
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      // <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Grid component="form"
         item
         container 
@@ -305,6 +321,6 @@ export default function SearchAppBar(props) {
               </Container>
             </Grid>
         </Grid>
-        </Collapse>
+        // </Collapse>
     );
 }
