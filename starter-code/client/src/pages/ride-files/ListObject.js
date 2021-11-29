@@ -152,9 +152,9 @@ function dateToString(date){
     var timeSuffix;
     if(tempHour<12){
         timeSuffix = "AM";
+        if(tempHour == 0)
+            tempHour=12;
     }
-    else if(tempHour == 0)
-        tempHour=12;
     else{
         timeSuffix = "PM";
         if(tempHour!=12)
