@@ -17,8 +17,10 @@ const rideSchema = new mongoose.Schema({
     price: Number, 
     seats_available: Number, 
     driver_id: String,
+    contact: String,
     riders: [{
         rider_id: String,
+        rider_name: String,
         pickup_address: String, 
         note_to_driver: String
     }]
