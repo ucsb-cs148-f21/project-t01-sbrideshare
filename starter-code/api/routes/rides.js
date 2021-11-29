@@ -85,7 +85,7 @@ router.get("/", async function(req, res, next) {
                     const pickup_distance = gc_distance(ride.start_location.lat, ride.start_location.lng,
                         start_location_geo.geometry.location.lat, start_location_geo.geometry.location.lng)
 
-                    if (pickup_distance > ride.rider_radius) {
+                    if (pickup_distance > query.start_location_radius) {
                       rides.splice(index, 1);
                     }
                   }, []);
@@ -110,7 +110,7 @@ router.get("/", async function(req, res, next) {
                     const dropoff_distance = gc_distance(ride.end_location.lat, ride.end_location.lng,
                         end_location_geo.geometry.location.lat, end_location_geo.geometry.location.lng)
 
-                    if (dropoff_distance > ride.rider_radius) {
+                    if (dropoff_distance > query.end_location_radius) {
                       rides.splice(index, 1);
                     }
                   }, []);

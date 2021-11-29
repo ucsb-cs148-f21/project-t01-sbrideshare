@@ -68,16 +68,16 @@ Append optional parameters by adding `?{param}={value}` to the request URL. Appe
 
 Example: `/rides?min_leave_datetime=2021-10-14T00:07:46.443Z&min_price=10`
 
-| parameter          | value                 |
-| ------------------ | --------------------- |
-| min_price          | Number                |
-| max_price          | Number                |
-| min_leave_datetime | ISO8601               |
-| max_leave_datetime | ISO8601               |
-| start_location     | valid Google place_id |
-| end_location       | valid Google place_id |
-
-If the parameters start_location/end_location are provided, the API only returns drives which are within the ride's `rider_radius` of the corresponding ride's start_location/end_location. 
+| parameter             | value                 |
+| --------------------- | --------------------- |
+| min_price             | Number                |
+| max_price             | Number                |
+| min_leave_datetime    | ISO8601               |
+| max_leave_datetime    | ISO8601               |
+| start_location        | valid Google place_id |
+| start_location_radius | Number                |
+| end_location          | valid Google place_id |
+| end_location_radius   | Number                |
 
 ## Response
 ```
