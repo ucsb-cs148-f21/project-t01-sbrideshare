@@ -19,6 +19,7 @@ export default function App() {
   document.body.appendChild(script);
 
   function initGoogleSignIn() {
+    if(window.gapi === undefined){return;}
     window.gapi.load("auth2", () => {
       window.gapi.auth2
         .init({
