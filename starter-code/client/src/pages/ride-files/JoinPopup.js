@@ -131,7 +131,7 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
                     }
                     {!driver_pickup &&
                       <Typography variant="body1" gutterBottom component="div">
-                        The driver wants to meet only at their specified leave location.
+                        The driver wants to meet only at their specified start location.
                       </Typography>
                     }
                     {status === "OK" && <ul>{renderSuggestions()}</ul>}

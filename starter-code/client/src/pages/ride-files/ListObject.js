@@ -343,10 +343,10 @@ export default function ListObject(props) {
         const driver_pickup = rideInfo.rider_radius!=0;
         var pickup_message;
         if(driver_pickup){
-            pickup_message = "The driver will pick up riders within "+rideInfo.rider_radius+" meters of the specified leave location.";
+            pickup_message = "The driver will pick up riders within "+rideInfo.rider_radius+" meters of the specified start location.";
         }
         else{
-            pickup_message = "The driver will only pick up riders from the listed leave location.";
+            pickup_message = "The driver will only pick up riders from the listed start location.";
         }
         return(
             <Collapse in={expanded} timeout="auto" unmountOnExit>
