@@ -31,6 +31,7 @@ Submits a ride with the specified data. Also adds a reference to this ride of th
     "rider_radius": $Integer, //Required. Max distance driver is willing to pick up and dropoff riders from driver's intended destination. Set to 0 if driver will not pick people up.
     "price": $Double, //Required. Cannot be negative.
     "seats_available": $Integer, //Required. Must be greater than 1.
+    "contact": $String, //Optional.
     "driver_id": $UUID //Required. 
 }
 ```
@@ -146,6 +147,7 @@ Adds a rider with `rider_id` to the `riders` array of the ride to the specifed `
 ```
 {
     "rider_id": $UUID, //Required. 
+    "rider_name": $String //Required
     "pickup_address": $String // Required if `:ride_id` has `rider_radius` not equal to 0. A valid place_id.
     "note_to_driver": $String //Optional.
 }
