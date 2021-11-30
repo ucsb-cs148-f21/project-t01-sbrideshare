@@ -386,13 +386,22 @@ router.post("/:ride_id/riders",
                             }
                         }).then(r => {
                             location_geo = r.data.results[0]
-
                             // Ensure pickup_location is within rider radius
                             const distance = gc_distance(location_geo.geometry.location.lat, location_geo.geometry.location.lng, ride.start_location.lat, ride.start_location.lng)
                             if (distance > ride.rider_radius) {
                                 return res.status(409).send("pickup_location is outside of the drive's specified rider_radius.").end();
                             }
-
+                        })
+                        .catch(e => {
+                            console.log(e.response.data.error_message);
+                            return res.status(500).send("pickup_address place_id is not valid.").end()
+                        })
+                    }
+                    else {
+                        if (ride.rider_radius != 0) {
+                            return res.status(409).send("Driver has specified that they will pickup riders. Please specify a pickup location.").end();
+                        }
+                    }
                             ride.seats_available -= 1
                             const riderData = {
                                 rider_id: body.rider_id,
@@ -410,7 +419,7 @@ router.post("/:ride_id/riders",
                                 }
                     
                                 if (user == undefined || user == null) {
-                                    return res.status(404).send("rider_id does not exist as a user.")
+                                    return res.status(404).send("rider_id does not exist as a user.").end()
                                 }
             
                                 const ride_id = ride._id
@@ -427,18 +436,6 @@ router.post("/:ride_id/riders",
                                 })
                             
                             })
-
-                        })
-                        .catch(e => {
-                            console.log(e.response.data.error_message);
-                            return res.status(500).send("pickup_address place_id is not valid.").end()
-                        })
-                    }
-                    else {
-                        if (ride.rider_radius != 0) {
-                            return res.status(409).send("Driver has specified that they will pickup riders. Please specify a pickup location.").end();
-                        }
-                    }
 
                 }
 
