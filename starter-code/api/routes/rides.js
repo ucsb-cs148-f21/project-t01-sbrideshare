@@ -295,6 +295,7 @@ router.post("/",
             price: body.price,
             seats_available: body.seats_available,
             driver_id: body.driver_id,
+            contact: body.contact == undefined ? "" : body.contact,
             riders: []
         })
 
@@ -327,6 +328,9 @@ router.post("/:ride_id/riders",
     body("rider_id")
         .exists().withMessage('rider_id is required.').bail()
         .notEmpty().withMessage('rider_id is required.').bail(),
+    body("rider_name")
+        .exists().withMessage('rider_name is required.').bail()
+        .notEmpty().withMessage('rider_name is required.').bail(),
     function(req, res, next) {
 
             const errors = validationResult(req);
@@ -392,6 +396,7 @@ router.post("/:ride_id/riders",
                             ride.seats_available -= 1
                             const riderData = {
                                 rider_id: body.rider_id,
+                                rider_name: body.rider_name,
                                 pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
                                 note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
                             }
