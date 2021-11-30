@@ -402,40 +402,40 @@ router.post("/:ride_id/riders",
                             return res.status(409).send("Driver has specified that they will pickup riders. Please specify a pickup location.").end();
                         }
                     }
-                            ride.seats_available -= 1
-                            const riderData = {
-                                rider_id: body.rider_id,
-                                rider_name: body.rider_name,
-                                pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
-                                note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
-                            }
-        
-                            ride.riders.push(riderData)
+                    ride.seats_available -= 1
+                    const riderData = {
+                        rider_id: body.rider_id,
+                        rider_name: body.rider_name,
+                        pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
+                        note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
+                    }
 
-                            Users.findOne({id: body.rider_id}, (err, user) => {
-                                if (err) {
-                                    console.log(err);
-                                    return res.status(500).end();
-                                }
-                    
-                                if (user == undefined || user == null) {
-                                    return res.status(404).send("rider_id does not exist as a user.").end()
-                                }
+                    ride.riders.push(riderData)
+
+                    Users.findOne({id: body.rider_id}, (err, user) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).end();
+                        }
             
-                                const ride_id = ride._id
-                                user.rides.push(ride_id)
-            
-                                user.save().then(saved_doc => {
-                                    ride.save().then(saved_doc => {
-                                        return res.status(200).end()
-                                    })
-                                })
-                                .catch(err => {
-                                    console.log(err)
-                                    return res.status(500).end()
-                                })
-                            
+                        if (user == undefined || user == null) {
+                            return res.status(404).send("rider_id does not exist as a user.").end()
+                        }
+    
+                        const ride_id = ride._id
+                        user.rides.push(ride_id)
+    
+                        user.save().then(saved_doc => {
+                            ride.save().then(saved_doc => {
+                                return res.status(200).end()
                             })
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            return res.status(500).end()
+                        })
+                    
+                    })
 
                 }
 
