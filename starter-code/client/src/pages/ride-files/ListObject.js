@@ -5,27 +5,16 @@ import getUser from "../../utils/get-user";
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import JoinPopup from './JoinPopup';
 import LeavePopup from './LeavePopup';
-
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
 
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
@@ -321,18 +310,20 @@ export default function ListObject(props) {
         return(
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                <Typography  variant="body1">Riders:</Typography>
                     
                     {
                     rideInfo.riders.length != 0 && 
                     rideInfo.riders.map(item => (
-                    <Typography  variant="body2" color="textSecondary">
-                        {item.rider_id}: {item.pickup_address}
-                    </Typography>
+                        <Typography  variant="body2" color="textSecondary">
+                            {item.rider_id}: {item.pickup_address}
+                        </Typography>
                     ))}
                     {
                     rideInfo.riders.length === 0 &&
-                    "Your ride currently has no riders."
+                    <Typography  variant="body2" color="textSecondary">
+                        Your ride currently has no riders.
+                    </Typography>
+                    
                     }
                 </CardContent>
             </Collapse>
@@ -351,7 +342,6 @@ export default function ListObject(props) {
         return(
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography  variant="body1">Additional Information</Typography>
                     <Typography  variant="body2" color="textSecondary">{pickup_message}</Typography>
                 </CardContent>
             </Collapse>
@@ -392,23 +382,17 @@ export default function ListObject(props) {
                         Price: ${rideInfo.price}
                     </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                        >
-                        <ExpandMoreIcon />
-                    </ExpandMore>
-                </CardActions>
+                <ListItemButton onClick={handleExpandClick}>
+                    {
+                        rideInfo.driver_id === user.id  ?
+                        <ListItemText primary="See Riders" /> : <ListItemText primary="Additional Information" />
+                    }
+                    
+                    {expanded ? <ExpandLess /> : <ExpandMoreIcon />}
+                </ListItemButton>
                 {
-                    rideInfo.driver_id === user.id &&
-                    riderInfo()
-                }
-                {
-                    rideInfo.driver_id != user.id &&
-                    moreDriveInfo()
+                    rideInfo.driver_id === user.id  ?
+                    riderInfo() : moreDriveInfo()
                 }
             </Card>
             <JoinPopup open = {signupOpen} handleClose = {handleClose} 
