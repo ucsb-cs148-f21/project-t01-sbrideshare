@@ -75,7 +75,7 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
     var driver_pickup = rideInfo.rider_radius!=0;
 
     const check_radius = () => {
-        if(id == ""){
+        if(id == "" && driver_pickup){
           setInputError(true);
           return;
         }else{
@@ -83,25 +83,53 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
         }
         loading_effect();
         //send the signup request
-        axios.post(rideURL, {
-            "rider_id": user.id,
-            "pickup_address": id,
-            "note_to_driver": notes
-        })
-        //then change the button colors
-        .then(function (response) {
-            //change button to be signed up
-            signed_up_effect();
-            decrement_seats();
-            handleClose();
-            setError(false);
-        })
-        //if there is an error catch it
-        .catch(function(error) {
-            console.log(error.response);
-            signup_available_effect();
-            setError(true);
-        });
+        if(driver_pickup){
+            console.log("here1");
+            axios.post(rideURL, {
+                "rider_id": user.id,
+                "rider_name": user.fullName,
+                "pickup_address": id,
+                "note_to_driver": notes
+            })
+            //then change the button colors
+            .then(function (response) {
+                //change button to be signed up
+                signed_up_effect();
+                decrement_seats();
+                handleClose();
+                setError(false);
+            })
+            //if there is an error catch it
+            .catch(function(error) {
+                console.log(error.response);
+                signup_available_effect();
+                setError(true);
+            });
+        }
+        else{
+          console.log("here2");
+            axios.post(rideURL, {
+              "rider_id": user.id,
+              "rider_name": user.fullName,
+              "note_to_driver": notes
+            })
+            //then change the button colors
+            .then(function (response) {
+                console.log("then");
+                //change button to be signed up
+                signed_up_effect();
+                decrement_seats();
+                handleClose();
+                setError(false);
+            })
+            //if there is an error catch it
+            .catch(function(error) {
+                console.log("catch");
+                console.log(error.response);
+                signup_available_effect();
+                setError(true);
+            });
+        }
     }
   
     return (

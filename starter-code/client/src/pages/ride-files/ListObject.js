@@ -315,7 +315,7 @@ export default function ListObject(props) {
                     rideInfo.riders.length != 0 && 
                     rideInfo.riders.map(item => (
                         <Typography  variant="body2" color="textSecondary">
-                            {item.rider_id}: {item.pickup_address}
+                            {item.rider_name}: {item.pickup_address}
                         </Typography>
                     ))}
                     {
