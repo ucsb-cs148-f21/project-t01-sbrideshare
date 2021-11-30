@@ -314,7 +314,7 @@ export default function ListObject(props) {
                     {
                     rideInfo.riders.length != 0 && 
                     rideInfo.riders.map(item => (
-                        <Typography  variant="body2" color="textSecondary">
+                        <Typography  variant="body2" color="black">
                             {item.rider_name}: {item.pickup_address}
                         </Typography>
                     ))}
@@ -342,7 +342,12 @@ export default function ListObject(props) {
         return(
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography  variant="body2" color="textSecondary">{pickup_message}</Typography>
+                    {
+                        rideInfo.contact != "" ?
+                        <Typography  variant="body2" color="black">Contact: {rideInfo.contact}</Typography> :
+                        <Typography  variant="body2" color="textSecondary">The driver did not provide their contact info.</Typography>
+                    }
+                    <Typography  variant="body2" color="black">{pickup_message}</Typography>
                 </CardContent>
             </Collapse>
         )
@@ -372,13 +377,13 @@ export default function ListObject(props) {
                         src={driverImg.link}/>}
                 />
                 <CardContent>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="black">
                         Driver: {rideInfo.name}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="black">
                         Seats Available: {seats.numSeats}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="black">
                         Price: ${rideInfo.price}
                     </Typography>
                 </CardContent>

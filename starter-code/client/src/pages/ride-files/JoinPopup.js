@@ -84,7 +84,6 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
         loading_effect();
         //send the signup request
         if(driver_pickup){
-            console.log("here1");
             axios.post(rideURL, {
                 "rider_id": user.id,
                 "rider_name": user.fullName,
@@ -107,7 +106,6 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
             });
         }
         else{
-          console.log("here2");
             axios.post(rideURL, {
               "rider_id": user.id,
               "rider_name": user.fullName,
@@ -115,7 +113,6 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
             })
             //then change the button colors
             .then(function (response) {
-                console.log("then");
                 //change button to be signed up
                 signed_up_effect();
                 decrement_seats();
@@ -124,7 +121,6 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
             })
             //if there is an error catch it
             .catch(function(error) {
-                console.log("catch");
                 console.log(error.response);
                 signup_available_effect();
                 setError(true);
