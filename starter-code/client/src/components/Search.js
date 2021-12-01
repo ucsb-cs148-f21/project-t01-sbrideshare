@@ -42,9 +42,12 @@ export default function SearchAppBar(props) {
         debounce: 300,
       });
 
+    var dt = new Date();
+    dt.setHours(dt.getHours() - 24);
+
     const [values, setValues] = useState({
         max_price: "",
-        min_leave_datetime: new Date(),
+        min_leave_datetime: dt,
         max_leave_datetime: null,
         start_location: "",
         start_location_radius: sliderRangeDefaultValue,
@@ -97,9 +100,12 @@ export default function SearchAppBar(props) {
       }
 
     const handleClearSearch = () => {
+      var tempDate = new Date();
+      tempDate.setHours(tempDate.getHours() - 24);
+
       setValues({ 
         max_price: "",
-        min_leave_datetime: new Date(),
+        min_leave_datetime: tempDate,
         max_leave_datetime: null,
         start_location: "",
         start_location_radius: sliderRangeDefaultValue,

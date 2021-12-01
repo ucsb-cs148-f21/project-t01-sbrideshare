@@ -20,9 +20,12 @@ export default function RidesList() {
 
   var baseURL = getBackendURL() + "/rides";
   useEffect(() => {
+    var tempDate = new Date();
+    tempDate.setHours(tempDate.getHours() - 24);
+
     const params = {
       params: {
-        min_leave_datetime: new Date()
+        min_leave_datetime: tempDate
       }
     }
 
