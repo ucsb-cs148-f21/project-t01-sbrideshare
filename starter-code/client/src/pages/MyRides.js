@@ -46,7 +46,7 @@ export default function MyRides() {
   }, []);
 
   return (
-    <Layout user={user} navBarActive={"My Rides"}>
+    <Layout user={user} navBarActive={"My Rides"} background={"none"}>
       <ThemeProvider theme={theme}> 
         <Container>
           <br />
