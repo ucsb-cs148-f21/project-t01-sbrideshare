@@ -45,7 +45,7 @@ export default function SearchAppBar(props) {
     const [values, setValues] = useState({
         max_price: "",
         min_leave_datetime: new Date(),
-        max_leave_datetime: new Date(),
+        max_leave_datetime: "",
         start_location: "",
         start_location_radius: sliderRangeDefaultValue,
         end_location: "",
@@ -81,8 +81,8 @@ export default function SearchAppBar(props) {
 
         const params = {
             params: {
-                min_leave_datetime: values.min_leave_datetime,
-                max_leave_datetime: values.max_leave_datetime,
+                min_leave_datetime: values.min_leave_datetime == "" ? undefined: values.min_leave_datetime,
+                max_leave_datetime: values.max_leave_datetime == "" ? undefined : values.max_leave_datetime,
                 max_price: values.max_price == "" ? undefined :  values.max_price,
                 start_location: startPlaceId == "" ? undefined : startPlaceId,
                 start_location_radius: values.start_location_radius,
@@ -95,6 +95,29 @@ export default function SearchAppBar(props) {
             props.callback(<List rideInfo={response.data}/>)
         })
       }
+
+    const handleClearSearch = () => {
+      setValues({ 
+        max_price: "",
+        min_leave_datetime: new Date(),
+        max_leave_datetime: "",
+        start_location: "",
+        start_location_radius: sliderRangeDefaultValue,
+        end_location: "",
+        end_location_radius: sliderRangeDefaultValue
+      });
+
+      const params = {
+        params: {
+          min_leave_datetime: new Date()
+        }
+      }
+
+      axios.get(getBackendURL() + "/rides", params).then(response => {
+        props.callback(<List rideInfo={response.data}/>)
+      })
+      
+    };
 
     const ref = useOnclickOutside(() => {
       // When user clicks outside of the component, we can dismiss
@@ -311,11 +334,17 @@ export default function SearchAppBar(props) {
                     </Container>
                     </Grid>
                     <Grid item>
-                    <Container fixed>
-                        <Button type = "submit" variant="contained">
-                            Search
-                        </Button>
-                    </Container>
+                        <Container fixed>
+                          <Stack direction="row" spacing={2}>
+                            <Button type = "submit" variant="contained">
+                                Search
+                            </Button>
+                            <Button onClick={handleClearSearch} variant="contained">
+                                Clear Search
+                            </Button>
+                          </Stack>
+                        </Container>
+
                     </Grid>
                 </Grid>
             </Collapse>
