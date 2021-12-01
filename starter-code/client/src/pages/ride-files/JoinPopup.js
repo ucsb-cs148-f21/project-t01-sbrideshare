@@ -10,7 +10,6 @@ import getBackendURL from "../../utils/get-backend-url";
 import Typography from '@mui/material/Typography';
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
-import Autocomplete from '@mui/material/Autocomplete';
 
 export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect,signed_up_effect,decrement_seats,signup_available_effect}) {
     const [id,setID] = useState('');
@@ -72,10 +71,10 @@ export default function JoinPopup({open,handleClose,rideInfo,user,loading_effect
 
     var rideURL = getBackendURL()+'/rides/'+rideInfo._id+'/riders';
 
-    var driver_pickup = rideInfo.rider_radius!=0;
+    var driver_pickup = rideInfo.rider_radius!==0;
 
     const check_radius = () => {
-        if(id == "" && driver_pickup){
+        if(id === "" && driver_pickup){
           setInputError(true);
           return;
         }else{

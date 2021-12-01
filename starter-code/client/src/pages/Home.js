@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import axios from "axios";
 import { Carousel } from "react-bootstrap";
@@ -20,12 +19,6 @@ import HailIcon from '@mui/icons-material/Hail';
 
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-
-
-const TextWrapper = styled.div`
-  width: 700px;
-  max-width: 100%;
-`;
 
 export default function Home() {
   const user = getUser();
@@ -47,7 +40,7 @@ export default function Home() {
       });
   }, []);
 
-  const [backgroundImage, setBackgroundImage] = React.useState("none");
+  const [backgroundImage, setBackgroundImage] = useState("none");
 
   return (
     <Layout id="layout" user={user} navBarActive={"Home"} background={backgroundImage}>

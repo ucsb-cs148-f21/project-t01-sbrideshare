@@ -31,7 +31,4 @@ test('renders Home page', () => {
 
     const myRides = screen.getByText(/My Rides/i);
     expect(myRides).toBeInTheDocument();
-
-    const text = screen.getByText(/A web application designed for UCSB students on the go./i);
-    expect(text).toBeInTheDocument();
 }); 

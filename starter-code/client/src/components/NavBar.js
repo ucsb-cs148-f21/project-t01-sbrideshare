@@ -14,13 +14,13 @@ export default function NavBar(props) {
   let myRidesActive = false;;
   let homeActive = false;
 
-  if(navBarActive == "Find A Ride") {
+  if(navBarActive === "Find A Ride") {
     findActive = true;
-  }else if(navBarActive == "Create A Ride") {
+  }else if(navBarActive === "Create A Ride") {
     createActive = true;
-  }else if(navBarActive == "My Rides") {
+  }else if(navBarActive === "My Rides") {
     myRidesActive = true;
-  }else if(navBarActive == "Home") {
+  }else if(navBarActive === "Home") {
     homeActive = true;
   }
 

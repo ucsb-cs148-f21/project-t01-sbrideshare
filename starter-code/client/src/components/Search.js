@@ -83,10 +83,10 @@ export default function SearchAppBar(props) {
             params: {
                 min_leave_datetime: values.min_leave_datetime,
                 max_leave_datetime: values.max_leave_datetime,
-                max_price: values.max_price == "" ? undefined :  values.max_price,
-                start_location: startPlaceId == "" ? undefined : startPlaceId,
+                max_price: values.max_price === "" ? undefined :  values.max_price,
+                start_location: startPlaceId === "" ? undefined : startPlaceId,
                 start_location_radius: values.start_location_radius,
-                end_location: endPlaceId == "" ? undefined : endPlaceId,
+                end_location: endPlaceId === "" ? undefined : endPlaceId,
                 end_location_radius: values.end_location_radius
             }
         }

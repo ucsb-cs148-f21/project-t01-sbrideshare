@@ -14,7 +14,7 @@ export default function RidesList() {
   const theme = getTheme();
   const user = getUser();
 
-  const [list, makeList] = React.useState(
+  const [list, makeList] = useState(
     "Attempting to connect to the server...",
   );
 
@@ -42,7 +42,7 @@ export default function RidesList() {
         <Container>
           <br />
           <h1>Rides</h1>
-          To join a ride, select the green sign-up button.
+          To join a ride, select the blue sign-up button or filter to find a ride close to your location.
           <hr />
           <Search callback={makeList}/>
           <p />

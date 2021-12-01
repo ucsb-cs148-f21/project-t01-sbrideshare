@@ -1,6 +1,6 @@
 
 
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { purple, lightBlue, grey, red, lightGreen } from '@mui/material/colors';
 export default function getTheme() {
     return createTheme({

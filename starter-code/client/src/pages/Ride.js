@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import "./index2.css";
 import Container from "react-bootstrap/Container";
 
@@ -210,6 +210,7 @@ export default function Ride() {
           isValid = true;
           errors["leave_datetime"] = "";
         }
+        break;
 
       case keys.includes("name"):
         if (values.name === "") {
@@ -222,6 +223,7 @@ export default function Ride() {
           isValid = true;
           errors["name"] = "";
         }
+        break;
 
       case keys.includes("seats_available"):
         const seats_available = parseInt(values.seats_available, 10);
@@ -240,6 +242,7 @@ export default function Ride() {
           isValid = true;
           errors["seats_available"] = "";
         }
+        break;
 
       case keys.includes("rider_radius"):
         if (shouldPickup) {
@@ -255,6 +258,7 @@ export default function Ride() {
           isValid = true;
           errors["rider_radius"] = "";
         }
+        break;
 
       case keys.includes("start_location"):
         if (values.start_location === "") {
@@ -267,6 +271,8 @@ export default function Ride() {
           isValid = true;
           errors["start_location"] = "";
         }
+        break;
+
       case keys.includes("end_location"):
         if (values.end_location === "") {
           isValid = false;
@@ -278,6 +284,8 @@ export default function Ride() {
           isValid = true;
           errors["end_location"] = "";
         }
+        break;
+
       case keys.includes("price"):
         const price = values.price;
         if (price === "") {
@@ -290,13 +298,14 @@ export default function Ride() {
           isValid = false;
           errors["price"] = "Please enter value in the format 00.00.";
         }
+        break;
     }
 
     setErrorMsgs(errors);
 
     const objectKeys = Object.keys(errors);
     const isError = objectKeys.some((key) => {
-      return errors[key] != "";
+      return errors[key] !== "";
     });
     setHasErrors(isError);
     if (isError === false) {
