@@ -20,6 +20,9 @@ export default function getTheme() {
             error: {
                 main: red[300]
             },
+            black: {
+                main: "#000000"
+            }
         },
     });
 }
