@@ -322,9 +322,16 @@ export default function ListObject(props) {
                     {
                     rideInfo.riders.length !== 0 && 
                     rideInfo.riders.map(item => (
-                        <Typography  variant="body2" color="black">
-                            {item.rider_name}: {item.pickup_address}
-                        </Typography>
+                        <div>
+                            <Typography  variant="body2" color="black">
+                                {item.rider_name}: {item.pickup_address}
+                            </Typography>
+                            { item.note_to_driver != "" &&
+                            <Typography  variant="body2" color="textSecondary">
+                                Note: {item.note_to_driver}
+                            </Typography>
+                            }
+                        </div>
                     ))}
                     {
                     rideInfo.riders.length === 0 &&

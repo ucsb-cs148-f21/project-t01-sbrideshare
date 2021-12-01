@@ -10,7 +10,7 @@ export default function LeavePopup({open,handleLeave,handleClose}) {
     return (
       <div>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Subscribe</DialogTitle>
+          <DialogTitle>Leave Ride</DialogTitle>
           <DialogContent>
             <DialogContentText>
               Are you sure you want to leave this ride?

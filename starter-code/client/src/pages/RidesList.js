@@ -42,7 +42,7 @@ export default function RidesList() {
         <Container>
           <br />
           <h1>Rides</h1>
-          To join a ride, select the blue sign-up button or filter to find a ride close to your location.
+          To join a ride, select the sign-up button, or filter by ride details to find the ride you want.
           <hr />
           <Search callback={makeList}/>
           <p />
