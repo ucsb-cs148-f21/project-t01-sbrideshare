@@ -1,8 +1,10 @@
-POST http://localhost:9000/rides/618b6087eec6865e5d8cdf3c/riders
+POST http://localhost:9000/rides/619c21ed3dee9e7f383c29a4/riders
 content-type: application/json
 
 {
     "rider_id": "101907546083592133348",
-    "pickup_address": "adsfa"
-
+    "rider_name": "Heather Dinh",
+    "pickup_address": "EiMxMjMgVHJpZ28gUm9hZCwgSXNsYSBWaXN0YSwgQ0EsIFVTQSIuKiwKFAoSCR93hRtDP-mAEV9td0-B5FqoEhQKEgkzvx5OfEDpgBFK8yJBwdnBzg"
 }
+
+  # "pickup_address": "EiMxMjMgVHJpZ28gUm9hZCwgSXNsYSBWaXN0YSwgQ0EsIFVTQSIuKiwKFAoSCR93hRtDP-mAEV9td0-B5FqoEhQKEgkzvx5OfEDpgBFK8yJBwdnBzg"

@@ -29,7 +29,7 @@ export default function MyRides() {
             rider = true;
           }
           for (var j = 0; j < response.data[i].riders.length; j++) {
-            if (response.data[i].riders[j] == user.id) {
+            if (response.data[i].riders[j].rider_id == user.id) {
               rider = true;
             }
           }

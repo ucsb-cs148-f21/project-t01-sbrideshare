@@ -85,7 +85,7 @@ router.get("/", async function(req, res, next) {
                     const pickup_distance = gc_distance(ride.start_location.lat, ride.start_location.lng,
                         start_location_geo.geometry.location.lat, start_location_geo.geometry.location.lng)
 
-                    if (pickup_distance > ride.rider_radius) {
+                    if (pickup_distance > query.start_location_radius) {
                       rides.splice(index, 1);
                     }
                   }, []);
@@ -110,7 +110,7 @@ router.get("/", async function(req, res, next) {
                     const dropoff_distance = gc_distance(ride.end_location.lat, ride.end_location.lng,
                         end_location_geo.geometry.location.lat, end_location_geo.geometry.location.lng)
 
-                    if (dropoff_distance > ride.rider_radius) {
+                    if (dropoff_distance > query.end_location_radius) {
                       rides.splice(index, 1);
                     }
                   }, []);
@@ -295,6 +295,7 @@ router.post("/",
             price: body.price,
             seats_available: body.seats_available,
             driver_id: body.driver_id,
+            contact: body.contact == undefined ? "" : body.contact,
             riders: []
         })
 
@@ -327,6 +328,9 @@ router.post("/:ride_id/riders",
     body("rider_id")
         .exists().withMessage('rider_id is required.').bail()
         .notEmpty().withMessage('rider_id is required.').bail(),
+    body("rider_name")
+        .exists().withMessage('rider_name is required.').bail()
+        .notEmpty().withMessage('rider_name is required.').bail(),
     function(req, res, next) {
 
             const errors = validationResult(req);
@@ -382,47 +386,11 @@ router.post("/:ride_id/riders",
                             }
                         }).then(r => {
                             location_geo = r.data.results[0]
-
                             // Ensure pickup_location is within rider radius
                             const distance = gc_distance(location_geo.geometry.location.lat, location_geo.geometry.location.lng, ride.start_location.lat, ride.start_location.lng)
                             if (distance > ride.rider_radius) {
                                 return res.status(409).send("pickup_location is outside of the drive's specified rider_radius.").end();
                             }
-
-                            ride.seats_available -= 1
-                            const riderData = {
-                                rider_id: body.rider_id,
-                                pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
-                                note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
-                            }
-        
-                            ride.riders.push(riderData)
-
-                            Users.findOne({id: body.rider_id}, (err, user) => {
-                                if (err) {
-                                    console.log(err);
-                                    return res.status(500).end();
-                                }
-                    
-                                if (user == undefined || user == null) {
-                                    return res.status(404).send("rider_id does not exist as a user.")
-                                }
-            
-                                const ride_id = ride._id
-                                user.rides.push(ride_id)
-            
-                                user.save().then(saved_doc => {
-                                    ride.save().then(saved_doc => {
-                                        return res.status(200).end()
-                                    })
-                                })
-                                .catch(err => {
-                                    console.log(err)
-                                    return res.status(500).end()
-                                })
-                            
-                            })
-
                         })
                         .catch(e => {
                             console.log(e.response.data.error_message);
@@ -434,6 +402,40 @@ router.post("/:ride_id/riders",
                             return res.status(409).send("Driver has specified that they will pickup riders. Please specify a pickup location.").end();
                         }
                     }
+                    ride.seats_available -= 1
+                    const riderData = {
+                        rider_id: body.rider_id,
+                        rider_name: body.rider_name,
+                        pickup_address: body.pickup_address != undefined ? location_geo.formatted_address : "",
+                        note_to_driver: body.note_to_driver != undefined ? body.note_to_driver : ""
+                    }
+
+                    ride.riders.push(riderData)
+
+                    Users.findOne({id: body.rider_id}, (err, user) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).end();
+                        }
+            
+                        if (user == undefined || user == null) {
+                            return res.status(404).send("rider_id does not exist as a user.").end()
+                        }
+    
+                        const ride_id = ride._id
+                        user.rides.push(ride_id)
+    
+                        user.save().then(saved_doc => {
+                            ride.save().then(saved_doc => {
+                                return res.status(200).end()
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            return res.status(500).end()
+                        })
+                    
+                    })
 
                 }
 
