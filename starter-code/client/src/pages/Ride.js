@@ -36,7 +36,7 @@ export default function Ride() {
     seats_available: "",
     driver_id: user_id,
     contact: "",
-    rider_radius: "0",
+    rider_radius: "500",
   });
   const [shouldPickup, setShouldPickup] = useState(false);
   const [shouldAddNumber, setShouldAddNumber] = useState(false);
@@ -286,17 +286,11 @@ export default function Ride() {
           if (values.rider_radius === "") {
             isValid = false;
             errors["rider_radius"] = "This is a required field.";
-          } else if (values.rider_radius === "0") {
-            isValid = false;
-            errors["rider_radius"] = "Rider radius must be greater than zero.";
           } else {
             isValid = true;
             errors["rider_radius"] = "";
           }
-        } //else {
-      //   isValid = true;
-      //   errors["rider_radius"] = "";
-      // }
+        }
 
       case keys.includes("start_location"):
         if (values.start_location === "") {
@@ -382,7 +376,7 @@ export default function Ride() {
             end_location: "",
             price: "",
             seats_available: "",
-            rider_radius: "0",
+            rider_radius: "500",
             contact: "",
             driver_id: user_id,
           });
