@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./index2.css";
 import Container from "react-bootstrap/Container";
 
@@ -7,15 +7,25 @@ import getUser from "../utils/get-user";
 import ucsbAccount from "../utils/ucsb-account";
 import axios from "axios";
 import getBackendURL from "../utils/get-backend-url";
-import DateTimePicker from "react-datetime-picker";
+import TextField from "@mui/material/TextField";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import FormLabel from "@mui/material/FormLabel";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
+import NumberFormat from "react-number-format";
+import Slider from "@mui/material/Slider";
+import Tooltip from "@mui/material/Tooltip";
+import HelpIcon from "@mui/icons-material/Help";
 
 export default function Ride() {
   const google_user = getUser();
   const user_id = google_user.id;
 
   const [location, setLocation] = useState("");
+  const [shouldShowContact, setShouldShowContact] = useState(false);
+  const [shouldPickupRiders, setShouldPickupRiders] = useState(false);
 
   const [values, setValues] = useState({
     name: google_user.fullName,
@@ -25,9 +35,12 @@ export default function Ride() {
     price: "",
     seats_available: "",
     driver_id: user_id,
+    contact: "",
     rider_radius: "0",
   });
   const [shouldPickup, setShouldPickup] = useState(false);
+  const [shouldAddNumber, setShouldAddNumber] = useState(false);
+  const [rangeValue, setRangeValue] = useState(10);
   const [startPlaceId, setStartPlaceId] = useState("");
   const [endPlaceId, setEndPlaceId] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -122,6 +135,16 @@ export default function Ride() {
       );
     });
 
+  const handleRadioBtnChange = (event) => {
+    const shouldShow = event.target.value === "yes";
+    setShouldShowContact(shouldShow);
+  };
+
+  const handlePickupRadioBtnChange = (event) => {
+    const shouldPickup = event.target.value === "yes";
+    setShouldPickupRiders(shouldPickup);
+  };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     switch (name) {
@@ -174,6 +197,22 @@ export default function Ride() {
     }
   };
 
+  const handleNumberChange = (event) => {
+    if (event.target.checked) {
+      setShouldAddNumber(true);
+    } else {
+      setShouldAddNumber(false);
+      //if (!submitted) {
+      setValues((prev) => {
+        return {
+          ...prev,
+          contact: "",
+        };
+      });
+      //}
+    }
+  };
+
   const handleLeave_DatetimeInputChange = (date) => {
     setValues({ ...values, leave_datetime: date });
   };
@@ -190,12 +229,12 @@ export default function Ride() {
       price: "",
       seats_available: "",
       rider_radius: "",
+      contact: "",
       driver_id: "",
     };
 
     switch (true) {
       case keys.includes("leave_datetime"):
-        // 2020-07-10 15:00:00.000
         if (values.leave_datetime === "") {
           isValid = false;
           errors["leave_datetime"] = "This is a required field.";
@@ -210,7 +249,6 @@ export default function Ride() {
           isValid = true;
           errors["leave_datetime"] = "";
         }
-        break;
 
       case keys.includes("name"):
         if (values.name === "") {
@@ -223,7 +261,6 @@ export default function Ride() {
           isValid = true;
           errors["name"] = "";
         }
-        break;
 
       case keys.includes("seats_available"):
         const seats_available = parseInt(values.seats_available, 10);
@@ -242,23 +279,24 @@ export default function Ride() {
           isValid = true;
           errors["seats_available"] = "";
         }
-        break;
 
       case keys.includes("rider_radius"):
-        if (shouldPickup) {
+        if (shouldPickupRiders) {
           const rider_radius = parseInt(values.rider_radius, 10);
           if (values.rider_radius === "") {
             isValid = false;
             errors["rider_radius"] = "This is a required field.";
-          } else if (rider_radius === 0 || rider_radius < 1) {
+          } else if (values.rider_radius === "0") {
             isValid = false;
-            errors["rider_radius"] = "Rider radius should be greater than 0.";
+            errors["rider_radius"] = "Rider radius must be greater than zero.";
+          } else {
+            isValid = true;
+            errors["rider_radius"] = "";
           }
-        } else {
-          isValid = true;
-          errors["rider_radius"] = "";
-        }
-        break;
+        } //else {
+      //   isValid = true;
+      //   errors["rider_radius"] = "";
+      // }
 
       case keys.includes("start_location"):
         if (values.start_location === "") {
@@ -271,8 +309,6 @@ export default function Ride() {
           isValid = true;
           errors["start_location"] = "";
         }
-        break;
-
       case keys.includes("end_location"):
         if (values.end_location === "") {
           isValid = false;
@@ -284,8 +320,6 @@ export default function Ride() {
           isValid = true;
           errors["end_location"] = "";
         }
-        break;
-
       case keys.includes("price"):
         const price = values.price;
         if (price === "") {
@@ -298,25 +332,42 @@ export default function Ride() {
           isValid = false;
           errors["price"] = "Please enter value in the format 00.00.";
         }
-        break;
+
+      case keys.includes("contact"):
+        if (shouldShowContact) {
+          const contact = values.contact;
+          const contactNumber = contact.replace(/\D+/g, "");
+          if (contactNumber === "") {
+            isValid = false;
+            errors["contact"] = "This is a required field.";
+          } else if (contactNumber.length !== 10) {
+            isValid = false;
+            errors["contact"] = "Please enter number in form (XXX) XXX-XXXX";
+          } else {
+            isValid = true;
+            errors["contact"] = "";
+          }
+        }
     }
 
     setErrorMsgs(errors);
 
     const objectKeys = Object.keys(errors);
     const isError = objectKeys.some((key) => {
-      return errors[key] !== "";
+      return errors[key] != "";
     });
     setHasErrors(isError);
     if (isError === false) {
       setValid(true);
       setSubmitted(true);
-
+      const contactNumber = values.contact.replace(/\D+/g, "");
       axios
         .post(getBackendURL() + "/rides", {
           ...values,
           start_location: startPlaceId,
           end_location: endPlaceId,
+          contact: shouldShowContact ? contactNumber : "",
+          rider_radius: shouldPickupRiders ? values.rider_radius : "0",
         })
         .then((response) => {
           setHasErrors(false);
@@ -332,9 +383,13 @@ export default function Ride() {
             price: "",
             seats_available: "",
             rider_radius: "0",
+            contact: "",
             driver_id: user_id,
           });
           setShouldPickup(false);
+          setShouldAddNumber(false);
+          setShouldPickupRiders(false);
+          setShouldShowContact(false);
         })
         .catch((error) => {
           console.log("error", error.errors);
@@ -356,7 +411,7 @@ export default function Ride() {
   }
 
   return (
-    <Layout user={user} navBarActive={"Create A Ride"} background={"none"}>
+    <Layout user={user} navBarActive={"Create A Ride"}>
       <Container>
         <br />
         <h1>Create A Ride</h1>
@@ -378,19 +433,21 @@ export default function Ride() {
             value={values.name}
             className="form-field"
             placeholder="Name"
-            name="name"
+            name="google_user.id"
             autoComplete="off"
           />
           {errorMsgs.name && <p className="error-msg">{errorMsgs.name}</p>}
-          <label>Leave/Datetime</label>
-          <DateTimePicker
-            onChange={handleLeave_DatetimeInputChange}
-            value={values.leave_datetime}
-            className="form-field"
-            placeholder="Leave/Datetime"
-            name="leave_datetime"
-            autoComplete="off"
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              onChange={handleLeave_DatetimeInputChange}
+              value={values.leave_datetime}
+              className="form-field"
+              placeholder="Leave/Datetime"
+              name="leave_datetime"
+              autoComplete="off"
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
           {errorMsgs.leave_datetime && (
             <p className="error-msg">{errorMsgs.leave_datetime}</p>
           )}
@@ -450,28 +507,98 @@ export default function Ride() {
             <p className="error-msg">{errorMsgs.seats_available}</p>
           )}
           <div>
-            <input
-              type="checkbox"
-              name="pickup"
-              checked={shouldPickup}
-              onChange={handlePickupChange}
-              className="form-field"
-            />{" "}
-            Driver pick up?
+            Are you willing to pickup riders?
+            <div className="radio-btn">
+              <div>
+                <input
+                  type="radio"
+                  name="should_pickup"
+                  value="yes"
+                  checked={shouldPickupRiders}
+                  onChange={handlePickupRadioBtnChange}
+                />{" "}
+                Yes
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="should_pickup"
+                  value="no"
+                  checked={!shouldPickupRiders}
+                  onChange={handlePickupRadioBtnChange}
+                />{" "}
+                No
+              </div>
+            </div>
           </div>
-          <input
-            type="number"
-            onChange={handleInputChange}
-            value={values.rider_radius}
-            className="form-field"
-            placeholder="Rider Radius"
-            name="rider_radius"
-            autoComplete="off"
-            disabled={!shouldPickup}
-          />
-          {errorMsgs.rider_radius && (
-            <p className="error-msg">{errorMsgs.rider_radius}</p>
+          {shouldPickupRiders && (
+            <div>
+              How far are you willing to pickup riders from your start location
+              (in meters)
+              <Tooltip title="1600 meters = 0.99 miles">
+                <HelpIcon />
+              </Tooltip>
+              <div>
+                <Slider
+                  name="rider_radius"
+                  onChange={handleInputChange}
+                  value={values.rider_radius}
+                  step={250}
+                  min={500}
+                  max={3000}
+                  aria-label="Default"
+                  valueLabelDisplay="auto"
+                />
+              </div>
+              {errorMsgs.rider_radius && (
+                <p className="error-msg">{errorMsgs.rider_radius}</p>
+              )}
+            </div>
           )}
+          <div>
+            Do you want to enter your contact Information?
+            <div className="radio-btn">
+              <div>
+                <input
+                  type="radio"
+                  name="contact_info"
+                  value="yes"
+                  checked={shouldShowContact}
+                  onChange={handleRadioBtnChange}
+                />{" "}
+                Yes
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="contact_info"
+                  value="no"
+                  checked={!shouldShowContact}
+                  onChange={handleRadioBtnChange}
+                />{" "}
+                No
+              </div>
+            </div>
+          </div>
+          <div
+            className={`contact-number ${shouldShowContact ? "show" : "hide"}`}
+          >
+            <NumberFormat
+              type="tel"
+              onChange={handleInputChange}
+              // required
+              value={values.contact}
+              className="form-field"
+              placeholder="Contact Number"
+              name="contact"
+              autoComplete="off"
+              format="(###) ###-####"
+              mask="_"
+            />
+            {errorMsgs.contact && (
+              <p className="error-msg">{errorMsgs.contact}</p>
+            )}
+          </div>
           <button className="form-field" type="submit">
             Submit
           </button>
