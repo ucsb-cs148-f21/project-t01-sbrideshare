@@ -19,7 +19,9 @@ export default function App() {
   document.body.appendChild(script);
 
   function initGoogleSignIn() {
-    if(window.gapi === undefined){return;}
+    if (window.gapi === undefined) {
+      return;
+    }
     window.gapi.load("auth2", () => {
       window.gapi.auth2
         .init({
@@ -64,7 +66,7 @@ export default function App() {
   }
   const script2 = document.createElement("script");
   script2.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`;
-  script2.onload = () => initGoogleSignIn();
+  // script2.onload = () => initGoogleSignIn();
   script2.async = true;
   document.body.appendChild(script2);
   return <CheckingSignedIn />;
