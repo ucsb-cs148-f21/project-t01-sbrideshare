@@ -5,7 +5,6 @@ import CheckingSignedIn from "./pages/CheckingSignedIn";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import RidesList from "./pages/RidesList";
-import Profile from "./pages/Profile";
 import Ride from "./pages/Ride";
 import MyRides from "./pages/MyRides";
 import PageNotFound from "./pages/PageNotFound";
@@ -54,7 +53,6 @@ export default function App() {
           {!isSignedIn && <Route exact path="/" component={Login} />}
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/rides" component={RidesList} />
-          <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/ride" component={Ride} />
           <PrivateRoute exact path="/myrides" component={MyRides} />
           <Route path="/" component={PageNotFound} />

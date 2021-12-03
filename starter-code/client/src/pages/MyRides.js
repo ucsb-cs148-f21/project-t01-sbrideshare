@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import styled from "styled-components";
 import Search from "../components/Search";
 import getUser from "../utils/get-user";
 import Layout from "../components/Layout";
@@ -46,7 +45,7 @@ export default function MyRides() {
   }, []);
 
   return (
-    <Layout user={user} navBarActive={"My Rides"} background={"none"}>
+    <Layout user={user} navBarActive={"My Rides"}>
       <ThemeProvider theme={theme}> 
         <Container>
           <br />

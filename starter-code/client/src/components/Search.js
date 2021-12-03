@@ -83,10 +83,10 @@ export default function SearchAppBar(props) {
             params: {
                 min_leave_datetime: values.min_leave_datetime,
                 max_leave_datetime: values.max_leave_datetime,
-                max_price: values.max_price == "" ? undefined :  values.max_price,
-                start_location: startPlaceId == "" ? undefined : startPlaceId,
+                max_price: values.max_price === "" ? undefined :  values.max_price,
+                start_location: startPlaceId === "" ? undefined : startPlaceId,
                 start_location_radius: values.start_location_radius,
-                end_location: endPlaceId == "" ? undefined : endPlaceId,
+                end_location: endPlaceId === "" ? undefined : endPlaceId,
                 end_location_radius: values.end_location_radius
             }
         }
@@ -271,7 +271,7 @@ export default function SearchAppBar(props) {
                             <HelpIcon/>
                             </Tooltip>
                         </Stack>
-                        <Slider onChange={handleStartLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
+                        <Slider onChange={handleStartLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
                         <div ref={ref}>
                             <input
                             value={values.end_location}
@@ -292,7 +292,7 @@ export default function SearchAppBar(props) {
                             <HelpIcon/>
                             </Tooltip>
                         </Stack>
-                        <Slider onChange={handleEndLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
+                        <Slider onChange={handleEndLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
                         </Container>
                     </Grid>
                     
@@ -315,6 +315,7 @@ export default function SearchAppBar(props) {
                         <Button type = "submit" variant="contained">
                             Search
                         </Button>
+                        <br /><br />
                     </Container>
                     </Grid>
                 </Grid>
