@@ -27,5 +27,5 @@ Riders would be able to search for all available rides on the app. Drivers would
 
 Deployment steps are outlined in [this](https://github.com/ucsb-cs148-f21/project-t01-sbrideshare/blob/master/docs/DEPLOY.md) file. 
 
-[Live Deployment Link](https://sb-rideshare.herokuapp.com)
-[Presentation Slides](https://docs.google.com/presentation/d/1qwO4z8igBxzEVfzrAqKDmp6pS3oEZ-KSdxmTCDwNMzI/edit#slide=id.g105ff68de35_0_157)
+- [Live Deployment Link](https://sb-rideshare.herokuapp.com)
+- [Presentation Slides](https://docs.google.com/presentation/d/1qwO4z8igBxzEVfzrAqKDmp6pS3oEZ-KSdxmTCDwNMzI/edit#slide=id.g105ff68de35_0_157)
