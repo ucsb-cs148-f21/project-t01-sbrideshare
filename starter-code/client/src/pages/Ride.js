@@ -528,8 +528,8 @@ export default function Ride() {
           {shouldPickupRiders && (
             <div>
               How far are you willing to pickup riders from your start location
-              (in meters)
-              <Tooltip title="1600 meters = 0.99 miles">
+              (in meters)? &emsp;
+              <Tooltip title="1600 meters = 1 mile">
                 <HelpIcon />
               </Tooltip>
               <div>
@@ -550,7 +550,7 @@ export default function Ride() {
             </div>
           )}
           <div>
-            Do you want to enter your contact Information?
+            Do you want to enter your contact information?
             <div className="radio-btn">
               <div>
                 <input
