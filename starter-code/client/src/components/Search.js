@@ -349,6 +349,7 @@ export default function SearchAppBar(props) {
                                 Clear Search
                             </Button>
                           </Stack>
+                          <br />
                         </Container>
 
                     </Grid>
