@@ -34,7 +34,6 @@ export default function Home() {
     };
     axios
       .post(baseURL, formattedUser)
-      .then(() => console.log("User Created"))
       .catch(function (error) {
         console.log(error);
       });
