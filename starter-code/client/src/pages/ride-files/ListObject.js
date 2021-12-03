@@ -109,6 +109,10 @@ function dateToString(date){
             break;
         case 6:
             weekday = "Saturday";
+            break;
+        default:
+            weekday = "Thursday";
+            break;
     }
     var monthday = (date.getDate()).toString();
     var monthnum = date.getMonth()+1;
@@ -150,6 +154,10 @@ function dateToString(date){
             break;
         case 12:
             month = "December";
+            break;
+        default: 
+            month = "November";
+            break;
     }
     monthnum = monthnum.toString();
     var year = (date.getFullYear()).toString();
@@ -157,12 +165,12 @@ function dateToString(date){
     var timeSuffix;
     if(tempHour<12){
         timeSuffix = "AM";
-        if(tempHour == 0)
+        if(tempHour === 0)
             tempHour=12;
     }
     else{
         timeSuffix = "PM";
-        if(tempHour!=12)
+        if(tempHour!==12)
             tempHour -= 12;
     }
     
@@ -312,11 +320,18 @@ export default function ListObject(props) {
                 <CardContent>
                     
                     {
-                    rideInfo.riders.length != 0 && 
+                    rideInfo.riders.length !== 0 && 
                     rideInfo.riders.map(item => (
-                        <Typography  variant="body2" color="black">
-                            {item.rider_name}: {item.pickup_address}
-                        </Typography>
+                        <div>
+                            <Typography  variant="body2" color="black">
+                                {item.rider_name}: {item.pickup_address}
+                            </Typography>
+                            { item.note_to_driver != "" &&
+                            <Typography  variant="body2" color="textSecondary">
+                                Note: {item.note_to_driver}
+                            </Typography>
+                            }
+                        </div>
                     ))}
                     {
                     rideInfo.riders.length === 0 &&
@@ -331,7 +346,7 @@ export default function ListObject(props) {
         
     }
     const moreDriveInfo = () => {
-        const driver_pickup = rideInfo.rider_radius!=0;
+        const driver_pickup = rideInfo.rider_radius!==0;
         var pickup_message;
         if(driver_pickup){
             pickup_message = "The driver will pick up riders within "+rideInfo.rider_radius+" meters of the specified start location.";
@@ -343,7 +358,7 @@ export default function ListObject(props) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     {
-                        rideInfo.contact != "" ?
+                        rideInfo.contact !== "" ?
                         <Typography  variant="body2" color="black">Contact: {rideInfo.contact}</Typography> :
                         <Typography  variant="body2" color="textSecondary">The driver did not provide their contact info.</Typography>
                     }

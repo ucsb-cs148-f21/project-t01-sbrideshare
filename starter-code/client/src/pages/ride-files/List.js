@@ -21,7 +21,7 @@ export default function List(props) {
     return (
         <Container>
             <Grid container spacing={3}>
-                    {list.length!=0 &&
+                    {list.length!==0 &&
                     list.map(item => (
                         <Grid item xs={12} key={item._id}>
                             

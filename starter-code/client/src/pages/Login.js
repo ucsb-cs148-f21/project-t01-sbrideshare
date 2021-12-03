@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import "../styles/login.css";
-
-import getUser from "../utils/get-user";
 
 import Container from "react-bootstrap/Container";
 import { Pagination } from '@mui/material';

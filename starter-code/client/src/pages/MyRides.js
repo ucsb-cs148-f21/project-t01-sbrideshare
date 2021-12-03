@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Search from "../components/Search";
 import getUser from "../utils/get-user";
 import Layout from "../components/Layout";
 import Container from "react-bootstrap/Container";
@@ -13,7 +12,7 @@ export default function MyRides() {
   const user = getUser();
   const theme = getTheme();
 
-  const [list, makeList] = React.useState(
+  const [list, makeList] = useState(
     "Attempting to connect to the server...",
   );
 
@@ -24,11 +23,11 @@ export default function MyRides() {
       .then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
           var rider = false;
-          if (response.data[i].driver_id == user.id) {
+          if (response.data[i].driver_id === user.id) {
             rider = true;
           }
           for (var j = 0; j < response.data[i].riders.length; j++) {
-            if (response.data[i].riders[j].rider_id == user.id) {
+            if (response.data[i].riders[j].rider_id === user.id) {
               rider = true;
             }
           }

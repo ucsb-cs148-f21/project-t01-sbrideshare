@@ -14,15 +14,18 @@ export default function RidesList() {
   const theme = getTheme();
   const user = getUser();
 
-  const [list, makeList] = React.useState(
+  const [list, makeList] = useState(
     "Attempting to connect to the server...",
   );
 
   var baseURL = getBackendURL() + "/rides";
   useEffect(() => {
+    var tempDate = new Date();
+    tempDate.setHours(tempDate.getHours() - 24);
+
     const params = {
       params: {
-        min_leave_datetime: new Date()
+        min_leave_datetime: tempDate
       }
     }
 
@@ -42,7 +45,7 @@ export default function RidesList() {
         <Container>
           <br />
           <h1>Rides</h1>
-          To join a ride, select the green sign-up button.
+          To join a ride, select the sign-up button, or filter by ride details to find the ride you want.
           <hr />
           <Search callback={makeList}/>
           <p />

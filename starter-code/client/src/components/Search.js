@@ -42,10 +42,13 @@ export default function SearchAppBar(props) {
         debounce: 300,
       });
 
+    var dt = new Date();
+    dt.setHours(dt.getHours() - 24);
+
     const [values, setValues] = useState({
         max_price: "",
-        min_leave_datetime: new Date(),
-        max_leave_datetime: new Date(),
+        min_leave_datetime: dt,
+        max_leave_datetime: null,
         start_location: "",
         start_location_radius: sliderRangeDefaultValue,
         end_location: "",
@@ -81,10 +84,10 @@ export default function SearchAppBar(props) {
 
         const params = {
             params: {
-                min_leave_datetime: values.min_leave_datetime,
-                max_leave_datetime: values.max_leave_datetime,
-                max_price: values.max_price === "" ? undefined :  values.max_price,
-                start_location: startPlaceId === "" ? undefined : startPlaceId,
+                min_leave_datetime: values.min_leave_datetime == null ? undefined: values.min_leave_datetime,
+                max_leave_datetime: values.max_leave_datetime == null ? undefined : values.max_leave_datetime,
+                max_price: values.max_price == "" ? undefined :  values.max_price,
+                start_location: startPlaceId == "" ? undefined : startPlaceId,
                 start_location_radius: values.start_location_radius,
                 end_location: endPlaceId === "" ? undefined : endPlaceId,
                 end_location_radius: values.end_location_radius
@@ -95,6 +98,32 @@ export default function SearchAppBar(props) {
             props.callback(<List rideInfo={response.data}/>)
         })
       }
+
+    const handleClearSearch = () => {
+      var tempDate = new Date();
+      tempDate.setHours(tempDate.getHours() - 24);
+
+      setValues({ 
+        max_price: "",
+        min_leave_datetime: tempDate,
+        max_leave_datetime: null,
+        start_location: "",
+        start_location_radius: sliderRangeDefaultValue,
+        end_location: "",
+        end_location_radius: sliderRangeDefaultValue
+      });
+
+      const params = {
+        params: {
+          min_leave_datetime: new Date()
+        }
+      }
+
+      axios.get(getBackendURL() + "/rides", params).then(response => {
+        props.callback(<List rideInfo={response.data}/>)
+      })
+      
+    };
 
     const ref = useOnclickOutside(() => {
       // When user clicks outside of the component, we can dismiss
@@ -271,7 +300,7 @@ export default function SearchAppBar(props) {
                             <HelpIcon/>
                             </Tooltip>
                         </Stack>
-                        <Slider onChange={handleStartLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
+                        <Slider onChange={handleStartLocationRangeInputChange} value={values.start_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
                         <div ref={ref}>
                             <input
                             value={values.end_location}
@@ -292,7 +321,7 @@ export default function SearchAppBar(props) {
                             <HelpIcon/>
                             </Tooltip>
                         </Stack>
-                        <Slider onChange={handleEndLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
+                        <Slider onChange={handleEndLocationRangeInputChange} value={values.end_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
                         </Container>
                     </Grid>
                     
@@ -311,12 +340,17 @@ export default function SearchAppBar(props) {
                     </Container>
                     </Grid>
                     <Grid item>
-                    <Container fixed>
-                        <Button type = "submit" variant="contained">
-                            Search
-                        </Button>
-                        <br /><br />
-                    </Container>
+                        <Container fixed>
+                          <Stack direction="row" spacing={2}>
+                            <Button type = "submit" variant="contained">
+                                Search
+                            </Button>
+                            <Button onClick={handleClearSearch} variant="contained">
+                                Clear Search
+                            </Button>
+                          </Stack>
+                        </Container>
+
                     </Grid>
                 </Grid>
             </Collapse>

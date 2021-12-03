@@ -2,7 +2,7 @@
 
 export default function ucsbAccount(user){
   if(user){
-    if(user.email.substr(-8) == "ucsb.edu"){
+    if(user.email.substr(-8) === "ucsb.edu"){
       return true;
     }
   }
