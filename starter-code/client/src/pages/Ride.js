@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useState } from "react";
 import "./index2.css";
 import Container from "react-bootstrap/Container";
 
@@ -10,7 +10,6 @@ import getBackendURL from "../utils/get-backend-url";
 import TextField from "@mui/material/TextField";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import FormLabel from "@mui/material/FormLabel";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
