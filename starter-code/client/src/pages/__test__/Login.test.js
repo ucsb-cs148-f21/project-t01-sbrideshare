@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 test('renders front login page', () => {
     render(<Login />);
-    const title = screen.getByText(/SBRideShare/i);
+    const title = screen.getByText(/SB RideShare/i);
     expect(title).toBeInTheDocument();
     const buttonText = screen.getByText(/GET STARTED/i);
     expect(buttonText).toBeInTheDocument();

@@ -1,7 +1,7 @@
 import {render, screen, fireEvent} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import Home from '../Home';
+import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import getUser from "../../utils/get-user";
 import ucsbAccount from "../../utils/ucsb-account";
@@ -19,7 +19,7 @@ test('renders Home page', () => {
 
     ucsbAccount.mockResolvedValue(true);
 
-    render(<Home />);
+    render(<BrowserRouter><Home /></BrowserRouter>);
     const title = screen.getByText(/Welcome to SB RideShare!/i);
     expect(title).toBeInTheDocument();
 
@@ -31,4 +31,7 @@ test('renders Home page', () => {
 
     const myRides = screen.getByText(/My Rides/i);
     expect(myRides).toBeInTheDocument();
+
+    const text = screen.getByText(/Join in on a ride to your destination with a fellow UCSB Gaucho./i);
+    expect(text).toBeInTheDocument();
 }); 

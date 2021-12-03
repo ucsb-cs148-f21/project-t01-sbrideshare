@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import axios from "axios";
@@ -40,15 +40,13 @@ export default function Home() {
       });
   }, []);
 
-  const [backgroundImage, setBackgroundImage] = useState("none");
-
   return (
-    <Layout id="layout" user={user} navBarActive={"Home"} background={backgroundImage}>
+    <Layout id="layout" user={user} navBarActive={"Home"}>
       <Container id="home">
         <div id="home-title">
             <h1>Welcome to SB RideShare!</h1>
         </div>
-        <Carousel fade prevIcon="" nextIcon="" indicators="false">
+        <Carousel fade prevIcon="" nextIcon="" indicators="false" id="carousel">
           
           <Carousel.Item>
           <Tabs defaultActiveKey="ride">
@@ -60,11 +58,8 @@ export default function Home() {
           <Card id="first-card">
               <CardActionArea id="first-card-content" component={RouterLink} to="/rides">
                 <CardMedia
-                  component=""
-                  underline="none"
+                  src="none"
                   height="140"
-                  image=""
-                  alt=""
                 />
                 <CardContent>
                   <br />
@@ -90,10 +85,8 @@ export default function Home() {
             <Card id="second-card">
               <CardActionArea id="second-card-content" component={RouterLink} to="/ride">
                 <CardMedia
-                  component=""
                   height="140"
-                  image=""
-                  alt=""
+                  src="none"
                 />
                 <CardContent>
                   <br />
