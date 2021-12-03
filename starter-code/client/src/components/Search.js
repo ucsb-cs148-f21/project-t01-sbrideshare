@@ -300,7 +300,7 @@ export default function SearchAppBar(props) {
                             <HelpIcon/>
                             </Tooltip>
                         </Stack>
-                        <Slider onChange={handleStartLocationRangeInputChange} value={values.start_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
+                        <Slider onChange={handleStartLocationRangeInputChange} value={values.start_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
                         <div ref={ref}>
                             <input
                             value={values.end_location}
@@ -321,7 +321,7 @@ export default function SearchAppBar(props) {
                             <HelpIcon/>
                             </Tooltip>
                         </Stack>
-                        <Slider onChange={handleEndLocationRangeInputChange} value={values.end_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
+                        <Slider onChange={handleEndLocationRangeInputChange} value={values.end_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
                         </Container>
                     </Grid>
                     
@@ -349,6 +349,7 @@ export default function SearchAppBar(props) {
                                 Clear Search
                             </Button>
                           </Stack>
+                          <br />
                         </Container>
 
                     </Grid>
