@@ -17,9 +17,11 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import FormLabel from '@mui/material/FormLabel';
 import HelpIcon from '@mui/icons-material/Help';
 import Collapse from '@mui/material/Collapse';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
+import Card from '@mui/material/Card';
 
 import usePlacesAutocomplete from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
@@ -40,21 +42,13 @@ export default function SearchAppBar(props) {
         debounce: 300,
       });
 
-      const ExpandMore = styled((props) => {
-        const { expand, ...other } = props;
-        return <IconButton {...other} />;
-      })(({ theme, expand }) => ({
-        transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shortest,
-        }),
-      }));
+    var dt = new Date();
+    dt.setHours(dt.getHours() - 24);
 
     const [values, setValues] = useState({
         max_price: "",
-        min_leave_datetime: new Date(),
-        max_leave_datetime: new Date(),
+        min_leave_datetime: dt,
+        max_leave_datetime: null,
         start_location: "",
         start_location_radius: sliderRangeDefaultValue,
         end_location: "",
@@ -81,28 +75,21 @@ export default function SearchAppBar(props) {
         setValues({ ...values, max_price: event.target.value });
     };
 
-    const handleExpandClick = () => {
-      console.log("here")
-      setExpanded(!expanded);
-    };
-
     const [location, setLocation] = useState("");
     const [startPlaceId, setStartPlaceId] = useState("");
     const [endPlaceId, setEndPlaceId] = useState("");
-
-    const [expanded, setExpanded] = React.useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const params = {
             params: {
-                min_leave_datetime: values.min_leave_datetime,
-                max_leave_datetime: values.max_leave_datetime,
+                min_leave_datetime: values.min_leave_datetime == null ? undefined: values.min_leave_datetime,
+                max_leave_datetime: values.max_leave_datetime == null ? undefined : values.max_leave_datetime,
                 max_price: values.max_price == "" ? undefined :  values.max_price,
                 start_location: startPlaceId == "" ? undefined : startPlaceId,
                 start_location_radius: values.start_location_radius,
-                end_location: endPlaceId == "" ? undefined : endPlaceId,
+                end_location: endPlaceId === "" ? undefined : endPlaceId,
                 end_location_radius: values.end_location_radius
             }
         }
@@ -111,6 +98,32 @@ export default function SearchAppBar(props) {
             props.callback(<List rideInfo={response.data}/>)
         })
       }
+
+    const handleClearSearch = () => {
+      var tempDate = new Date();
+      tempDate.setHours(tempDate.getHours() - 24);
+
+      setValues({ 
+        max_price: "",
+        min_leave_datetime: tempDate,
+        max_leave_datetime: null,
+        start_location: "",
+        start_location_radius: sliderRangeDefaultValue,
+        end_location: "",
+        end_location_radius: sliderRangeDefaultValue
+      });
+
+      const params = {
+        params: {
+          min_leave_datetime: new Date()
+        }
+      }
+
+      axios.get(getBackendURL() + "/rides", params).then(response => {
+        props.callback(<List rideInfo={response.data}/>)
+      })
+      
+    };
 
     const ref = useOnclickOutside(() => {
       // When user clicks outside of the component, we can dismiss
@@ -215,112 +228,133 @@ export default function SearchAppBar(props) {
         }
       };
 
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
+
     return (
-      // <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Grid component="form"
-        item
-        container 
-        spacing={2}
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center"
-        style = {{
-            "border": "2px outset darkgrey",
-            "backgroundColor": "azure",
-        }}
-        onSubmit = {handleSubmit}
-        >
-            <Grid xs={12} item>
-              <Container fixed>
-                <FormLabel component="legend">Rides leaving between</FormLabel>
-                  <Stack direction="row" spacing={2} >
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DateTimePicker
-                          value={values.min_leave_datetime}
-                          onChange={handleMinDateTimeInputChange}
-                          renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-                    <FormLabel xs = {1} component="legend" style={{width: "5px"}}>to</FormLabel>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DateTimePicker
-                        value={values.max_leave_datetime}
-                        onChange={handleMaxDateTimeInputChange}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-                  </Stack>
-              </Container>
-            </Grid>
-            <Grid xs={6} item>
-                <Container fixed>
-                  <div ref={ref}>
-                    <input
-                    value={values.start_location}
-                    name="start_location"
-                    onChange={handleInputChange}
-                    placeholder="Start Location"
-                    className="form-field"
-                    autoComplete="off"
-                    />
-                    {/* We can use the "status" to decide whether we should display the dropdown or not */}
-                    {status === "OK" && location === "start" && (
-                    <ul>{renderStartSuggestions("start_location")}</ul>
-                    )}
-                  </div>
-                  <Stack direction="row" >
-                    <FormLabel component="legend">Start Location Search Radius</FormLabel> 
-                    <Tooltip title="Distance in meters to search around your start location.">
-                      <HelpIcon/>
-                    </Tooltip>
-                  </Stack>
-                  <Slider onChange={handleStartLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
-                  <div ref={ref}>
-                    <input
-                      value={values.end_location}
-                      name="end_location"
-                      onChange={handleInputChange}
-                      placeholder="End Location"
-                      className="form-field"
-                      autoComplete="off"
-                    />
-                    {/* We can use the "status" to decide whether we should display the dropdown or not */}
-                    {status === "OK" && location === "end" && (
-                    <ul>{renderEndSuggestions("end_location")}</ul>
-                    )}
-                  </div>
-                  <Stack direction="row" >
-                    <FormLabel component="legend">End Location Search Radius</FormLabel> 
-                    <Tooltip title="Distance in meters to search around your end location.">
-                      <HelpIcon/>
-                    </Tooltip>
-                  </Stack>
-                  <Slider onChange={handleEndLocationRangeInputChange} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" />
-                </Container>
-            </Grid>
-            
-            <Grid xs={12} item>
-              <Container fixed>
-                <TextField
-                  id="max_price" 
-                  label="Max Price"
-                  type="number"
-                  variant="outlined"
-                  onChange={handleMaxPriceInputChange}
-                  InputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                  }}
-                />
-              </Container>
-            </Grid>
-            <Grid item>
-              <Container fixed>
-                <Button type = "submit" variant="contained">
-                    Search
-                </Button>
-              </Container>
-            </Grid>
-        </Grid>
-        // </Collapse>
+        <Card>
+            <ListItemButton onClick={handleExpandClick}>
+                <ListItemText primary="Filter Rides" />
+                {expanded ? <ExpandLess /> : <ExpandMoreIcon />}
+            </ListItemButton>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                
+                <Grid component="form"
+                item
+                container 
+                spacing={2}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                style = {{
+                    "border": "2px outset darkgrey",
+                    "backgroundColor": "azure",
+                }}
+                onSubmit = {handleSubmit}
+                >
+                    
+                    <Grid xs={12} item>
+                    <Container fixed>
+                        <FormLabel component="legend">Rides leaving between</FormLabel>
+                        <Stack direction="row" spacing={2} >
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DateTimePicker
+                                value={values.min_leave_datetime}
+                                onChange={handleMinDateTimeInputChange}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                            </LocalizationProvider>
+                            <FormLabel xs = {1} component="legend" style={{width: "5px"}}>to</FormLabel>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DateTimePicker
+                                value={values.max_leave_datetime}
+                                onChange={handleMaxDateTimeInputChange}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                            </LocalizationProvider>
+                        </Stack>
+                    </Container>
+                    </Grid>
+                    <Grid xs={6} item>
+                        <Container fixed>
+                        <div ref={ref}>
+                            <input
+                            value={values.start_location}
+                            name="start_location"
+                            onChange={handleInputChange}
+                            placeholder="Start Location"
+                            className="form-field"
+                            autoComplete="off"
+                            />
+                            {/* We can use the "status" to decide whether we should display the dropdown or not */}
+                            {status === "OK" && location === "start" && (
+                            <ul>{renderStartSuggestions("start_location")}</ul>
+                            )}
+                        </div>
+                        <Stack direction="row" >
+                            <FormLabel component="legend">Start Location Search Radius</FormLabel> 
+                            <Tooltip title="Distance in meters to search around your start location.">
+                            <HelpIcon/>
+                            </Tooltip>
+                        </Stack>
+                        <Slider onChange={handleStartLocationRangeInputChange} value={values.start_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
+                        <div ref={ref}>
+                            <input
+                            value={values.end_location}
+                            name="end_location"
+                            onChange={handleInputChange}
+                            placeholder="End Location"
+                            className="form-field"
+                            autoComplete="off"
+                            />
+                            {/* We can use the "status" to decide whether we should display the dropdown or not */}
+                            {status === "OK" && location === "end" && (
+                            <ul>{renderEndSuggestions("end_location")}</ul>
+                            )}
+                        </div>
+                        <Stack direction="row" >
+                            <FormLabel component="legend">End Location Search Radius</FormLabel> 
+                            <Tooltip title="Distance in meters to search around your end location.">
+                            <HelpIcon/>
+                            </Tooltip>
+                        </Stack>
+                        <Slider onChange={handleEndLocationRangeInputChange} value={values.end_location_radius} defaultValue={sliderRangeDefaultValue} step={250} max={3000} aria-label="Default" valueLabelDisplay="auto" valueLabelFormat={value => <div>{value} meters</div>}/>
+                        </Container>
+                    </Grid>
+                    
+                    <Grid xs={12} item>
+                    <Container fixed>
+                        <TextField
+                        id="max_price" 
+                        label="Max Price"
+                        type="number"
+                        variant="outlined"
+                        onChange={handleMaxPriceInputChange}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        />
+                    </Container>
+                    </Grid>
+                    <Grid item>
+                        <Container fixed>
+                          <Stack direction="row" spacing={2}>
+                            <Button type = "submit" variant="contained">
+                                Search
+                            </Button>
+                            <Button onClick={handleClearSearch} variant="contained">
+                                Clear Search
+                            </Button>
+                          </Stack>
+                          <br />
+                        </Container>
+
+                    </Grid>
+                </Grid>
+            </Collapse>
+        </Card>
     );
 }

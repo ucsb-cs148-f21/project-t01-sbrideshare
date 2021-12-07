@@ -5,7 +5,6 @@ import CheckingSignedIn from "./pages/CheckingSignedIn";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import RidesList from "./pages/RidesList";
-import Profile from "./pages/Profile";
 import Ride from "./pages/Ride";
 import MyRides from "./pages/MyRides";
 import PageNotFound from "./pages/PageNotFound";
@@ -19,7 +18,9 @@ export default function App() {
   document.body.appendChild(script);
 
   function initGoogleSignIn() {
-    if(window.gapi === undefined){return;}
+    if (window.gapi === undefined) {
+      return;
+    }
     window.gapi.load("auth2", () => {
       window.gapi.auth2
         .init({
@@ -54,7 +55,6 @@ export default function App() {
           {!isSignedIn && <Route exact path="/" component={Login} />}
           <Route exact path="/" component={Home} />
           <PrivateRoute exact path="/rides" component={RidesList} />
-          <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/ride" component={Ride} />
           <PrivateRoute exact path="/myrides" component={MyRides} />
           <Route path="/" component={PageNotFound} />
@@ -64,7 +64,7 @@ export default function App() {
   }
   const script2 = document.createElement("script");
   script2.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`;
-  script2.onload = () => initGoogleSignIn();
+  // script2.onload = () => initGoogleSignIn();
   script2.async = true;
   document.body.appendChild(script2);
   return <CheckingSignedIn />;

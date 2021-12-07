@@ -1,21 +1,12 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import "../styles/login.css";
 
-import getUser from "../utils/get-user";
-
 import Container from "react-bootstrap/Container";
-import { Pagination, PaginationItem } from '@mui/material';
+import { Pagination } from '@mui/material';
 import Button from '@mui/material/Button';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
-const TextWrapper = styled.div`
-  width: 700px;
-  max-width: 100%;
-`;
-
 export default function Login() {
-  const user = getUser();
   const [page, setPage] = useState(1);
   const [showGoogle, setShowGoogle] = useState(false);
 
@@ -38,10 +29,10 @@ export default function Login() {
     </Container>
   );
   const handleChange = (event, value) => {
-    if(value == 1) {
+    if(value === 1) {
       setComponentDisplayed(firstPage);
       setShowGoogle(false);
-    }else if(value == 2){
+    }else if(value === 2){
       setComponentDisplayed(secondPage);
       setShowGoogle(true);
     }else {

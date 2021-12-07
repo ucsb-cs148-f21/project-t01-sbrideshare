@@ -3,41 +3,104 @@
 }
 
 #home-title {
-    display: flex;
+    display: block;
     align-items: center;
-    justify-content: left;
-    height: 20vh;
+    text-align: center;
+    padding-top: 5vh;
+    height: 18vh;
 }
 
-#home-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+h1 {
     text-align: center;
 }
 
-.card-row {
-    display: flex;
-    
-}
-  
-.column {
-    flex: 50%;
-    display: flex;
-    align-items: center;
+#first-card {
     justify-content: center;
-    text-align: center;
+    width: 52vw;
+    height: 55vh;
 }
 
-#left-card {    
-    justify-content: center;
-    width: 60vw;
-    height: 65vh;
-}
-
-#right-card {    
+#second-card {    
     justify-content: center;
     vertical-align: middle;
-    width: 60vw;
-    height: 65vh;
+    width: 52vw;
+    height: 55vh;
 }
+
+#first-card-content {
+    min-height: 100%;
+}
+
+#second-card-content {
+    min-height: 100%;
+}
+
+#carousel {
+    margin-left: 18vw;
+}
+
+.carousel-indicators li {
+    background-color: transparent !important;
+}
+
+a.carousel-control-prev {
+    width: 22vw;
+    height: 8vh;
+}
+
+nav.nav-tabs {
+    border-bottom: 0;
+    font-size: large;
+    color: aqua;
+}
+
+/* media */
+@media only screen and (max-width: 600px) {
+    #carousel {
+        padding-top: 10%;
+        margin-left: 8vw;
+        margin-right: 8vw;
+    }
+
+    #first-card {    
+        justify-content: center;
+        width: 82vw;
+        height: 50vh;
+    }
+    
+    #second-card {    
+        justify-content: center;
+        vertical-align: middle;
+        width: 82vw;
+        height: 50vh;
+    }
+
+    a.carousel-control-prev {
+        width: 55vw;
+        height: 8vh;
+    }
+}
+
+  @media only screen and (min-width: 601px) and (max-width: 1200px) {
+    #carousel {
+        margin-left: 12vw;
+        margin-right: 12vw;
+    }
+
+    #first-card {    
+        justify-content: center;
+        width: 76vw;
+        height: 45vh;
+    }
+    
+    #second-card {    
+        justify-content: center;
+        width: 76vw;
+        height: 45vh;
+    }
+
+    a.carousel-control-prev {
+        width: 30vw;
+        height: 6vh;
+    }
+  }

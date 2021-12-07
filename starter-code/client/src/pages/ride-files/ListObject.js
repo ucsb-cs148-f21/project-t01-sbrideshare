@@ -5,27 +5,16 @@ import getUser from "../../utils/get-user";
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import JoinPopup from './JoinPopup';
 import LeavePopup from './LeavePopup';
-
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
 
 //button values for if the user can signup for the ride
 function signupAvailableValues(){
@@ -120,6 +109,10 @@ function dateToString(date){
             break;
         case 6:
             weekday = "Saturday";
+            break;
+        default:
+            weekday = "Thursday";
+            break;
     }
     var monthday = (date.getDate()).toString();
     var monthnum = date.getMonth()+1;
@@ -161,6 +154,10 @@ function dateToString(date){
             break;
         case 12:
             month = "December";
+            break;
+        default: 
+            month = "November";
+            break;
     }
     monthnum = monthnum.toString();
     var year = (date.getFullYear()).toString();
@@ -168,12 +165,12 @@ function dateToString(date){
     var timeSuffix;
     if(tempHour<12){
         timeSuffix = "AM";
-        if(tempHour == 0)
+        if(tempHour === 0)
             tempHour=12;
     }
     else{
         timeSuffix = "PM";
-        if(tempHour!=12)
+        if(tempHour!==12)
             tempHour -= 12;
     }
     
@@ -321,18 +318,27 @@ export default function ListObject(props) {
         return(
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                <Typography  variant="body1">Riders:</Typography>
                     
                     {
-                    rideInfo.riders.length != 0 && 
+                    rideInfo.riders.length !== 0 && 
                     rideInfo.riders.map(item => (
-                    <Typography  variant="body2" color="textSecondary">
-                        {item.rider_id}: {item.pickup_address}
-                    </Typography>
+                        <div>
+                            <Typography  variant="body2" color="black">
+                                {item.rider_name}: {item.pickup_address}
+                            </Typography>
+                            { item.note_to_driver != "" &&
+                            <Typography  variant="body2" color="textSecondary">
+                                Note: {item.note_to_driver}
+                            </Typography>
+                            }
+                        </div>
                     ))}
                     {
                     rideInfo.riders.length === 0 &&
-                    "Your ride currently has no riders."
+                    <Typography  variant="body2" color="textSecondary">
+                        Your ride currently has no riders.
+                    </Typography>
+                    
                     }
                 </CardContent>
             </Collapse>
@@ -340,7 +346,7 @@ export default function ListObject(props) {
         
     }
     const moreDriveInfo = () => {
-        const driver_pickup = rideInfo.rider_radius!=0;
+        const driver_pickup = rideInfo.rider_radius!==0;
         var pickup_message;
         if(driver_pickup){
             pickup_message = "The driver will pick up riders within "+rideInfo.rider_radius+" meters of the specified start location.";
@@ -351,8 +357,12 @@ export default function ListObject(props) {
         return(
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography  variant="body1">Additional Information</Typography>
-                    <Typography  variant="body2" color="textSecondary">{pickup_message}</Typography>
+                    {
+                        rideInfo.contact !== "" ?
+                        <Typography  variant="body2" color="black">Contact: {rideInfo.contact}</Typography> :
+                        <Typography  variant="body2" color="textSecondary">The driver did not provide their contact info.</Typography>
+                    }
+                    <Typography  variant="body2" color="black">{pickup_message}</Typography>
                 </CardContent>
             </Collapse>
         )
@@ -382,33 +392,27 @@ export default function ListObject(props) {
                         src={driverImg.link}/>}
                 />
                 <CardContent>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="black">
                         Driver: {rideInfo.name}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="black">
                         Seats Available: {seats.numSeats}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body2" color="black">
                         Price: ${rideInfo.price}
                     </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                        >
-                        <ExpandMoreIcon />
-                    </ExpandMore>
-                </CardActions>
+                <ListItemButton onClick={handleExpandClick}>
+                    {
+                        rideInfo.driver_id === user.id  ?
+                        <ListItemText primary="See Riders" /> : <ListItemText primary="Additional Information" />
+                    }
+                    
+                    {expanded ? <ExpandLess /> : <ExpandMoreIcon />}
+                </ListItemButton>
                 {
-                    rideInfo.driver_id === user.id &&
-                    riderInfo()
-                }
-                {
-                    rideInfo.driver_id != user.id &&
-                    moreDriveInfo()
+                    rideInfo.driver_id === user.id  ?
+                    riderInfo() : moreDriveInfo()
                 }
             </Card>
             <JoinPopup open = {signupOpen} handleClose = {handleClose} 
